@@ -1,0 +1,302 @@
+/**
+ * Base widget styling.
+ */
+.widget {
+
+  .widgettitle {
+    @extend .base-title;
+
+    margin: 0;
+    padding-bottom: .6em;
+
+    @media (max-width: $breakpoint_tablet) {
+      border: none !important;
+      text-align: center;
+      padding: .6em;
+      margin: .6em 0;
+    }
+  }
+
+  margin-bottom: 2em;
+  > ul {
+    margin: 0;
+  }
+  ul {
+    li {
+      list-style: none;
+    }
+    a {
+      display: block;
+    }
+  }
+}
+
+
+/**
+ * The logo
+ */
+.widget_tinsta_logo_widget {
+
+  &.colored {
+    background-color: $color_secondary;
+    background-image: linear-gradient(-4deg,darken($color_secondary, 10%) 28%,transparent 28%),
+                      linear-gradient(-8deg,$color_secondary 84%,transparent 84%),
+                      linear-gradient(-8deg,lighten($color_secondary, 6%) 84%,transparent 84%),
+                      linear-gradient(-8deg,lighten($color_secondary, 12%) 100%,transparent 100%);
+    color: $color_secondary_inverted;
+  }
+
+  padding: .4em;
+
+  .custom-logo-link {
+    img {
+      max-height: 48px;
+      max-width: 256px;
+    }
+    &.noimage {
+      @extend .base-title;
+      color: inherit;
+      font-variant: small-caps;
+      font-size: 2.8em;
+      letter-spacing: -.04em;
+      line-height: 1em;
+      padding: .1em 0;
+      text-decoration: none;
+    }
+  }
+  .logo-site-description {
+    @extend .small;
+    line-height: 1em;
+    opacity: .5;
+  }
+  @media (max-width: $breakpoint_tablet) {
+    text-align: center;
+    margin: 1em;
+  }
+}
+
+
+/**
+ * Media widget
+ */
+.widget_media_image {
+  img {
+    display: block;
+  }
+}
+
+/**
+ * Widgets with link in list
+ */
+.widget_archive,
+.widget_categories,
+.widget_rss,
+.widget_pages {
+  li {
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(mix($main_color_background, $main_color_foreground, 92%), 5);
+    }
+
+    a {
+      padding: .4em 0;
+    }
+  }
+}
+
+/**
+ * Widgets with link in list and select
+ */
+.widget_archive,
+.widget_categories {
+  li {
+    a {
+      display: inline-block;
+      padding: .4em .4em .4em 0;
+    }
+  }
+  select {
+    width: 100%;
+  }
+}
+
+/**
+ * Widget with list make margin of bottom element.
+ */
+.widget_recent_entries,
+.widget_recent_comments {
+  li {
+    margin-bottom: 1em;
+    a {
+      display: inline;
+    }
+  }
+}
+
+/**
+ * Tag cloud widget
+ */
+.widget_tag_cloud {
+  .tagcloud {
+    text-align: center;
+  }
+  a {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+/**
+ * Calendar widget
+ */
+.widget_calendar {
+  border-collapse: separate;
+  border-spacing: 2px;
+  @extend .small;
+  width: 100%;
+  table {
+    border: none;
+    border-collapse: collapse;
+    margin-bottom: 0;
+    thead td,
+    thead th,
+    tbody td,
+    tbody th {
+      border: none;
+    }
+    thead {
+      background-color: rgba($main_color_background, .2);
+    }
+    tbody {
+      background-color: rgba($main_color_background, .8);
+      color: $main_color_foreground;
+      text-align: center;
+    }
+    tbody td:hover {
+      background-color: transparent;
+    }
+    tbody .pad {
+      background: none;
+    }
+    tfoot #next {
+      @extend .small;
+      padding-top: .4em;
+      text-transform: uppercase;
+    }
+    tfoot #prev {
+      @extend .small;
+      padding-top: .4em;
+      text-transform: uppercase;
+    }
+  }
+}
+
+/**
+ * RSS widget
+ */
+.widget_rss {
+  li a.rsswidget {
+    @extend .big;
+  }
+  .rss-date {
+    @extend .small;
+    font-variant: all-small-caps;
+  }
+  .rssSummary {
+    padding: 1em 0;
+  }
+  cite {
+    display: block;
+    font-style: italic;
+    text-align: right;
+  }
+}
+
+/**
+ * Video widget
+ */
+.widget_media_video {
+  position: relative;
+  width: 100%;
+  .mejs-container {
+    max-width: 100%;
+  }
+}
+
+/**
+ * Search Widget
+ */
+.widget_search {
+  body.effects & {
+    label {
+      top: auto;
+      bottom: auto;
+      right: auto;
+      left: auto;
+      transition: all 75ms ease-in-out;
+      body.effects & {
+        transition: all 150ms ease-in-out;
+      }
+    }
+    &.focus {
+      label {
+        background-color: rgba($header_color_background, .98);
+        backdrop-filter: saturate(180%) blur(4px);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 2em;
+        display: block;
+        z-index: 100;
+        &:before {
+          top: 50%;
+          margin-top: -1.08em;
+        }
+      }
+      .search-field {
+        height: 100%;
+        font-size: inherit;
+      }
+    }
+  }
+}
+
+/*
+ * Login form
+ */
+.widget_tinsta_loginform_widget {
+  input {
+    max-width: 100%;
+  }
+}
+
+/**
+ * User menu widget
+ */
+.widget_tinsta_usermenu_widget {
+  .user-info {
+    font-weight: bold;
+    &.style-icon,
+    &.style-iconname {
+      &:before {
+        @extend .fa;
+        @extend %fa-user;
+        margin-right: .6em;
+      }
+      margin-left: .4em;
+    }
+    &.style-icon,
+    &.style-avatar {
+      text-align: center;
+    }
+    .avatar {
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      margin-right: 1em;
+      vertical-align: middle;
+    }
+  }
+}

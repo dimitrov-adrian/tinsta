@@ -1,0 +1,43 @@
+/**
+ * Siteorigin
+ */
+.siteorigin-panels {
+  .so-panel .sow-submit-wrapper .sow-submit {
+    @extend .button;
+  }
+}
+
+/**
+ * CMB2
+ */
+.cmb2-list {
+  list-style: none;
+  margin: 0;
+}
+.cmb-multicheck-toggle {
+  @extend .button;
+}
+.cmb-form {
+  .cmb-repeat-table .cmb-remove-row > .cmb-remove-row-button:before {
+    @extend .fa;
+    @extend %fa-trash-o;
+  }
+}
+
+
+/**
+ * Mega menu
+ */
+#mega-menu-wrap-main.mega-menu-wrap {
+  @extend .site-primary-menu;
+  @extend .wrapper;
+}
+
+/**
+ * Google Maps
+ */
+.gm-style .gm-bundled-control .gmnoprint button {
+  border: inherit !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}

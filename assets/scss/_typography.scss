@@ -1,0 +1,647 @@
+html {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: mix($color_secondary, $color_secondary_inverted, 60%);
+}
+
+*,
+*:before,
+*:after {
+  /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
+  box-sizing: inherit;
+}
+
+%noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+
+  //hyphens: auto;
+  //-moz-hyphens: auto;
+  //-ms-hyphens: auto;
+  //word-wrap: break-word;
+  //-moz-word-wrap: break-word;
+  //-ms-word-wrap: break-word;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-smoothing: grayscale;
+
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+
+  -moz-font-feature-settings: "liga" on;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+
+  @if $font_size {
+    font-size: $font_size + px;
+  }
+  font-weight: normal;
+  line-height: 1.72em;
+  font-style: normal;
+  @if $font_google != '' {
+    font-family: $font_google, $font_family;
+  }
+  @else {
+    font-family: $font_family;
+  }
+
+  @media (max-width: $breakpoint_tablet) {
+    text-rendering: optimizeSpeed;
+  }
+
+  background: $main_color_background;
+  color: $main_color_foreground;
+}
+
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+}
+
+.small {
+  font-size: .9em;
+}
+
+.big {
+  font-size: 1.2em;
+}
+
+.bigger {
+  font-size: 1.4em;
+}
+
+.screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important; /* Many screen reader and browser combinations announce broken words as they would appear visually. */
+  &:focus {
+    background-color: mix($main_color_background, $main_color_foreground, 95%);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, .4);
+    clip: auto !important;
+    color: $color_primary;
+    display: block;
+    @extend .big;
+    font-weight: 700;
+    height: auto;
+    left: 5px;
+    padding: 1em;
+    text-decoration: none;
+    top: 5px;
+    width: auto;
+    z-index: 999999999; /* Above WP toolbar. */
+  }
+}
+
+.clearfix {
+  &:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  width: auto;
+
+  -ms-interpolation-mode: nearest-neighbor; // IE 7+ (non-standard property)
+  image-rendering: -webkit-optimize-contrast; // Safari 6, UC Browser 9.9
+  image-rendering: -webkit-crisp-edges; // Safari 7+
+  image-rendering: -moz-crisp-edges; // Firefox 3.6+
+  image-rendering: -o-crisp-edges; // Opera 12
+  image-rendering: crisp-edges;
+
+  @media (max-width: $breakpoint_mobile) {
+    image-rendering: pixelated;
+  }
+
+}
+
+a {
+  color: $color_primary;
+  text-decoration: none;
+
+  &:hover {
+    color: $color_secondary;
+    //text-decoration: underline; // underlined decoration could make troubles with icons
+    abbr {
+      border-bottom-width: 0;
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.base-title {
+
+  @if $font_headings_google != '' {
+    font-family: $font_headings_google;
+  }
+  @else {
+    @if $font_family_headings != '' {
+      font-family: $font_family_headings;
+    }
+  }
+
+  @if $font_headings_petite {
+    font-variant: all-small-caps;
+    font-variant: small-caps;
+  }
+
+  font-weight: bold;
+  //line-height: 1.4em;
+}
+
+details > summary {
+  cursor: pointer;
+  @extend %noselect;
+}
+
+ul,
+ol {
+  margin: 0 0 0 1.5em;
+  padding: 0;
+}
+
+ul {
+  list-style: disc;
+}
+
+ol {
+  list-style: decimal;
+}
+
+li > ul,
+li > ol {
+  margin-bottom: 0;
+  margin-left: 1.5em;
+}
+
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin: 0 1.5em 1.5em;
+}
+
+dfn,
+cite,
+em,
+i {
+  font-style: italic;
+}
+
+kbd {
+  background-color: mix($main_color_foreground, $main_color_background, 90%);
+  border-radius: .26em;
+  box-shadow: inset 1px -1px 1px rgba(#000, 0.25);
+  color: $main_color_background;
+  padding: 2px 4px;
+}
+
+figure {
+  margin: 0 0 1.5em 0;
+  padding: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.alignleft {
+  clear: left;
+  display: inline;
+  float: left;
+  margin-right: 1.5em;
+  margin-left: 0;
+  padding-left: 0;
+  text-align: left;
+}
+
+.alignright {
+  clear: right;
+  display: inline;
+  float: right;
+  margin-left: 1.5em;
+  margin-right: 0;
+  padding-right: 0;
+  text-align: right;
+}
+
+img.alignleft,
+img.alignright {
+  margin-bottom: 1.5em;
+}
+
+.aligncenter {
+  clear: both;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+img.default-image {
+  filter: grayscale(100%);
+  opacity: .4;
+}
+
+pre,
+code,
+kbd,
+tt,
+var {
+  font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+  margin-left: .1em;
+  margin-right: .1em;
+}
+
+pre {
+  // @TODO use opacity as background.
+  background-color: mix($main_color_background, $main_color_foreground, 90%);
+  color: mix($main_color_background, $main_color_foreground, 5%);
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1.6em;
+}
+
+blockquote {
+  quotes: "" "";
+  &:before,
+  &:after {
+    content: "";
+  }
+}
+
+q {
+  @extend .big;
+  font-style: oblique;
+  quotes: "“" "”" "‘" "’";
+}
+
+hr {
+  border: none;
+  // @TODO use opacity as background.
+  border-top: 1px solid mix($main_color_foreground, $main_color_background, 50%);
+  clear: both;
+  margin-bottom: 1.5em;
+  zoom: 1;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 0 1.6em;
+  table-layout: fixed; /* Prevents HTML tables from becoming too wide */
+  width: 100%;
+}
+td, th {
+  border-left: 0;
+  border-top: 0;
+  padding: .4em;
+}
+table > tr > td:last-child,
+table > tr > th:last-child,
+table > tfoot > tr:first-child td,
+table > tfoot > tr:first-child th {
+  border-left: 0;
+}
+table > tfoot > tr:first-child :last-child,
+table > thead > tr > :last-child,
+table > tbody > tr > :last-child,
+table > tfoot > tr > :last-child {
+  border-right: 0;
+}
+table > tr:last-child > td,
+table > tr:last-child > th,
+table > tbody > tr:last-child > td,
+table > tbody > tr:last-child > th,
+table > tfoot > tr:last-child > td,
+table > tfoot > tr:last-child > th {
+  border-bottom: 0;
+}
+
+//
+@media (max-width: $breakpoint_mobile) {
+  .hentry .caption,
+  .hentry .alignleft,
+  .hentry .alignright,
+  .hentry figure {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    display: block;
+    width: auto;
+    min-width: unset;
+    max-width: 100%;
+    float: none;
+    clear: both;
+  }
+}
+
+.size-thumbnail {
+  @extend figure;
+}
+img.size-full {
+  width: auto;
+}
+img.wp-smiley {
+  border: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding: 0;
+}
+.wp-caption-text {
+  color: mix($main_color_foreground, $main_color_background, 70%);
+  @extend .small;
+}
+
+
+/**
+ * Galleries
+ */
+.gallery {
+  margin-bottom: 1.6em;
+}
+
+.gallery-item {
+  display: inline-block;
+  padding: 1.79104477%;
+  text-align: center;
+  vertical-align: top;
+  width: 100%;
+}
+
+@for $i from 2 through 9 {
+  .gallery-columns-#{$i} .gallery-item {
+    max-width: ( 100 / $i ) + '%';
+  }
+}
+.gallery-columns-6 .gallery-caption,
+.gallery-columns-7 .gallery-caption,
+.gallery-columns-8 .gallery-caption,
+.gallery-columns-9 .gallery-caption {
+  display: none;
+}
+
+.gallery-icon img {
+  margin: 0 auto;
+}
+
+/**
+ * Forms
+ */
+.button,
+button,
+input,
+textarea,
+select,
+.wp-editor-container {
+  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+  border-radius: 0;
+  outline: 0;
+  padding: .6em;
+  vertical-align: baseline;
+}
+.select2-container {
+  .select2-choice {
+    border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+    max-width: 98%;
+    > .select2-chosen {
+      padding: 2px 0;
+    }
+  }
+}
+div#select2-drop {
+  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+}
+.select2-search input {
+  margin-top: .5em;
+}
+input,
+textarea,
+select {
+  background-color: transparent;
+}
+textarea {
+  overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
+  resize: vertical;
+  vertical-align: top; /* Improves readability and alignment in all browsers */
+  width: 99.9%;
+}
+input[type="radio"],
+input[type="checkbox"],
+input[type="reset"],
+input[type="submit"],
+select,
+button,
+.button {
+  cursor: pointer;
+  @extend %noselect;
+}
+select {
+  height: 2.4em;
+  max-width: 98%;
+  -webkit-appearance: none;
+}
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  background-color: $color_primary;
+  border: 1px solid $color_primary;
+  color: $color_primary_inverted;
+  font-variant: all-small-caps;
+  text-decoration: none;
+  .so-panel & {
+    color: $color_primary_inverted !important;
+    border: 1px solid $color_primary !important;
+  }
+  vertical-align: baseline;
+  &.secondary {
+    background-color: $color_secondary;
+    border-color: $color_secondary;
+    color: $color_secondary_inverted;
+  }
+  -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
+
+  -moz-appearance: none;
+}
+li.button a,
+a.button {
+  color: $color_primary_inverted;
+  display: inline-block;
+  &.secondary {
+    color: $color_secondary_inverted;
+  }
+}
+input,
+select,
+textarea {
+  &:focus {
+    outline: none;
+    outline-width: 0;
+    // Because the dummy bloated SiteOrigin we should use !important
+    .so-panel & {
+      outline: none !important;
+    }
+    border-color: mix($color_primary, $main_color_foreground, 90%);
+  }
+}
+.button:focus,
+button:focus,
+input[type="button"]:focus,
+input[type="reset"]:focus,
+input[type="submit"]:focus,
+.button:hover,
+button:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+input[type="submit"]:hover {
+  background-color: mix($color_primary, $main_color_foreground, 90%);
+  border-color: mix($color_primary, $main_color_foreground, 90%);
+  color: $color_primary_inverted;
+  text-decoration: none;
+
+  &.secondary {
+    background-color: mix($color_secondary, $main_color_foreground, 90%);
+    border-color: mix($color_secondary, $main_color_foreground, 90%);
+    color: $color_secondary_inverted;
+  }
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  padding: 0; /* Addresses excess padding in IE8/9 */
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner { /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
+  border: 0;
+  padding: 0;
+}
+[placeholder]:focus::-webkit-input-placeholder {
+  opacity: 0;
+}
+label {
+  padding-bottom: .4em;
+}
+.form-row-wide {
+  input,
+  select,
+  textarea {
+    width: 100%;
+  }
+}
+select {
+  height: auto;
+  -moz-appearance: none;
+}
+
+
+/**
+ * Typography within posts may be is good idea to revert in .post wrapper
+ */
+.columned {
+  column-count: 3;
+  -moz-column-count: 3;
+  -webkit-column-count: 3;
+  column-gap: 1em;
+  -moz-column-gap: 1em;
+  -webkit-column-gap: 1em;
+  vertical-align: top;
+  @for $i from 2 through 5 {
+    &[data-columns="#{$i}"] {
+      -webkit-column-count: $i;
+      -moz-column-count: $i;
+      column-count: $i;
+    }
+  }
+}
+
+li img {
+  margin: 0 .4em 0 0;
+  vertical-align: middle;
+}
+
+blockquote {
+  border-left: 4px solid $color_secondary;
+  @extend .bigger;
+  font-style: italic;
+  margin: 1em 1%;
+  overflow: hidden;
+  padding: 0 .6em;
+  position: relative;
+}
+
+.media-container {
+  height: 0;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  position: relative;
+
+  iframe,
+  object,
+  embed {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+}
+
+table {
+  // @TODO use opacity as background.
+  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+  border-collapse: collapse;
+  thead {
+    background-color: mix($main_color_background, $main_color_foreground, 80%);
+  }
+  tbody {
+    td, th {
+      border-right: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+      &:last-child {
+        border-right: none;
+      }
+    }
+    tr:nth-child(even) {
+      background-color: mix($main_color_background, $main_color_foreground, 90%);
+    }
+  }
+}
+
+.mejs-container,
+.twitter-tweet {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  position: relative;
+}
