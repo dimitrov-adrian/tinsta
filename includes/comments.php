@@ -10,11 +10,11 @@
  */
 function tinsta_comment_callback($comment, $args, $depth)
 {
-  // @TODO moderators should see unaproved comments too.
-  if ($comment->comment_approved || current_user_can('administrator')) {
+  if ($comment->comment_approved || current_user_can('moderate_comments')) {
     if ($comment->comment_type == 'pingback' || $comment->comment_type == 'trackback') {
       get_template_part('template-parts/comments/pingback');
-    } else {
+    }
+    else {
       $args['depth'] = $depth > 1 ? $depth - 1 : $depth;
       get_template_part('template-parts/comments/comment');
     }
@@ -26,15 +26,15 @@ add_filter('comment_form_defaults', function ($defaults) {
   // Enable auto-completion for fields
 
   if (!empty($defaults['fields']['author'])) {
-    $defaults['fields']['author'] = str_replace('<input', '<input autocomplete="name" ', $defaults['fields']['author']);
+    $defaults['fields']['author'] = str_replace('<input ', '<input autocomplete="name" ', $defaults['fields']['author']);
   }
 
   if (!empty($defaults['fields']['url'])) {
-    $defaults['fields']['url'] = str_replace('<input', '<input autocomplete="on" ', $defaults['fields']['url']);
+    $defaults['fields']['url'] = str_replace('<input ', '<input autocomplete="on" ', $defaults['fields']['url']);
   }
 
   if (!empty($defaults['fields']['email'])) {
-    $defaults['fields']['email'] = str_replace('<input', '<input autocomplete="email" ', $defaults['fields']['email']);
+    $defaults['fields']['email'] = str_replace('<input ', '<input autocomplete="email" ', $defaults['fields']['email']);
   }
 
   // Append avatar to comment post form.
@@ -53,10 +53,12 @@ add_filter('comment_text', function ($comment_text, $comment, $args) {
   }
 
   global $allowedtags;
+
   $allowed_html_tags = '';
   foreach (array_keys($allowedtags) as $tag) {
     $allowed_html_tags .= "<$tag>";
   }
 
   return strip_tags($comment_text, $allowed_html_tags);
+
 }, 10, 3);

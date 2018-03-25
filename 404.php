@@ -1,4 +1,8 @@
-<?php get_header(get_theme_mod('theme_404_page') ? '' : 'embed') ?>
+<?php
+
+$theme_404_page = get_theme_mod('theme_404_page') ? '' : 'embed';
+
+get_header($theme_404_page) ?>
 
 <div class="site-main" role="main" id="main">
 
@@ -16,11 +20,13 @@
     <?php endif ?>
   </div>
 
-  <div class="site-info">
-    <?php bloginfo('name') ?>
-  </div>
+  <?php if ($theme_404_page == 'embed'):?>
+    <div class="site-info">
+      <?php bloginfo('name') ?>
+    </div>
+  <?php endif?>
 
 </div>
 
 
-<?php get_footer(get_theme_mod('theme_404_page') ? '' : 'embed') ?>
+<?php get_footer($theme_404_page) ?>

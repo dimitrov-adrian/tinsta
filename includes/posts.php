@@ -42,10 +42,12 @@ add_filter('embed_oembed_html', function ($html, $url, $attr) {
   }
 
   return $html;
+
 }, 10, 3);
 
 
 add_filter('the_content', function ($content) {
+
   global $post;
 
   $outdated_post_time = get_theme_mod('outdated_post_time', 0);
@@ -64,9 +66,29 @@ add_filter('the_content', function ($content) {
     $content .= ob_get_clean();
   }
 
+  if (!is_admin_bar_showing()) {
+    // When use edit_post_link() no need to add one more translation.
+    ob_start();
+    edit_post_link(null, '<p>', '</p>' );
+    $content = ob_get_clean() . $content;
+  }
+
   return $content;
+
 }, 10, 2);
 
+// Allow widgets to be included
+if (!shortcode_exists('widget')) {
+  add_shortcode('widget', function ($atts) {
+    if (class_exists($atts['type'], false) && is_subclass_of($atts['type'], 'WP_Widget')) {
+      ob_start();
+      the_widget($atts['type'], $atts);
+
+      return ob_get_clean();
+    }
+    return ' <!-- Inactive Widget --> ';
+  });
+}
 
 add_action('init', function () {
 
@@ -74,7 +96,7 @@ add_action('init', function () {
 
   foreach (get_post_types(['public' => true], 'objects') as $post_type) {
 
-    $sidebar_variants[$post_type->name] = $post_type->label;
+    $sidebar_variants[$post_type->name . '-single'] = $post_type->label;
 
     if ( ! ($post_type->has_archive === 0 || $post_type->has_archive === false) || $post_type->name == 'post') {
       $sidebar_variants[$post_type->name . '-archive'] = sprintf(__('%s Archive', 'tinsta'), $post_type->label);
@@ -140,18 +162,12 @@ add_action('customize_register', function ($wp_customize) {
     return;
   }
 
-  $wp_customize->add_panel('tinsta_post_types', [
-    'priority'    => 120,
-    'title'       => __('Post Types', 'tinsta'),
-    'description' => __('Configure post types settings.', 'tinsta'),
-  ]);
-
   foreach (get_post_types(['public' => true], 'objects') as $post_type) {
 
     if (!$wp_customize->get_setting("post_type_{$post_type->name}")) {
       $wp_customize->add_section("post_type_{$post_type->name}", [
-        'title' => $post_type->label,
-        'panel' => 'tinsta_post_types',
+        'title' => sprintf(__('Type: %s', 'tinsta'), $post_type->label),
+        'panel' => 'tinsta_page_types',
       ]);
     }
 

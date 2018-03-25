@@ -31,12 +31,11 @@
     ?>
   </div>
 
-  <footer class="entry-footer">
-
-    <?php if ( ! is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav') ):?>
+  <?php if ( ! is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav') ):?>
+    <footer class="entry-footer">
       <?php tinsta_pagination('prevnext') ?>
-    <?php endif ?>
+    </footer>
+  <?php endif ?>
 
-  </footer>
 
 </article>

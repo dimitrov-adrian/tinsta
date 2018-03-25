@@ -90,48 +90,4 @@
 
   </footer>
 
-  <?php
-
-//    print_r(get_post_meta(get_the_ID()));exit;
-
-  function hybrid_entry_author_shortcode( $attr ) {
-    $attr = shortcode_atts( array( 'before' => '', 'after' => '' ), $attr );
-    if ( function_exists( 'coauthors_posts_links' ) ) {
-      $author = coauthors_posts_links( null, null, null, null, false );
-    } else {
-      $author = '<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" title="' . esc_attr( get_the_author_meta( 'display_name' ) ) . '">' . get_the_author_meta( 'display_name' ) . '</a></span>';
-    }
-    return $attr['before'] . $author . $attr['after'];
-  }
-
-  echo hybrid_entry_author_shortcode([]);
-
-  if ( function_exists( 'coauthors_posts_links' ) ) :
-    printf( __( '<span class="%1$s">Posted on</span> %2$s <span class="meta-sep">by</span> %3$s', 'twentyten' ),
-      'meta-prep meta-prep-author',
-      sprintf( '<a href="%1$s" title="%2$s" rel="bookmark"><span class="entry-date">%3$s</span></a>',
-        get_permalink(),
-        esc_attr( get_the_time() ),
-        get_the_date()
-      ),
-      coauthors_posts_links( null, null, null, null, false )
-    );
-  else:
-    printf( __( '<span class="%1$s">Posted on</span> %2$s <span class="meta-sep">by</span> %3$s', 'twentyten' ),
-      'meta-prep meta-prep-author',
-      sprintf( '<a href="%1$s" title="%2$s" rel="bookmark"><span class="entry-date">%3$s</span></a>',
-        get_permalink(),
-        esc_attr( get_the_time() ),
-        get_the_date()
-      ),
-      sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s">%3$s</a></span>',
-        get_author_posts_url( get_the_author_meta( 'ID' ) ),
-        esc_attr( sprintf( __( 'View all posts by %s', 'twentyten' ), get_the_author() ) ),
-        get_the_author()
-      )
-    );
-  endif;
-
-  ?>
-
 </article>

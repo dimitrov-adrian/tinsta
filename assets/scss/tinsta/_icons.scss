@@ -5,11 +5,8 @@
 
 
 // Allow other themes or plugins to disable this FontAwesome and use some from general place
-@if $enable_fontawesome {
+@if $font_icons_name {
   @import "_fontawesome-loader";
-}
-@else {
-  font-family: "FontAwesome", "Font Awesome";
 }
 
 %fa-500px { content: "\f100"; }

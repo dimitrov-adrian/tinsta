@@ -23,63 +23,6 @@
 }
 
 /**
- * Default search form
- */
-.search-form {
-  color: inherit;
-  .search-submit {
-    display: none;
-  }
-  label {
-    display: block;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    &:before {
-      @extend .fa;
-      @extend .bigger;
-      @extend %fa-search;
-      color: inherit;
-      display: inline;
-      left: 0.6em;
-      margin-top: 0;
-      opacity: 0.6;
-      position: absolute;
-      top: 0;
-      vertical-align: middle;
-      line-height: 2.2em;
-    }
-  }
-  .search-field {
-    background-color: rgba(0,0,0,.16);
-
-    body.effects & {
-      backdrop-filter: saturate(180%) blur(4px);
-    }
-
-    border: none !important;
-    box-sizing: border-box;
-    padding-left: 3.2em;
-    transition: background-color 50ms ease-in-out;
-
-    // Backgrounds are in consideration.
-    width: 100%;
-    &:focus {
-      background-color: rgba(255,255,255,.08);
-    }
-  }
-  ::-webkit-input-placeholder {
-    color: inherit;
-  }
-  ::-moz-placeholder {
-    color: inherit;
-  }
-  :-ms-input-placeholder {
-    color: inherit;
-  }
-}
-
-/**
  * Generic menu styling
  */
 .menu {
@@ -88,24 +31,24 @@
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+  //> li > .sub-menu {
+  li {
     &.current-menu-parent,
     &.current-menu-ancestor,
     &.current-menu-item {
       > a {
-        border-left: 3px solid $color_primary;
+        font-weight: bold;
       }
     }
   }
   a {
     display: block;
     padding: .3em;
-    text-decoration: none;
     &:hover {
-      background-color: $color_primary;
-      color: $color_primary_inverted;
+      text-decoration: underline;
     }
   }
-
   @media (max-width: $breakpoint_tablet) {
     text-align: center;
     > li > .sub-menu {
@@ -119,35 +62,42 @@
  */
 &.menu-inline {
   > li {
+
+    &.right {
+      float: right;
+    }
+
     display: inline-block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
     > a {
-      //bottom: -1px;
-      display: block;
       padding: .6em 1em;
       position: relative;
-      text-decoration: none;
       border: none;
     }
 
-    @if ( abs(lightness($header_color_background) - lightness($main_color_background) ) < 5 ) {
-      &.menu-item-has-children:hover > a {
-        background-color: $main_color_foreground;
-        color: $main_color_background;
-      }
-    }
-
     > .sub-menu {
+      border: 1px solid rgba(0,0,0,.2);
 
-      @if ( abs(lightness($header_color_background) - lightness($main_color_background) ) < 5 ) {
+      // If header and main are close light colors, then invert the sub-menu popup.
+      @if ( abs(lightness($main_color_background) - lightness($header_color_background) ) < 5 ) {
         background-color: $main_color_foreground;
-        border: 1px solid mix($main_color_background, $main_color_foreground, 20%);
+        body.effects & {
+          background-color: rgba($main_color_foreground, .92);
+          -webkit-backdrop-filter: saturate(80%) blur(15px);
+        }
+        a {
+          color: $main_color_background;
+        }
       }
       @else {
         background-color: $main_color_background;
-        border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+        body.effects & {
+          background-color: rgba($main_color_background, .9);
+          -webkit-backdrop-filter: saturate(80%) blur(15px);
+        }
+        a {
+          color: $main_color_foreground;
+        }
       }
 
       box-shadow: 1px 4px 20px -10px rgba(0, 0, 0, .9);
@@ -156,41 +106,22 @@
       min-width: 12em;
       position: absolute;
       margin: 0;
-      text-align: left;
+      //text-align: left;
       z-index: 100;
       &:before {
-        background-color: $main_color_background;
-        border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+        background-color: inherit;
+        border: 1px solid rgba(0,0,0,.4);
         border-bottom: none;
         border-left: none;
         content: '';
         height: 10px;
         left: 1em;
         position: absolute;
-        top: -6px;
+        top: -5.8px;
         transform: rotate(-45deg);
         width: 10px;
-        .sub-menu {
-          margin-left: 1.4em;
-        }
       }
       a {
-        @if ( abs(lightness($header_color_background) - lightness($main_color_background) ) < 5 ) {
-          color: $main_color_background;
-        }
-        @else {
-          color: $main_color_foreground;
-        }
-        &:hover {
-          @if ( abs(lightness($header_color_background) - lightness($main_color_background) ) < 5 ) {
-            color: $color_primary_inverted;
-          }
-          @else {
-            color: $color_primary;
-          }
-          background-color: transparent;
-          text-decoration: underline;
-        }
         padding: .6em;
       }
       .current-menu-item {
@@ -200,18 +131,22 @@
         }
       }
     }
+
+    // Mouse hovering popup menus should appear only when we have anough room for this.
     &:hover > .sub-menu {
       @media (min-width: $breakpoint_tablet) {
         display: block;
       }
+      body.no-js & {
+        display: block;
+      }
     }
-    &.right {
-      float: right;
-    }
+
     @media (max-width: $breakpoint_tablet) {
       display: block;
       padding: .4em .4em;
     }
+
   }
 }
 
@@ -219,7 +154,8 @@
  * Mobile sub-menu
  */
 .menu > li.menu-item-has-children.sub-menu-overlay-active > ul.sub-menu,
-body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu {
+body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
+.mobile-menu {
   display: block !important;
   position: fixed !important;
   top: 5em !important;
@@ -250,6 +186,37 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu {
 }
 
 /**
+ * Scroll Top button
+ */
+.scrolltop-button {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 22px;
+  cursor: pointer;
+  padding: .4em;
+  background: $color_primary;
+  color: $color_primary_inverted;
+  text-indent: -100px;
+  border-radius: .4em;
+  width: 2.4em;
+  height: 2.4em;
+  overflow: hidden;
+  &:before {
+    content: '^';
+    top: 0;
+    position: absolute;
+    width: 100%;
+    line-height: 1.6em;
+    font-size: 2em;
+    text-align: center;
+    right: 0;
+    text-indent: 0;
+  }
+}
+
+
+/**
  * Main pagination
  */
 .pagination {
@@ -258,7 +225,12 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu {
   text-align: center;
 
   .nav-links {
-    border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+    @if $pagination_style == 'borders' {
+      border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+    }
+    @if $pagination_style == 'bold' {
+      font-weight: bold;
+    }
     display: table;
     margin: 1em auto;
     table-layout: fixed;
@@ -272,7 +244,12 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu {
       vertical-align: middle;
       &.current {
         color: $color_primary;
-        font-weight: bold;
+        @if $pagination_style == 'bold' {
+          text-decoration: underline;
+        }
+        @else {
+          font-weight: bold;
+        }
       }
       &.prev,
       &.next {
@@ -436,8 +413,7 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu {
   z-index: 1000;
 
   body.effects & {
-    -webkit-backdrop-filter: saturate(80%) blur(2px);
-    backdrop-filter: saturate(80%) blur(2px);
+    -webkit-backdrop-filter: saturate(80%) blur(15px);
   }
 
   .dialog-inner {

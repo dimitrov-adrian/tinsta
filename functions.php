@@ -1,6 +1,21 @@
 <?php
 
-// @TODO Check for PHP 5.6, and return if not met.
+// Check for minimal supported PHP and WordPress versions.
+if (version_compare(phpversion(), '5.4.0', '<') || version_compare($wp_version, '4.7.0', '<')) {
+  function _tinsta_unsupported_message() {
+    echo '
+      <div class="error">
+        <p> ' . __('Tinsta theme requires PHP >= 5.4.0 and WordPress >= 4.7.', 'tinsta') . ' </p>
+      </div>';
+  }
+  add_action('admin_notices', '_tinsta_unsupported_message');
+  return;
+}
+
+// TINSTA_STYLESHEET_CACHE_DIR should be relative to WP_CONTENT_DIR and must starts with slash
+if (!defined('TINSTA_STYLESHEET_CACHE_DIR')) {
+  define('TINSTA_STYLESHEET_CACHE_DIR', '/s2cache');
+}
 
 // Vendors.
 require_once __DIR__ . '/includes/vendor/autoload.php';
@@ -10,6 +25,15 @@ require_once __DIR__ . '/includes/theme.php';
 require_once __DIR__ . '/includes/posts.php';
 require_once __DIR__ . '/includes/comments.php';
 
+/**
+ * Check if Tinsta theme should add customizer
+ *
+ * @return bool
+ */
+function tinsta_is_customizer_enabled()
+{
+  return apply_filters('tinsta_is_customizer_enabled', true);
+}
 
 /**
  * Build pagination links.
@@ -274,7 +298,8 @@ function tinsta_render_posts_loop($post_type, $display_mode)
         "template-parts/entries/{$post_post_type}-embed.php",
         "template-parts/entries/post-embed.php",
       ];
-    } else {
+    }
+    else {
       $templates = [
         "template-parts/entries/{$post_post_type}-{$display_mode}.php",
         "template-parts/entries/{$post_post_type}.php",
@@ -293,17 +318,13 @@ function tinsta_render_posts_loop($post_type, $display_mode)
  */
 function tinsta_the_social_code()
 {
-  static $social_code = null;
-  if ($social_code === null) {
-    $social_code = (string)get_theme_mod('social_networks_code', '');
-  }
+
+  $social_code = (string) get_theme_mod('social_networks_code');
+
   if ($social_code) {
-    ?>
-    <div class="social-networks-code">
-      <?php echo $social_code ?>
-    </div>
-    <?php
+    echo "<div class=\"social-networks-code\">{$social_code}</div>";
   }
+
 }
 
 /**
@@ -383,7 +404,7 @@ function tinsta_get_sidebar_variant()
     return $variant;
   }
 
-  $variant = get_post_type() . (is_singular() ? '' : '-archive');
+  $variant = get_post_type() . (is_singular() ? '-single' : '-archive');
 
   return apply_filters('tinsta_get_sidebar_variant', $variant);
 }
@@ -493,27 +514,34 @@ function tinsta_the_fivestar($rating = 0, $max = 5)
  *
  * @return array
  */
-function tinsta_options_defaults()
+function tinsta_get_options_defaults()
 {
 
   // Add all theme mods.
-  return apply_filters('tinsta_options_defaults', [
+  return apply_filters('tinsta_get_options_defaults', [
 
     /**
      * Misc
      */
     'legacy_support' => true,
-    'effects' => false,
+    'excerpt_more' => '',
+    'font_icons_name' => 'line-awesome',
 
     /**
      * Typography
      */
     'font_size' => 14,
-    'font_headings_petite' => true,
     'font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
     'font_family_headings' => '',
     'font_google' => '',
     'font_headings_google' => '',
+    'font_headings_style' => '',
+    'text_justify' => false,
+    'text_wordbreak' => false,
+    'form_spacing' => 6,
+    'form_borders' => 1,
+    'form_button_style' => 'fill',
+    'font_button_text_style' => 'small-caps',
 
     /**
      * Post Types defaults
@@ -528,9 +556,9 @@ function tinsta_options_defaults()
      */
 
     // Breakpoints
-    'breakpoint_desktop' => 1800,
-    'breakpoint_tablet' => 1024,
-    'breakpoint_mobile' => 640,
+    'breakpoint_desktop' => 1400,
+    'breakpoint_tablet' => 920,
+    'breakpoint_mobile' => 568,
 
     // Section: Globals
     'site_height_full' => true,
@@ -549,6 +577,7 @@ function tinsta_options_defaults()
     'site_body_image_position_y' => 'center',
 
     // Section: Topline
+    'topline_sticky' => false,
     'topline_color_background' => '#ffffff',
     'topline_color_background_opacity' => 100,
     'topline_color_foreground' => '#222222',
@@ -568,6 +597,7 @@ function tinsta_options_defaults()
     'header_color_foreground' => '#cdd9e4',
 
     // Section: Primary Menu
+    'primary_menu_movetop' => false,
     'primary_menu_color_background' => '#415261',
     'primary_menu_color_background_opacity' => 100,
     'primary_menu_color_foreground' => '#cdd9e4',
@@ -637,6 +667,17 @@ function tinsta_options_defaults()
     // Component: Outdated Posts
     'outdated_post_time' => 0,
     'outdated_post_message' => __('This article is older than %time%, the content might not be relevant anymore.', 'tinsta'),
+
+    // Component: Pagination
+    'pagination_style' => 'borders',
+
+    // Component: Effects
+    'effects' => false,
+    // @TODO roundness
+    // @TODO shadows
+
+    // Component: Scroll Top
+    'scrolltop' => '',
 
     // Component: Fivestar
     'fivestar_symbol_empty' => '\f318',
@@ -714,159 +755,165 @@ function tinsta_background_image_styles($args)
 
 }
 
+
 /**
- * Check if Tinsta theme should add customizer
+ * Check if stylesheet cache directory exists or can create AND have writeable permissions.
  *
  * @return bool
  */
-function tinsta_is_customizer_enabled()
-{
-  return apply_filters('tinsta_is_customizer_enabled', true);
+function tinsta_check_stylesheet_cache_directory() {
+  if (!is_dir(WP_CONTENT_DIR . TINSTA_STYLESHEET_CACHE_DIR)) {
+    if (wp_mkdir_p(WP_CONTENT_DIR . TINSTA_STYLESHEET_CACHE_DIR)) {
+      return false;
+    }
+  }
+  return is_writeable(WP_CONTENT_DIR . TINSTA_STYLESHEET_CACHE_DIR);
 }
 
 /**
- * Setup theme's css files and register "tinsta" stylesheet.
- *
  * @param $scss_file
- * @param $args
  *
  * @return string
  */
-function tinsta_setup_stylesheets($scss_file, $args = [])
+function tinsta_get_stylesheet($scss_file)
 {
 
-  $args = wp_parse_args($args, [
-    'force_rebuild' => false,
-    'clear' => false,
-  ]);
+  $source_file = $scss_file . '.scss';
+  $source_file_hash = md5($source_file);
 
-  $is_customize_change = false;
-
-  if (is_customize_preview()) {
-    global $wp_customize;
-    // @TODO optimize.
-    $customizer_patched_data_values = $wp_customize->unsanitized_post_values();
-    if ($wp_customize->validate_setting_values($customizer_patched_data_values)) {
-      $customizer_patched_data_values = array_intersect_key($customizer_patched_data_values, tinsta_options_defaults());
-      $is_customize_change = count($customizer_patched_data_values) > 0;
-    }
+  $suffix = '';
+  if (!empty($args['preview'])) {
+    $suffix = '.preview';
   }
 
-  $compiled_css_file = '/cache/' . get_stylesheet() . '-' . $scss_file . ( empty($args['clear']) && $is_customize_change ? '.customized' : '') . '.css';
-  $compiled_css_path = WP_CONTENT_DIR . $compiled_css_file;
-  $compiled_css_dirname = dirname($compiled_css_path);
+  $args = apply_filters('tinsta_get_stylesheet', [
+    'preview' => false,
+    'variables' => [
+      'tinsta_version' => wp_get_theme()->Version,
+      'tinsta_theme_dir_url' => '"' . get_template_directory_uri() . '"',
+      'stylesheet_directory_uri' => '"' . get_stylesheet_directory_uri() . '"',
+    ],
+  ], $scss_file);
+
+  // WP_CONTENT_DIR relative
+  $compiled_css_file = sprintf(TINSTA_STYLESHEET_CACHE_DIR . '/%s-%s%s.css', get_stylesheet(), $source_file_hash, $suffix);
   $compiled_css_uri = content_url($compiled_css_file);
+  $compiled_css_filepath = WP_CONTENT_DIR . $compiled_css_file;
 
-  // Check source SCSS file.
-  $source_file = get_template_directory() . '/assets/scss/' . $scss_file . '.scss';
+  // Stylesheet hashes.
+  $stylesheet_hashes = get_transient('tinsta_theme');
+  $stylesheet_hash_stored = empty($stylesheet_hashes[$source_file_hash]) ? null : $stylesheet_hashes[$source_file_hash];
+  $stylesheet_hash_current = md5(serialize($args['variables']));
 
-  // Just clearing old cached file.
-  if (!empty($args['clear'])) {
-    if (file_exists($compiled_css_path)) {
-      call_user_func('unlink', $compiled_css_path);
-    }
-    return $compiled_css_uri;
-  }
-
-  // print_r(apply_filters('tinsta_scss_variables', []));exit;
-
-  // Rebuild the cache if:
+  // Rebuild only when:
   if (
+    // File not exists.
+    !is_readable($compiled_css_filepath)
 
-    // Force rebuild
-    !empty($args['force_rebuild'])
+    // Force rebuild when debugging and no-cache is sent.
+    || ( defined('WP_DEBUG') && WP_DEBUG && !empty($_SERVER['HTTP_CACHE_CONTROL']) && stripos($_SERVER['HTTP_CACHE_CONTROL'], 'no-cache') !== false )
 
-    // When in customizer.
-    || $is_customize_change
+    // Preview mode.
+    || !empty($args['preview'])
 
-    // Or WordPress has WP_DEBUG set to TRUE and the user's browser send no-cache header.
-    || (defined('WP_DEBUG') && WP_DEBUG && (!empty($_SERVER['HTTP_CACHE_CONTROL']) && stripos($_SERVER['HTTP_CACHE_CONTROL'], 'no-cache') !== false))
-
-    // If cache file is does not exists.
-    || !file_exists($compiled_css_path)
-
-    // @TODO remove this after public release.
-    || ( !empty($_GET['tinsta-rebuild-styles']) && current_user_can('edit_theme_options') )
-
-    // Or the theme mod is set.
-    // || get_theme_mod('_require_stylesheet_rebuild')
+    // Hash is changed.
+    || $stylesheet_hash_current != $stylesheet_hash_stored
 
   ) {
+
+    $compiled_css_filepath_directory = dirname($compiled_css_filepath);
+    $import_paths = [
+      dirname($scss_file),
+    ];
+
+    $compiler = new \Leafo\ScssPhp\Compiler();
+
+    if ( ! defined('WP_DEBUG') || ! WP_DEBUG) {
+      $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
+      $compiler->setIgnoreErrors(true);
+    }
+
+    $compiler->setImportPaths($import_paths);
+
+    // Set variables.
+    $compiler->setVariables($args['variables']);
+
     try {
 
-      if (!is_readable($source_file)) {
-        throw new Exception("Source file for {$scss_file} is missing.");
+      if ( ! tinsta_check_stylesheet_cache_directory()) {
+        throw new \Exception("Cannot prepare path \"{$compiled_css_filepath_directory}\" to store stylesheets.");
       }
 
-      $import_paths = [
-        get_template_directory() . '/assets/scss',
-      ];
-
-      if (is_child_theme()) {
-        $import_paths[] = get_stylesheet_directory() . '/assets/scss';
+      if ( ! file_exists($source_file)) {
+        throw new \Exception("Stylesheet source \"{$source_file}\" not found");
       }
-
-      // Prepare variables.
-      $variables = apply_filters('tinsta_scss_variables', []);
-
-      if ($is_customize_change && !empty($customizer_patched_data_values)) {
-        $variables = array_replace_recursive($variables, $customizer_patched_data_values);
-      }
-
-      $variables['enable_fontawesome'] = apply_filters('tinsta_enable_fontawesome', true);
-      $variables['tinsta_theme_dir_url'] = '"' . get_template_directory_uri() . '"';
-      $variables['stylesheet_directory_uri'] = '"' . get_stylesheet_directory_uri() . '"';
-
-      // wp_die(print_r($variables, true));
-
-      $compiler = new \Leafo\ScssPhp\Compiler();
-
-      if (!defined('WP_DEBUG') || !WP_DEBUG) {
-        $compiler->setFormatter('Leafo\ScssPhp\Formatter\Compressed');
-        $compiler->setIgnoreErrors(true);
-      }
-
-      $compiler->setImportPaths($import_paths);
-      $compiler->setVariables($variables);
 
       // Using filter here is not the most elegant solution but is useful from times to times.
-      $output = $compiler->compile(file_get_contents($source_file) . apply_filters('tinsta_custom_scss', ''));
+      $output = $compiler->compile(file_get_contents($source_file));
 
-      if (!is_dir($compiled_css_dirname)) {
-        if (!wp_mkdir_p($compiled_css_dirname)) {
-          throw new \Exception("Cannot prepare path \"{$compiled_css_dirname}\" to store stylesheets.");
-        }
+      if (file_put_contents($compiled_css_filepath, $output) === false) {
+        throw new \Exception('Cannot prepare theme\'s stylesheets.');
       }
 
-      // Length of the hash + comment = 2 + 32 + 2 = 36
-      $build_hash = md5(serialize(get_theme_mods()));
-      $output = $output . "\n/*{$build_hash}*/";
-
-      if (file_put_contents($compiled_css_path, $output) === false) {
-        throw new \Exception('Cannot prepare theme\'s stylesheet.');
+      // Saving hash value only when NOT in preview mode.
+      if (empty($args['preview'])) {
+        $stylesheet_hashes[$source_file_hash] = $stylesheet_hash_current;
+        set_transient('tinsta_theme', $stylesheet_hashes);
       }
 
     } catch (\Exception $e) {
       if (defined('WP_DEBUG') && WP_DEBUG) {
-        wp_die('scssphp: ' . $e->getMessage());
+        wp_die(__FUNCTION__ . '(): ' . $e->getMessage());
+      } else {
+        syslog(LOG_ERR, __FUNCTION__ . '(): ' . $e->getMessage());
       }
-      else {
-        syslog(LOG_ERR, 'scssphp: ' . $e->getMessage());
-      }
-    }
-
-    // Unset the _require_stylesheet_rebuild to avoid the loop.
-    // if (get_theme_mod('_require_stylesheet_rebuild')) {
-    //   remove_theme_mod('_require_stylesheet_rebuild');
-    // }
-
-  }
-
-  if (!file_exists($compiled_css_path)) {
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-      wp_die(__('Unexpected error. Missing stylesheet.', 'tinsta'));
     }
   }
 
   return $compiled_css_uri;
+}
+
+/**
+ * Export .tinsta settings file
+ */
+function tinsta_settings_export()
+{
+  $filename = get_bloginfo('name') . '-' . date('YmdHi') . '.tinsta';
+  @header('Cache-Control: no-cache, must-revalidate');
+  @header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+  @header('Content-Type: plain/text; charset=UTF-8');
+  @header('Content-Disposition: attachment; filename="' . addslashes($filename) . '"');
+  $settings = get_theme_mods();
+  $settings_to_export = [];
+  foreach (tinsta_get_options_defaults() as $option => $value) {
+    $settings_to_export[$option] = isset($settings[$option]) ? $settings[$option] : $value;
+  }
+  echo json_encode($settings_to_export);
+  exit;
+}
+
+/**
+ * Import .tinsta settings file
+ *
+ * @param $file
+ *
+ * @return int
+ */
+function tinsta_settings_import($file)
+{
+  $imported_settings_count = 0;
+  if (file_exists($file) && is_readable($file)) {
+    $data = file_get_contents($file);
+    $data = @json_decode($data);
+    if (!json_last_error()) {
+      $defaults = tinsta_get_options_defaults();
+      foreach ($data as $key => $value) {
+        if (isset($defaults[$key])) {
+          set_theme_mod($key, $value);
+          $imported_settings_count ++;
+        }
+      }
+    }
+  }
+  return $imported_settings_count;
 }

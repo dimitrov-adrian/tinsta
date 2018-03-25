@@ -134,4 +134,29 @@
     }
   }, { once: true });
 
+  // Scrolltop.
+  if (tinsta.scrolltop) {
+    (function() {
+      var button = document.createElement('div');
+      button.className = 'scrolltop-button';
+      button.innerText = tinsta.scrolltop;
+      button.setAttribute('title', tinsta.top);
+      button.addEventListener('click', function() {
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+      });
+      var check = function() {
+        if (window.pageYOffset > window.innerHeight) {
+          button.style.display = 'block';
+        }
+        else {
+          button.style.display = 'none';
+        }
+      };
+      document.body.appendChild(button);
+      window.addEventListener('scroll', check);
+      setTimeout(check, 100);
+    }());
+
+  }
+
 }());

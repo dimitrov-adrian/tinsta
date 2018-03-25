@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tinsta - Tiny Standard Theme\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-23 16:07+0000\n"
+"POT-Creation-Date: 2018-03-25 14:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -14,12 +14,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
 
-#. Name of the template
-msgid "No Sidebars"
+#: functions.php:8
+msgid "Tinsta theme requires PHP >= 5.4.0 and WordPress >= 4.7."
+msgstr ""
+
+#: functions.php:48
+msgid "Post navigation"
+msgstr ""
+
+#: functions.php:56
+msgid "Prev"
+msgstr ""
+
+#: functions.php:57
+msgid "Next"
+msgstr ""
+
+#: functions.php:145
+#, php-format
+msgid "Search: %s"
+msgstr ""
+
+#: functions.php:503
+#, php-format
+msgid "Rate: %s/%s"
+msgstr ""
+
+#: functions.php:667
+msgid ""
+"This article is older than %time%, the content might not be relevant anymore."
+msgstr ""
+
+#: functions.php:687
+msgid "I agree with site terms."
+msgstr ""
+
+#: functions.php:688
+msgid "Agree"
+msgstr ""
+
+#: functions.php:690
+msgid "Cancel"
 msgstr ""
 
 #. Name of the template
-msgid "Thin, No Sidebars"
+msgid "Full Page"
+msgstr ""
+
+#: 404.php:10
+msgid "Oops! That page can&rsquo;t be found."
+msgstr ""
+
+#: 404.php:18
+msgid "It looks like nothing was found at this location. Maybe try a search?"
 msgstr ""
 
 #. Name of the template
@@ -27,58 +74,11 @@ msgid "Content Only"
 msgstr ""
 
 #. Name of the template
-msgid "Full Page"
+msgid "Thick, No Sidebars"
 msgstr ""
 
 #. Name of the template
 msgid "Embed"
-msgstr ""
-
-#. Name of the template
-msgid "Thick, No Sidebars"
-msgstr ""
-
-#: functions.php:24
-msgid "Post navigation"
-msgstr ""
-
-#: functions.php:32
-msgid "Prev"
-msgstr ""
-
-#: functions.php:33
-msgid "Next"
-msgstr ""
-
-#: functions.php:134
-#, php-format
-msgid "Search: %s"
-msgstr ""
-
-#: functions.php:496
-#, php-format
-msgid "Rate: %s/%s"
-msgstr ""
-
-#: functions.php:641
-msgid ""
-"This article is older than %time%, the content might not be relevant anymore."
-msgstr ""
-
-#: functions.php:650
-msgid "I agree with site terms."
-msgstr ""
-
-#: functions.php:651
-msgid "Agree"
-msgstr ""
-
-#: functions.php:653
-msgid "Cancel"
-msgstr ""
-
-#: functions.php:869
-msgid "Unexpected error. Missing stylesheet."
 msgstr ""
 
 #: comments.php:44
@@ -97,504 +97,660 @@ msgstr ""
 msgid "Comments are closed."
 msgstr ""
 
-#: 404.php:6
-msgid "Oops! That page can&rsquo;t be found."
+#. Name of the template
+msgid "Thin, No Sidebars"
 msgstr ""
 
-#: 404.php:14
-msgid "It looks like nothing was found at this location. Maybe try a search?"
+#. Name of the template
+msgid "No Sidebars"
 msgstr ""
 
-#: includes/theme.php:9
-msgid "Site Primary Menu"
+#: includes/theme.php:10 includes/theme.php:819
+msgid "Primary Site Menu"
 msgstr ""
 
-#: includes/theme.php:76
-msgid "Front-page Full Width"
-msgstr ""
-
-#: includes/theme.php:85
-msgid "Front-page Main"
-msgstr ""
-
-#: includes/theme.php:94
-msgid "Front-page Left"
-msgstr ""
-
-#: includes/theme.php:103
-msgid "Front-page Right"
-msgstr ""
-
-#: includes/theme.php:112 includes/theme.php:925
+#: includes/theme.php:74 includes/theme.php:741
 msgid "Header"
 msgstr ""
 
-#: includes/theme.php:121 includes/theme.php:1090 includes/posts.php:125
-msgid "Footer"
+#: includes/theme.php:83 includes/theme.php:92 includes/theme.php:101
+#: includes/theme.php:110
+msgid "Front-page"
 msgstr ""
 
-#: includes/theme.php:130
+#: includes/theme.php:83 includes/theme.php:379 includes/theme.php:1172
+#: includes/theme.php:1173
+msgid "Top"
+msgstr ""
+
+#: includes/theme.php:101 includes/theme.php:1173 includes/theme.php:1175
+msgid "Left"
+msgstr ""
+
+#: includes/theme.php:110 includes/theme.php:1172 includes/theme.php:1174
+msgid "Right"
+msgstr ""
+
+#: includes/theme.php:119
 msgid "Error 404"
 msgstr ""
 
-#: includes/theme.php:205
-#, php-format
-msgid "You are going to be redirected to %s"
+#: includes/theme.php:128 includes/theme.php:956 includes/posts.php:128
+msgid "Footer"
 msgstr ""
 
-#: includes/theme.php:386
+#: includes/theme.php:329
+#, php-format
+msgid ""
+"<strong>Tinsta:</strong> The directory <code>%s</code> MUST have write "
+"access."
+msgstr ""
+
+#: includes/theme.php:337 includes/tools.php:4
+msgid "Tools"
+msgstr ""
+
+#: includes/theme.php:377
 msgid "Menu"
 msgstr ""
 
-#: includes/theme.php:387
+#: includes/theme.php:378
 msgid "Close"
 msgstr ""
 
-#: includes/theme.php:518
+#: includes/theme.php:509
+msgid "Typography"
+msgstr ""
+
+#: includes/theme.php:513
+msgid "Base font size (px)"
+msgstr ""
+
+#: includes/theme.php:523
+msgid "Headings Style"
+msgstr ""
+
+#: includes/theme.php:527 includes/theme.php:1354 includes/posts.php:175
+#: includes/posts.php:194
+msgid "Default"
+msgstr ""
+
+#: includes/theme.php:528
+msgid "Uppercase"
+msgstr ""
+
+#: includes/theme.php:529
+msgid "Petite"
+msgstr ""
+
+#: includes/theme.php:533 includes/theme.php:538
+msgid "Base font family"
+msgstr ""
+
+#: includes/theme.php:538 includes/theme.php:548
+#, php-format
+msgid "(Headings) %s"
+msgstr ""
+
+#: includes/theme.php:543 includes/theme.php:548
+msgid "Google Font"
+msgstr ""
+
+#: includes/theme.php:545 includes/theme.php:550
+#, php-format
+msgid "Use font name from %s"
+msgstr ""
+
+#: includes/theme.php:553
+msgid "Word-break"
+msgstr ""
+
+#: includes/theme.php:558
+msgid "Justify Text"
+msgstr ""
+
+#: includes/theme.php:563
+msgid "Forms field spacing"
+msgstr ""
+
+#: includes/theme.php:573
+msgid "Forms field borders"
+msgstr ""
+
+#: includes/theme.php:583
+msgid "Button Style"
+msgstr ""
+
+#: includes/theme.php:587 includes/theme.php:1155 includes/theme.php:1171
+#: includes/theme.php:1319
+msgid "None"
+msgstr ""
+
+#: includes/theme.php:588
+msgid "Fill"
+msgstr ""
+
+#: includes/theme.php:589
+msgid "Border"
+msgstr ""
+
+#: includes/theme.php:597
+msgid "Sections"
+msgstr ""
+
+#: includes/theme.php:598
+msgid "Setup section appearances like colors, background and behavior."
+msgstr ""
+
+#: includes/theme.php:604
+msgid "Globals"
+msgstr ""
+
+#: includes/theme.php:609
+msgid "Use boxed layout"
+msgstr ""
+
+#: includes/theme.php:614
+msgid "Full-height page"
+msgstr ""
+
+#: includes/theme.php:618 includes/theme.php:910 includes/theme.php:935
+msgid "Width"
+msgstr ""
+
+#: includes/theme.php:629
+msgid "Desktop breakpoint (px)"
+msgstr ""
+
+#: includes/theme.php:640
+msgid "Tablet breakpoint (px)"
+msgstr ""
+
+#: includes/theme.php:651
+msgid "Mobile breakpoint (px)"
+msgstr ""
+
+#: includes/theme.php:662 includes/theme.php:666
+msgid "Primary Color"
+msgstr ""
+
+#: includes/theme.php:666 includes/theme.php:674
+#, php-format
+msgid "(Inverted) %s"
+msgstr ""
+
+#: includes/theme.php:670 includes/theme.php:674
+msgid "Secondary Color"
+msgstr ""
+
+#: includes/theme.php:678 includes/theme.php:720 includes/theme.php:766
+#: includes/theme.php:828 includes/theme.php:853 includes/theme.php:921
+#: includes/theme.php:946 includes/theme.php:965 includes/theme.php:1027
+msgid "Background"
+msgstr ""
+
+#: includes/theme.php:682 includes/theme.php:785 includes/theme.php:872
+#: includes/theme.php:984
+msgid "Background Image"
+msgstr ""
+
+#: includes/theme.php:686 includes/theme.php:789 includes/theme.php:876
+#: includes/theme.php:988
+msgid "Background Image Position"
+msgstr ""
+
+#: includes/theme.php:694 includes/theme.php:797 includes/theme.php:884
+#: includes/theme.php:996
+msgid "Background Image Size"
+msgstr ""
+
+#: includes/theme.php:698 includes/theme.php:801 includes/theme.php:888
+#: includes/theme.php:1000
+msgid "Original"
+msgstr ""
+
+#: includes/theme.php:699 includes/theme.php:802 includes/theme.php:889
+#: includes/theme.php:1001
+msgid "Fit to Screen"
+msgstr ""
+
+#: includes/theme.php:700 includes/theme.php:803 includes/theme.php:890
+#: includes/theme.php:1002
+msgid "Fill Screen"
+msgstr ""
+
+#: includes/theme.php:704 includes/theme.php:807 includes/theme.php:894
+#: includes/theme.php:1006
+msgid "Repeat Background Image"
+msgstr ""
+
+#: includes/theme.php:709 includes/theme.php:812 includes/theme.php:899
+#: includes/theme.php:1011
+msgid "Scroll with Page"
+msgstr ""
+
+#: includes/theme.php:716 includes/theme.php:1266
+msgid "Topline"
+msgstr ""
+
+#: includes/theme.php:724 includes/theme.php:770 includes/theme.php:832
+#: includes/theme.php:857 includes/theme.php:969 includes/theme.php:1031
+msgid "Opacity"
+msgstr ""
+
+#: includes/theme.php:735 includes/theme.php:781 includes/theme.php:843
+#: includes/theme.php:868 includes/theme.php:925 includes/theme.php:950
+#: includes/theme.php:980 includes/theme.php:1042
+msgid "Foreground"
+msgstr ""
+
+#: includes/theme.php:745
+msgid "Padding"
+msgstr ""
+
+#: includes/theme.php:757 includes/theme.php:1023
+msgid "Sticky"
+msgstr ""
+
+#: includes/theme.php:762
+msgid "Background on wrapper"
+msgstr ""
+
+#: includes/theme.php:823
+msgid "Move to top"
+msgstr ""
+
+#: includes/theme.php:849
+msgid "Main"
+msgstr ""
+
+#: includes/theme.php:906 includes/posts.php:109
+msgid "Primary Sidebar"
+msgstr ""
+
+#: includes/theme.php:931 includes/posts.php:118
+msgid "Secondary Sidebar"
+msgstr ""
+
+#: includes/theme.php:961
+msgid "Highlight inner background"
+msgstr ""
+
+#: includes/theme.php:1018 includes/theme.php:1281
+msgid "Bottomline"
+msgstr ""
+
+#: includes/theme.php:1052
 msgid "Components"
 msgstr ""
 
-#: includes/theme.php:519
+#: includes/theme.php:1053
 msgid "Configure theme components"
 msgstr ""
 
-#: includes/theme.php:527
+#: includes/theme.php:1061
 msgid "Social networks code"
 msgstr ""
 
-#: includes/theme.php:533
+#: includes/theme.php:1067
 msgid ""
 "Appears in posts headers. Can be used to put AddThis or social networks like,"
 " follow, share or etc."
 msgstr ""
 
-#: includes/theme.php:539
-msgid "Head Meta HTML"
+#: includes/theme.php:1073
+msgid "HTML <head>"
 msgstr ""
 
-#: includes/theme.php:545 includes/theme.php:557
+#: includes/theme.php:1079 includes/theme.php:1091
 msgid ""
-"Useful in case of putting extra 3rd party JS, CSS or HTML tags like "
-"analytics or etc."
+"Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics "
+"or etc."
 msgstr ""
 
-#: includes/theme.php:551
-msgid "Footer HTML"
+#: includes/theme.php:1085
+msgid "HTML <body>"
 msgstr ""
 
-#: includes/theme.php:563
-msgid "External links"
-msgstr ""
-
-#: includes/theme.php:567
-msgid "External link keyword"
-msgstr ""
-
-#: includes/theme.php:569
-msgid "Leave empty to disable"
-msgstr ""
-
-#: includes/theme.php:574
+#: includes/theme.php:1097
 msgid "Agreement Dialog"
 msgstr ""
 
-#: includes/theme.php:578
+#: includes/theme.php:1101
 msgid "Enable"
 msgstr ""
 
-#: includes/theme.php:583
+#: includes/theme.php:1106
 msgid "Text"
 msgstr ""
 
-#: includes/theme.php:588
+#: includes/theme.php:1111
 msgid "Button Text"
 msgstr ""
 
-#: includes/theme.php:592
+#: includes/theme.php:1115
 msgid "Cancel Text"
 msgstr ""
 
-#: includes/theme.php:596
+#: includes/theme.php:1119
 msgid "Cancel URL"
 msgstr ""
 
-#: includes/theme.php:602 includes/widgets/breadcrumbs-widget.php:8
+#: includes/theme.php:1125 includes/widgets/breadcrumbs-widget.php:8
 msgid "Breadcrumbs"
 msgstr ""
 
-#: includes/theme.php:607
+#: includes/theme.php:1130
 msgid "Include Home"
 msgstr ""
 
-#: includes/theme.php:613 includes/widgets/context-header-widget.php:11
+#: includes/theme.php:1136 includes/widgets/context-header-widget.php:11
 msgid "Context Header"
 msgstr ""
 
-#: includes/theme.php:617
+#: includes/theme.php:1140
 msgid "Date format"
 msgstr ""
 
-#: includes/theme.php:619
+#: includes/theme.php:1142
 msgid ""
 "Use <a href=\"http://php.net/manual/bg/function.date.php\" target=\"_blank\">"
 "PHP date</a> format."
 msgstr ""
 
-#: includes/theme.php:624
+#: includes/theme.php:1147
+msgid "Pagination"
+msgstr ""
+
+#: includes/theme.php:1151 includes/widgets/user-menu-widget.php:32
+msgid "Style"
+msgstr ""
+
+#: includes/theme.php:1156
+msgid "Borders"
+msgstr ""
+
+#: includes/theme.php:1157
+msgid "Bold"
+msgstr ""
+
+#: includes/theme.php:1163
+msgid "Scroll Top"
+msgstr ""
+
+#: includes/theme.php:1167
+msgid "Position"
+msgstr ""
+
+#: includes/theme.php:1174 includes/theme.php:1175
+msgid "Bottom"
+msgstr ""
+
+#: includes/theme.php:1181
 msgid "Fivestar"
 msgstr ""
 
-#: includes/theme.php:628
+#: includes/theme.php:1185
 msgid "Max rate value"
 msgstr ""
 
-#: includes/theme.php:633
+#: includes/theme.php:1190
 msgid "Empty symbol"
 msgstr ""
 
-#: includes/theme.php:635 includes/theme.php:643
+#: includes/theme.php:1192 includes/theme.php:1200
 #, php-format
 msgid "Use %s as a reference."
 msgstr ""
 
-#: includes/theme.php:641
+#: includes/theme.php:1198
 msgid "Full symbol"
 msgstr ""
 
-#: includes/theme.php:651
+#: includes/theme.php:1208
 msgid "Outdated Post notification"
 msgstr ""
 
-#: includes/theme.php:656
+#: includes/theme.php:1213
 msgid "Time"
 msgstr ""
 
-#: includes/theme.php:658
+#: includes/theme.php:1215
 msgid "In days, 0 or empty to disable."
 msgstr ""
 
-#: includes/theme.php:662
+#: includes/theme.php:1219
 msgid "Message"
 msgstr ""
 
-#: includes/theme.php:664
+#: includes/theme.php:1221
 msgid "Use %time% token to show the time ago"
 msgstr ""
 
-#: includes/theme.php:669
+#: includes/theme.php:1226
 msgid "Avatars"
 msgstr ""
 
-#: includes/theme.php:673
+#: includes/theme.php:1230
 msgid "Size"
 msgstr ""
 
-#: includes/theme.php:684
+#: includes/theme.php:1241
 msgid "Small size"
 msgstr ""
 
-#: includes/theme.php:697
-msgid "Login and Register"
-msgstr ""
-
-#: includes/theme.php:702
-msgid "Enable theme login and register forms."
-msgstr ""
-
-#: includes/theme.php:705 includes/posts.php:178 includes/posts.php:197
-msgid "Default"
-msgstr ""
-
-#: includes/theme.php:706
-msgid "Brand Only"
-msgstr ""
-
-#: includes/theme.php:707
-msgid "Full theme integration"
-msgstr ""
-
-#: includes/theme.php:713
-msgid "404"
-msgstr ""
-
-#: includes/theme.php:718
-msgid "Enable theme for 404 error page."
-msgstr ""
-
-#: includes/theme.php:724
+#: includes/theme.php:1254
 msgid "Effects"
 msgstr ""
 
-#: includes/theme.php:729
+#: includes/theme.php:1259
 msgid "Enable theme effects"
 msgstr ""
 
-#: includes/theme.php:731
+#: includes/theme.php:1261
 msgid "Enable theme effects like shadows, animations and etc."
 msgstr ""
 
-#: includes/theme.php:736 includes/theme.php:900
-msgid "Topline"
-msgstr ""
-
-#: includes/theme.php:740 includes/theme.php:755
+#: includes/theme.php:1270 includes/theme.php:1285
 msgid "Content"
 msgstr ""
 
-#: includes/theme.php:741 includes/theme.php:756
+#: includes/theme.php:1271 includes/theme.php:1286
 msgid "HTML is supported"
 msgstr ""
 
-#: includes/theme.php:751 includes/theme.php:1139
-msgid "Bottomline"
+#: includes/theme.php:1303
+msgid "Page Types"
 msgstr ""
 
-#: includes/theme.php:772
-msgid "Typography"
+#: includes/theme.php:1311
+msgid "Login and Register"
 msgstr ""
 
-#: includes/theme.php:775
-msgid "Base font size (px)"
+#: includes/theme.php:1316 includes/theme.php:1332
+msgid "Theming"
 msgstr ""
 
-#: includes/theme.php:785
-msgid "Petite headings"
+#: includes/theme.php:1320
+msgid "Brand Only"
 msgstr ""
 
-#: includes/theme.php:790 includes/theme.php:795
-msgid "Base font family"
+#: includes/theme.php:1321
+msgid "Full theme integration"
 msgstr ""
 
-#: includes/theme.php:795 includes/theme.php:805
-#, php-format
-msgid "(Headings) %s"
+#: includes/theme.php:1327
+msgid "404"
 msgstr ""
 
-#: includes/theme.php:800 includes/theme.php:805
-msgid "Google Font"
+#: includes/theme.php:1341
+msgid "Miscellaneous"
 msgstr ""
 
-#: includes/theme.php:802 includes/theme.php:807
-#, php-format
-msgid "Use font name from %s"
-msgstr ""
-
-#: includes/theme.php:813
-msgid "Site Sections"
-msgstr ""
-
-#: includes/theme.php:814
-msgid "Setup section appearances like colors, background and behavior."
-msgstr ""
-
-#: includes/theme.php:819
-msgid "Globals"
-msgstr ""
-
-#: includes/theme.php:824
-msgid "Use boxed layout"
-msgstr ""
-
-#: includes/theme.php:829
-msgid "Full-height page"
-msgstr ""
-
-#: includes/theme.php:833 includes/theme.php:1044 includes/theme.php:1069
-msgid "Width"
-msgstr ""
-
-#: includes/theme.php:844
-msgid "Desktop breakpoint (px)"
-msgstr ""
-
-#: includes/theme.php:855
-msgid "Tablet breakpoint (px)"
-msgstr ""
-
-#: includes/theme.php:866
-msgid "Mobile breakpoint (px)"
-msgstr ""
-
-#: includes/theme.php:877
-#, php-format
-msgid "(Boxed Layout) %s"
-msgstr ""
-
-#: includes/theme.php:877
-msgid "Background (Boxed Layout)"
-msgstr ""
-
-#: includes/theme.php:881 includes/theme.php:885
-msgid "Primary Color"
-msgstr ""
-
-#: includes/theme.php:885 includes/theme.php:893
-#, php-format
-msgid "(Inverted) %s"
-msgstr ""
-
-#: includes/theme.php:889 includes/theme.php:893
-msgid "Secondary Color"
-msgstr ""
-
-#: includes/theme.php:904 includes/theme.php:945 includes/theme.php:994
-#: includes/theme.php:1019 includes/theme.php:1055 includes/theme.php:1080
-#: includes/theme.php:1094 includes/theme.php:1143
-msgid "Background"
-msgstr ""
-
-#: includes/theme.php:908 includes/theme.php:949 includes/theme.php:998
-#: includes/theme.php:1023 includes/theme.php:1098 includes/theme.php:1147
-msgid "Opacity"
-msgstr ""
-
-#: includes/theme.php:919 includes/theme.php:960 includes/theme.php:1009
-#: includes/theme.php:1034 includes/theme.php:1059 includes/theme.php:1084
-#: includes/theme.php:1109 includes/theme.php:1158
-msgid "Foreground"
-msgstr ""
-
-#: includes/theme.php:929
-msgid "Padding"
-msgstr ""
-
-#: includes/theme.php:941
-msgid "Sticky header"
-msgstr ""
-
-#: includes/theme.php:968 includes/theme.php:1117
-msgid "Image Size"
-msgstr ""
-
-#: includes/theme.php:972 includes/theme.php:1121
-msgid "Original"
-msgstr ""
-
-#: includes/theme.php:973 includes/theme.php:1122
-msgid "Fit to Screen"
-msgstr ""
-
-#: includes/theme.php:974 includes/theme.php:1123
-msgid "Fill Screen"
-msgstr ""
-
-#: includes/theme.php:978 includes/theme.php:1127
-msgid "Repeat Background Image"
-msgstr ""
-
-#: includes/theme.php:983 includes/theme.php:1132
-msgid "Scroll with Page"
-msgstr ""
-
-#: includes/theme.php:990
-msgid "Primary Menu"
-msgstr ""
-
-#: includes/theme.php:1015
-msgid "Main"
-msgstr ""
-
-#: includes/theme.php:1040 includes/posts.php:106
-msgid "Primary Sidebar"
-msgstr ""
-
-#: includes/theme.php:1065 includes/posts.php:115
-msgid "Secondary Sidebar"
-msgstr ""
-
-#: includes/theme.php:1164
-msgid "General"
-msgstr ""
-
-#: includes/theme.php:1168
+#: includes/theme.php:1345
 msgid "Legacy browser support."
 msgstr ""
 
-#: includes/theme.php:1169
+#: includes/theme.php:1346
 msgid ""
 "Enable legacy browsers support, it could heart the performance but will add "
 "support for old browser like IE < 10, and Chrome, Firefox and Opera versions "
 "few years."
 msgstr ""
 
-#: includes/posts.php:80
+#: includes/theme.php:1350 includes/theme.php:1361
+msgid "Read More Style"
+msgstr ""
+
+#: includes/theme.php:1355
+msgid "Hellip"
+msgstr ""
+
+#: includes/theme.php:1356
+msgid "Arrow"
+msgstr ""
+
+#: includes/theme.php:1357
+msgid "Triangle"
+msgstr ""
+
+#: includes/theme.php:1367
+msgid "External FontAwesome compatible front"
+msgstr ""
+
+#: includes/theme.php:1369
+msgid "Icon font to use, must be FontAwesome compatible."
+msgstr ""
+
+#: includes/tools.php:12
+msgid "Export Tinsta theme settings into .tinsta file."
+msgstr ""
+
+#: includes/tools.php:17
+msgid "Export"
+msgstr ""
+
+#: includes/tools.php:26
+msgid ""
+"Import theme settings from .tinsta file. Note that this will override all "
+"your current settings about the theme."
+msgstr ""
+
+#: includes/tools.php:34
+msgid "Settings file is imported"
+msgstr ""
+
+#: includes/tools.php:38
+msgid "Upload error."
+msgstr ""
+
+#: includes/tools.php:47 includes/tools.php:72
+msgid "Do you want to continue?"
+msgstr ""
+
+#: includes/tools.php:48
+msgid "Import"
+msgstr ""
+
+#: includes/tools.php:58
+msgid "Reset all theme settings to default values."
+msgstr ""
+
+#: includes/tools.php:67
+msgid "All theme settings are reset."
+msgstr ""
+
+#: includes/tools.php:73
+msgid "Reset"
+msgstr ""
+
+#: includes/tools.php:83
+msgid "Invalidate currently generated stylesheets."
+msgstr ""
+
+#: includes/tools.php:90
+msgid "Invalidated"
+msgstr ""
+
+#: includes/tools.php:96
+msgid "Invalidate"
+msgstr ""
+
+#: includes/posts.php:83
 #, php-format
 msgid "%s Archive"
 msgstr ""
 
-#: includes/posts.php:88
+#: includes/posts.php:91
 msgid "Before Entries"
 msgstr ""
 
-#: includes/posts.php:97
+#: includes/posts.php:100
 msgid "After Entries"
 msgstr ""
 
-#: includes/posts.php:145
-msgid "Post Types"
+#: includes/posts.php:150
+#, php-format
+msgid "Type: %s"
 msgstr ""
 
-#: includes/posts.php:146
-msgid "Configure post types settings."
-msgstr ""
-
-#: includes/posts.php:160
+#: includes/posts.php:157
 msgid "Use default views"
 msgstr ""
 
-#: includes/posts.php:168
+#: includes/posts.php:165
 msgid "Archive Layout"
 msgstr ""
 
-#: includes/posts.php:179
+#: includes/posts.php:176
 msgid "Boxes"
 msgstr ""
 
-#: includes/posts.php:180
+#: includes/posts.php:177
 msgid "Cover Boxes"
 msgstr ""
 
-#: includes/posts.php:181
+#: includes/posts.php:178
 msgid "Timeline"
 msgstr ""
 
-#: includes/posts.php:182
+#: includes/posts.php:179
 msgid "Poetry"
 msgstr ""
 
-#: includes/posts.php:183 includes/posts.php:198
+#: includes/posts.php:180 includes/posts.php:195
 msgid "Left Thumbnail"
 msgstr ""
 
-#: includes/posts.php:184 includes/posts.php:199
+#: includes/posts.php:181 includes/posts.php:196
 msgid "Right Thumbnail"
 msgstr ""
 
-#: includes/posts.php:191
+#: includes/posts.php:188
 msgid "Singular Layout"
 msgstr ""
 
-#: includes/posts.php:200
+#: includes/posts.php:197
 msgid "Contextual Header"
 msgstr ""
 
-#: includes/posts.php:206
+#: includes/posts.php:203
 msgid "Append Authors Bio at end of content"
 msgstr ""
 
-#: includes/posts.php:214
+#: includes/posts.php:211
 msgid "Append post navigation"
 msgstr ""
 
-#: includes/widgets/related-posts-widget.php:8
-msgid "Related posts"
+#: includes/widgets/page-subnav-widget.php:8
+msgid "Pages Navigation"
 msgstr ""
 
-#: includes/widgets/related-posts-widget.php:17
 #: includes/widgets/page-subnav-widget.php:17
 #: includes/widgets/login-form-widget.php:18
 #: includes/widgets/context-header-widget.php:21
 #: includes/widgets/user-menu-widget.php:26
+#: includes/widgets/related-posts-widget.php:17
 msgid "Title:"
 msgstr ""
 
@@ -604,10 +760,6 @@ msgstr ""
 
 #: includes/widgets/logo-widget.php:24
 msgid "Front Page"
-msgstr ""
-
-#: includes/widgets/page-subnav-widget.php:8
-msgid "Pages Navigation"
 msgstr ""
 
 #: includes/widgets/login-form-widget.php:8
@@ -624,10 +776,6 @@ msgstr ""
 
 #: includes/widgets/user-menu-widget.php:8
 msgid "User Profile"
-msgstr ""
-
-#: includes/widgets/user-menu-widget.php:32
-msgid "Style"
 msgstr ""
 
 #: includes/widgets/user-menu-widget.php:34
@@ -660,12 +808,16 @@ msgstr ""
 msgid "Menu when Logged-Out"
 msgstr ""
 
-#: template-parts/misc/header.php:2
-msgid "Skip to content"
+#: includes/widgets/related-posts-widget.php:8
+msgid "Related posts"
 msgstr ""
 
 #: template-parts/misc/no-entries.php:2
 msgid "Nothing Found"
+msgstr ""
+
+#: template-parts/misc/header.php:2
+msgid "Skip to content"
 msgstr ""
 
 #: template-parts/comments/comment.php:15
@@ -674,17 +826,21 @@ msgstr ""
 msgid "%s ago"
 msgstr ""
 
-#: template-parts/entries/post-single.php:34 template-parts/entries/post.php:30
+#: template-parts/entries/post.php:30 template-parts/entries/post-single.php:34
 msgid "Comments"
 msgstr ""
 
-#: template-parts/entries/post-single.php:44 template-parts/entries/post.php:37
+#: template-parts/entries/post.php:37 template-parts/entries/post-single.php:44
 msgid "Authored by"
 msgstr ""
 
+#: template-parts/entries/post.php:54
+msgid "Read more"
+msgstr ""
+
+#: template-parts/entries/post-embed.php:5
 #: template-parts/entries/post-single.php:65
 #: template-parts/entries/page-single.php:29
-#: template-parts/entries/post-embed.php:5
 #, php-format
 msgid "Continue reading %s"
 msgstr ""
@@ -697,16 +853,12 @@ msgstr ""
 msgid "Tags: "
 msgstr ""
 
-#: template-parts/entries/post.php:54
-msgid "Read more"
-msgstr ""
-
 #: template-parts/entries/attachment-single.php:23
 msgid "Type"
 msgstr ""
 
 #. Name of the theme
-msgid "Tinsta - Tiny Standard"
+msgid "Tinsta"
 msgstr ""
 
 #. Description of the theme

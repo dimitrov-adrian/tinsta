@@ -124,79 +124,75 @@
       display: inline-block;
     }
 
-    .entry-header {
-      margin-bottom: 1.6em;
-      margin-top: 1.6em;
-    }
-
-    .entry-summary,
-    .entry-content {
-      @extend .clearfix;
-      &:first-child {
-        margin-top: 0;
-      }
-      &:not(:last-child) {
-        margin-bottom: 1.6em;
-      }
-    }
+    //.entry-summary,
+    //.entry-content {
+    //  @extend .clearfix;
+    //  &:first-child {
+    //    //margin-top: 0;
+    //  }
+    //  &:not(:last-child) {
+    //    //margin-bottom: 1.6em;
+    //  }
+    //}
 
   }
 
   // Singulars overrides.
   &.site-entries-single {
     .hentry.default {
-      .entry-summary {
-        @extend .big;
-      }
+
       .entry-thumbnail-wrapper {
         margin-bottom: 1em;
       }
-      .entry-footer {
-        border-top: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-        margin-top: 1em;
-        padding-top: 1em;
-      }
-      &:only-child .entry-footer {
-        border-top: none;
+
+      .entry-header {
+        margin: 2em 0 1em 0;
       }
 
-      &.contextual-header {
+      .entry-footer {
+        padding: 1em 0;
+        border-top: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+      }
+
+      .entry-summary {
+        @extend .big;
+      }
+
+      &.layout-contextual-header {
         .entry-header {
           @extend .context-header;
         }
       }
 
-      @media (max-width: $breakpoint_tablet) {
-        &.left-thumbnail {
+      @media (min-width: $breakpoint_tablet) {
+        &.layout-left-thumbnail {
+          .entry-header {
+            @extend .clearfix;
+          }
           margin-top: 2em;
           .entry-thumbnail-wrapper {
             display: inline-block;
-            width: 34%;
-            margin-right: 3%;
-            vertical-align: top;
+            float: left;
+            width: 40%;
           }
-          .entry-header {
-            display: inline-block;
-            width: 61%;
-            vertical-align: top;
-            margin-top: 0;
+          .entry-title,
+          .entry-meta {
+            margin-left: 44%;
           }
         }
-        &.right-thumbnail {
+        &.layout-right-thumbnail {
+          .entry-header {
+            @extend .clearfix;
+          }
           margin-top: 2em;
           .entry-thumbnail-wrapper {
             display: inline-block;
-            width: 34%;
-            margin-right: 3%;
-            vertical-align: top;
             float: right;
-            clear: right;
+            width: 40%;
           }
-          .entry-header {
-            display: inline-block;
-            width: 61%;
-            vertical-align: top;
-            margin-top: 0;
+          .entry-title,
+          .entry-meta {
+            margin-right: 44%;
           }
         }
       }
@@ -207,22 +203,14 @@
   &.site-entries-archive {
 
     .hentry.default {
-      margin-bottom: 1em;
+      margin-top: 2em;
+      margin-bottom: 2em;
       padding-bottom: 1em;
       border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 90%);
 
-      &:first-child {
-        margin-top: 2em;
-      }
-
-      &:last-child {
-        border-bottom: none;
-        margin-bottom: 2em;
-      }
-
       // Layout.
       &.layout-boxes {
-        margin-top: 0;
+
         @media (min-width: $breakpoint_tablet+1) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
@@ -262,10 +250,10 @@
       // Layout.
       &.layout-cover-boxes {
 
-        margin-top: 0;
+        text-align: center;
 
         @media (min-width: $breakpoint_tablet+1) {
-          width: 23.22%;
+          width: 23.12%;
           &:not(:nth-child(4n+4)) {
             margin-right: 2%;
           }
@@ -334,7 +322,14 @@
         width: 80%;
         margin-left: 10%;
         margin-right: 10%;
+        margin-top: 0;
         margin-bottom: 0;
+        &:first-child {
+          margin-top: 2em;
+        }
+        &:last-child {
+          margin-bottom: 2em;
+        }
         position: relative;
         padding: 1em;
         border-left: 1px solid mix($main_color_background, $main_color_foreground, 80%);
@@ -346,7 +341,7 @@
           padding: 0 .4em;
         }
         .entry-meta-time {
-          top: 2.6em;
+          top: 1em;
           background-color: rgba($main_color_foreground, .8);
           color: $main_color_background;
         }
@@ -355,7 +350,7 @@
         }
         .entry-meta-author {
           border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-          top: 2.4em;
+          top: 1em;
           right: 0;
           left: auto;
           transform: translate(0, 0);
@@ -373,11 +368,8 @@
         .entry-summary {
           font-weight: 300;
         }
-        &:not(:last-child) {
-          border-bottom-width: 3px;
-          border-bottom-style: dashed;
-          border-bottom-style: dot-dot-dash;
-        }
+        border-bottom-width: 3px;
+        border-bottom-style: dashed;
       }
 
     }

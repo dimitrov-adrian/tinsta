@@ -13,20 +13,24 @@ html {
 %noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-body {
+// Seems that placeholders can't be chained.
+::-webkit-input-placeholder {
+  color: inherit;
+}
+::-moz-placeholder {
+  color: inherit;
+}
+:-ms-input-placeholder {
+  color: inherit;
+}
 
-  //hyphens: auto;
-  //-moz-hyphens: auto;
-  //-ms-hyphens: auto;
-  //word-wrap: break-word;
-  //-moz-word-wrap: break-word;
-  //-ms-word-wrap: break-word;
+
+body {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -59,6 +63,19 @@ body {
 
   background: $main_color_background;
   color: $main_color_foreground;
+
+  @if $text_justify {
+    text-align: justify;
+  }
+
+  @if $text_wordbreak {
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    -moz-word-wrap: break-word;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+  }
 }
 
 
@@ -165,9 +182,12 @@ h6,
     }
   }
 
-  @if $font_headings_petite {
-    font-variant: all-small-caps;
-    font-variant: small-caps;
+  @if $font_headings_style {
+    @if $font_headings_style == 'uppercase' {
+      text-transform: uppercase;
+    } @else {
+      font-variant: $font_headings_style;
+    }
   }
 
   font-weight: bold;
@@ -421,23 +441,23 @@ input,
 textarea,
 select,
 .wp-editor-container {
-  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+  border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
   border-radius: 0;
   outline: 0;
-  padding: .6em;
+  padding: ( ( $form_spacing / 20 ) + em ) ( ( $form_spacing / 10 ) + em );
   vertical-align: baseline;
 }
 .select2-container {
   .select2-choice {
-    border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+    border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
     max-width: 98%;
     > .select2-chosen {
-      padding: 2px 0;
+      padding: ( ( $form_spacing / 20 ) + em ) ( ( $form_spacing / 10 ) + em );
     }
   }
 }
 div#select2-drop {
-  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+  border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
 }
 .select2-search input {
   margin-top: .5em;
@@ -469,18 +489,29 @@ select {
   -webkit-appearance: none;
 }
 .button,
+li.button > a,
+a.button,
 button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
+  display: inline-block;
   background-color: $color_primary;
-  border: 1px solid $color_primary;
+  border: ( $form_borders + px ) solid $color_primary;
   color: $color_primary_inverted;
-  font-variant: all-small-caps;
+
+  @if $font_button_text_style {
+    @if $font_button_text_style == 'uppercase' {
+      text-transform: uppercase;
+    } @else {
+      font-variant: $font_button_text_style;
+    }
+  }
+
   text-decoration: none;
   .so-panel & {
     color: $color_primary_inverted !important;
-    border: 1px solid $color_primary !important;
+    border: ( $form_borders + px ) solid $color_primary !important;
   }
   vertical-align: baseline;
   &.secondary {
@@ -491,14 +522,19 @@ input[type="submit"] {
   -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
 
   -moz-appearance: none;
-}
-li.button a,
-a.button {
-  color: $color_primary_inverted;
-  display: inline-block;
-  &.secondary {
-    color: $color_secondary_inverted;
+
+  @if $form_button_style == 'border' {
+    background-color: transparent;
+    color: $color_primary;
   }
+
+  @if $form_button_style == '' {
+    background-color: transparent;
+    color: $color_primary;
+    border: none;
+    font-weight: bold;
+  }
+
 }
 input,
 select,

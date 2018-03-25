@@ -16,15 +16,22 @@ body {
  */
 .site-topline-wrapper {
   @extend .clearfix;
+  @extend .small;
+  @if $topline_sticky {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+  padding: .2em 0;
+  text-align: left;
   background-color: $topline_color_background;
+  border-bottom: 1px solid mix($topline_color_background, $topline_color_foreground, 90%);
+  color: $topline_color_foreground;
   @if $topline_color_background_opacity < 100 {
     background-color: rgba($topline_color_background, ( $topline_color_background_opacity / 100 ) );
   }
-  border-bottom: 1px solid mix($topline_color_background, $topline_color_foreground, 90%);
-  color: $topline_color_foreground;
-  @extend .small;
-  padding: .2em 0;
-  text-align: left;
 }
 
 /**
@@ -38,9 +45,17 @@ body {
   right: 0;
   top: 0;
   z-index: 100;
+  display: flex;
+
+  @if $primary_menu_movetop {
+    flex-flow: column-reverse;
+  }
+  @else {
+    flex-flow: column;
+  }
 
   // Sticky header tweaks.
-  @media (min-width: $breakpoint_tablet+1) {
+  @media (min-width: $breakpoint_tablet) {
     body.sticky-header & {
       position: sticky;
     }
@@ -79,7 +94,7 @@ body {
   }
   a:hover {
     color: $color_secondary;
-    text-decoration: none;
+    //text-decoration: none;
   }
 
   .site-header {
@@ -111,7 +126,7 @@ body {
       .widget:last-child {
         margin-right: 0;
       }
-      .widget_search {
+      .search-form {
         max-width: 200px;
       }
     }
@@ -142,7 +157,7 @@ body {
             > a {
               height: 100%;
               letter-spacing: 1px;
-              padding: 0 1em;
+              padding: .5em 1em;
               &:hover {
                 background-color: transparent;
               }
@@ -167,24 +182,11 @@ body {
    */
   .site-primary-menu {
 
-    @if $header_background_wrapper {
-      background-color: $primary_menu_color_background;
-      @if $primary_menu_color_background_opacity < 100 {
-        background-color: rgba($primary_menu_color_background, ($primary_menu_color_background_opacity / 100));
-        body.effects & {
-          backdrop-filter: saturate(180%) blur(4px);
-        }
-      }
-    }
-    @else {
-      .menu {
-        background-color: $primary_menu_color_background;
-        @if $primary_menu_color_background_opacity < 100 {
-          background-color: rgba($primary_menu_color_background, ($primary_menu_color_background_opacity / 100));
-          body.effects & {
-            backdrop-filter: saturate(180%) blur(4px);
-          }
-        }
+    background-color: $primary_menu_color_background;
+    @if $primary_menu_color_background_opacity < 100 {
+      background-color: rgba($primary_menu_color_background, ($primary_menu_color_background_opacity / 100));
+      body.effects & {
+        -webkit-backdrop-filter: saturate(80%) blur(15px);
       }
     }
 
@@ -194,25 +196,30 @@ body {
       @extend .wrapper;
       @extend .menu-inline;
 
-
       > li {
+        > a {
+          color: $primary_menu_color_foreground;
+        }
         > .sub-menu {
           &:before {
             display: none;
           }
           border-top: none !important;
+          a {
+            color: $primary_menu_color_background;
+          }
         }
       }
+      > li > .sub-menu,
       > li:hover > a,
       > li > a:hover,
       > .current-menu-ancestor > a,
-      > li.current-menu-item > a {
-        background-color: $primary_menu_color_background;
-        color: mix($primary_menu_color_background, $primary_menu_color_foreground, 20%);
+      > li.current-menu-item > a,
+      > li.menu-item-has-children:hover > a:hover {
+        background-color: $primary_menu_color_foreground;
+        color: $primary_menu_color_background;
       }
     }
-
-    // @TODO use $primary_menu_color_foreground and background for sub-menu items and active states.
   }
 }
 
@@ -347,8 +354,14 @@ body {
       background: rgba( $footer_color_foreground , .1);
     }
 
-    @media (max-width: $breakpoint_tablet) and (min-width: $breakpoint_mobile) {
+    @media (max-width: $breakpoint_tablet) {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: $breakpoint_mobile) {
       flex-flow: column;
+      display: block;
+      width: 100%;
     }
 
     .widget {
@@ -365,14 +378,12 @@ body {
       }
 
       @media (max-width: $breakpoint_tablet) and (min-width: $breakpoint_mobile) {
-        min-width: 39%;
-        max-width: 59%;
+        max-width: 48%;
       }
 
       @media (max-width: $breakpoint_mobile) {
-        display: block;
-        width: 100%;
-        max-width: calc( 100% - 2em );
+        max-width: none;
+        width: auto;
       }
 
     }
@@ -421,6 +432,7 @@ body {
  */
 .site-bottomline-wrapper {
   @extend .clearfix;
+  @extend .small;
   @if $bottomline_sticky {
     position: sticky;
     left: 0;
@@ -428,15 +440,14 @@ body {
     bottom: 0;
     z-index: 100;
   }
+  padding: 1em;
+  text-align: center;
   background-color: $bottomline_color_background;
+  border-top: 1px solid mix($bottomline_color_background, $bottomline_color_foreground, 90%);
+  color: $bottomline_color_foreground;
   @if $bottomline_color_background_opacity < 100 {
     background-color: rgba($bottomline_color_background, ( $bottomline_color_background_opacity / 100 ) );
   }
-  border-top: 1px solid mix($bottomline_color_background, $bottomline_color_foreground, 90%);
-  color: $bottomline_color_foreground;
-  @extend .small;
-  padding: 1em;
-  text-align: center;
 }
 
 

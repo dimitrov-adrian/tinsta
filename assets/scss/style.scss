@@ -1,12 +1,12 @@
 @charset "UTF-8";
 
-@import "_normalize";
-@import "_icons";
-@import "_typography";
-@import "_layout";
-@import "_components";
-@import "_widgets";
-@import "_comments";
-@import "_entries";
-@import "_3rd-party";
-
+@import "tinsta/_normalize";
+@import "tinsta/_icons";
+@import "tinsta/_typography";
+@import "tinsta/_components";
+@import "tinsta/_widgets";
+@import "tinsta/_layout";
+@import "tinsta/_comments";
+@import "tinsta/_entries";
+@import "integrations/misc";
+@import "integrations/siteorigin";
