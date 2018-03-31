@@ -3,19 +3,19 @@
 // Hide comments when:
 if (
 
-  // - Not Single page
+  // Not Single page
   ! is_singular()
 
   // Password is required
   || post_password_required()
 
-  // - Have no comments and comments are closed
-  || ( ! have_comments() && ! comments_open() )
+  // Have no comments and comments are closed
+  || ( ! have_comments() && ! comments_open())
 
-  // - Post type does not supports comments
-  || ! post_type_supports( get_post_type(), 'comments' )
+  // Post type does not supports comments
+  || ! post_type_supports(get_post_type(), 'comments')
 
-  // - Post type is attachment
+  // Post type is attachment
   || get_post_type() == 'attachment'
 
 ) {
@@ -38,8 +38,8 @@ if ( ! get_option('show_avatars')) {
     <?php echo get_comments_number_text() ?>
   </div>
 
-  <div class="comments-toolbar">
-    <?php if (have_comments() && get_comments_number() > 1): ?>
+  <?php if (have_comments() && get_comments_number() > 1): ?>
+    <div class="comments-toolbar">
       <label>
         <?php _e('Order: ', 'tinsta') ?>
         <select onchange="window.location.href=this.value+'#comments'">
@@ -51,15 +51,15 @@ if ( ! get_option('show_avatars')) {
           </option>
         </select>
       </label>
-    <?php endif ?>
-  </div>
+    </div>
+  <?php endif ?>
 
   <div class="comments-list" itemprop="UserComments">
     <?php if (have_comments()): ?>
       <?php wp_list_comments([
         'reverse_top_level' => $comments_order == 'DESC',
         'reverse_children'  => $comments_order == 'DESC',
-        'avatar_size'       => 100,
+        'component_avatar_size'       => 100,
         'short_ping'        => true,
         'callback'          => 'tinsta_comment_callback',
       ]) ?>

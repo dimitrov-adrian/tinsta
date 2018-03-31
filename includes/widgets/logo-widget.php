@@ -11,19 +11,40 @@ class Tinsta_Logo_Widget extends WP_Widget
     parent::__construct(false, sprintf('(Tinsta) %s', __('Logo', 'tinsta')));
   }
 
+  function form($instance)
+  {
+    $instance = wp_parse_args($instance, [
+      'style' => '',
+    ]);
+
+    ?>
+    <p>
+      <label for="<?php echo $this->get_field_id('style') ?>">
+        <?php _e('Style', 'tinsta') ?>
+      </label>
+      <select id="<?php echo $this->get_field_id('style') ?>" name="<?php echo $this->get_field_name('style') ?>">
+        <option value=""><?php _e('None', 'tinsta')?></option>
+        <option value="colored" <?php selected('colored', $instance['style'])?>><?php _e('Colored', 'tinsta')?></option>
+      </select>
+    </p>
+    <?php
+
+  }
+
   public function widget($args, $instance)
   {
-    echo str_replace('class=', 'role="logo" class=', $args['before_widget']);
+    $instance = wp_parse_args($instance, ['style' => '']);
+    $class = $instance['style'];
+    echo str_replace('class="', 'role="logo" class="' . $class . ' ', $args['before_widget']);
 
     if (get_theme_mod('custom_logo') && get_custom_logo()) {
       the_custom_logo();
-    }
-    else {
+    } else {
       ?>
-        <a class="custom-logo-link noimage" href="<?php echo esc_url(home_url()) ?>"
-           title="<?php _e('Front Page', 'tinsta') ?>" rel="home">
-          <?php bloginfo('blogname') ?>
-        </a>
+      <a class="custom-logo-link noimage" href="<?php echo esc_url(home_url()) ?>"
+         title="<?php _e('Front Page', 'tinsta') ?>" rel="home">
+        <?php bloginfo('blogname') ?>
+      </a>
       <?php
     }
 

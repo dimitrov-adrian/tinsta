@@ -1,3 +1,7 @@
+.nicescroll-rails.nicescroll-rails-vr {
+  z-index: 1000 !important;
+}
+
 /**
  * CMB2
  */
@@ -5,16 +9,17 @@
   list-style: none;
   margin: 0;
 }
+
 .cmb-multicheck-toggle {
   @extend .button;
 }
+
 .cmb-form {
   .cmb-repeat-table .cmb-remove-row > .cmb-remove-row-button:before {
-    @extend .fa;
-    @extend %fa-trash-o;
+    @extend .la;
+    @extend %la-trash-o;
   }
 }
-
 
 /**
  * Mega menu

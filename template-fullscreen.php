@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template Name: Full Page
+ * Template Name: Full Screen
  */
 
 get_header();

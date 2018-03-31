@@ -1,13 +1,35 @@
 html {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: mix($color_secondary, $color_secondary_inverted, 60%);
+  // -webkit-tap-highlight-color: mix($section_root_color_secondary, $section_root_color_secondary_inverted, 60%);
 }
+
+html[dir="rtl"],
+html[dir="rtl"] body {
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+// @TODO a11y focus outline
+
 
 *,
 *:before,
 *:after {
   /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
   box-sizing: inherit;
+}
+
+// @TODO add to elements
+%roundness {
+  @if $effects_roundness {
+    border-radius: ( $effects_roundness / 7 ) + 'em';
+  }
+}
+%roundness-bottom {
+  @if $effects_roundness {
+    border-bottom-left-radius: ( $effects_roundness / 7 ) + 'em';
+    border-bottom-right-radius: ( $effects_roundness / 7 ) + 'em';
+  }
 }
 
 %noselect {
@@ -22,53 +44,41 @@ html {
 ::-webkit-input-placeholder {
   color: inherit;
 }
+
 ::-moz-placeholder {
   color: inherit;
 }
+
 :-ms-input-placeholder {
   color: inherit;
 }
 
-
 body {
 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -moz-font-smoothing: grayscale;
-
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-
-  -moz-font-feature-settings: "liga" on;
-  text-rendering: optimizeLegibility;
-  backface-visibility: hidden;
-
-  @if $font_size {
-    font-size: $font_size + px;
+  @if $typography_font_size {
+    font-size: $typography_font_size + px;
   }
   font-weight: normal;
   line-height: 1.72em;
   font-style: normal;
-  @if $font_google != '' {
-    font-family: $font_google, $font_family;
-  }
-  @else {
-    font-family: $font_family;
+  @if $typography_font_google {
+    font-family: $typography_font_google, $typography_font_family;
+  } @else {
+    font-family: $typography_font_family;
   }
 
-  @media (max-width: $breakpoint_tablet) {
+  @media (max-width: $section_root_breakpoint_tablet) {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
     text-rendering: optimizeSpeed;
   }
 
-  background: $main_color_background;
-  color: $main_color_foreground;
-
-  @if $text_justify {
+  @if $typography_text_justify {
     text-align: justify;
   }
 
-  @if $text_wordbreak {
+  @if $typography_text_wordbreak {
     -moz-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
@@ -76,13 +86,18 @@ body {
     -ms-word-wrap: break-word;
     word-wrap: break-word;
   }
+
 }
 
+p {
+  overflow: hidden;
+}
 
 button,
 input,
 select,
 textarea {
+  color: inherit;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -109,10 +124,10 @@ textarea {
   width: 1px;
   word-wrap: normal !important; /* Many screen reader and browser combinations announce broken words as they would appear visually. */
   &:focus {
-    background-color: mix($main_color_background, $main_color_foreground, 95%);
+    background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
     box-shadow: 4px 4px 0 rgba(0, 0, 0, .4);
     clip: auto !important;
-    color: $color_primary;
+    color: $section_root_color_primary;
     display: block;
     @extend .big;
     font-weight: 700;
@@ -146,18 +161,18 @@ img {
   image-rendering: -o-crisp-edges; // Opera 12
   image-rendering: crisp-edges;
 
-  @media (max-width: $breakpoint_mobile) {
+  @media (max-width: $section_root_breakpoint_mobile) {
     image-rendering: pixelated;
   }
 
 }
 
 a {
-  color: $color_primary;
+  color: $section_root_color_primary;
   text-decoration: none;
 
   &:hover {
-    color: $color_secondary;
+    color: $section_root_color_secondary;
     //text-decoration: underline; // underlined decoration could make troubles with icons
     abbr {
       border-bottom-width: 0;
@@ -173,20 +188,19 @@ h5,
 h6,
 .base-title {
 
-  @if $font_headings_google != '' {
-    font-family: $font_headings_google;
-  }
-  @else {
-    @if $font_family_headings != '' {
-      font-family: $font_family_headings;
+  @if $typography_font_headings_google {
+    font-family: $typography_font_headings_google;
+  } @else {
+    @if $typography_font_family_headings {
+      font-family: $typography_font_family_headings;
     }
   }
 
-  @if $font_headings_style {
-    @if $font_headings_style == 'uppercase' {
+  @if $typography_font_headings_style {
+    @if $typography_font_headings_style == 'uppercase' {
       text-transform: uppercase;
     } @else {
-      font-variant: $font_headings_style;
+      font-variant: $typography_font_headings_style;
     }
   }
 
@@ -235,10 +249,10 @@ i {
 }
 
 kbd {
-  background-color: mix($main_color_foreground, $main_color_background, 90%);
+  background-color: mix($section_main_color_foreground, $section_main_color_background, 90%);
   border-radius: .26em;
   box-shadow: inset 1px -1px 1px rgba(#000, 0.25);
-  color: $main_color_background;
+  color: $section_main_color_background;
   padding: 2px 4px;
 }
 
@@ -299,8 +313,8 @@ var {
 
 pre {
   // @TODO use opacity as background.
-  background-color: mix($main_color_background, $main_color_foreground, 90%);
-  color: mix($main_color_background, $main_color_foreground, 5%);
+  background-color: rgba($section_main_color_foreground, .08);
+  color: mix($section_main_color_background, $section_main_color_foreground, 5%);
   margin-bottom: 1.6em;
   max-width: 100%;
   overflow: auto;
@@ -323,8 +337,7 @@ q {
 
 hr {
   border: none;
-  // @TODO use opacity as background.
-  border-top: 1px solid mix($main_color_foreground, $main_color_background, 50%);
+  border-top: 1px solid rgba($section_main_color_foreground, .2);
   clear: both;
   margin-bottom: 1.5em;
   zoom: 1;
@@ -336,35 +349,59 @@ table {
   margin: 0 0 1.6em;
   table-layout: fixed; /* Prevents HTML tables from becoming too wide */
   width: 100%;
+
+  td, th {
+    border-left: 0;
+    border-top: 0;
+    padding: .4em;
+  }
+
+   > tr > td:last-child,
+   > tr > th:last-child,
+   > tfoot > tr:first-child td,
+   > tfoot > tr:first-child th {
+    border-left: 0;
+  }
+
+   > tfoot > tr:first-child :last-child,
+   > thead > tr > :last-child,
+   > tbody > tr > :last-child,
+   > tfoot > tr > :last-child {
+    border-right: 0;
+  }
+
+   > tr:last-child > td,
+   > tr:last-child > th,
+   > tbody > tr:last-child > td,
+   > tbody > tr:last-child > th,
+   > tfoot > tr:last-child > td,
+   > tfoot > tr:last-child > th {
+    border-bottom: 0;
+  }
 }
-td, th {
-  border-left: 0;
-  border-top: 0;
-  padding: .4em;
-}
-table > tr > td:last-child,
-table > tr > th:last-child,
-table > tfoot > tr:first-child td,
-table > tfoot > tr:first-child th {
-  border-left: 0;
-}
-table > tfoot > tr:first-child :last-child,
-table > thead > tr > :last-child,
-table > tbody > tr > :last-child,
-table > tfoot > tr > :last-child {
-  border-right: 0;
-}
-table > tr:last-child > td,
-table > tr:last-child > th,
-table > tbody > tr:last-child > td,
-table > tbody > tr:last-child > th,
-table > tfoot > tr:last-child > td,
-table > tfoot > tr:last-child > th {
-  border-bottom: 0;
+
+table {
+  border: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .4);
+  border-collapse: collapse;
+  thead {
+    background-color: rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .2);
+  }
+  tbody {
+    //background: rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .1);
+    td, th {
+      border-right: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .4);
+      &:last-child {
+        border-right: none;
+      }
+    }
+    tr:nth-child(even) {
+      background-color: rgba(mix($section_main_color_background, $section_main_color_foreground, 90%), .2);
+    }
+  }
 }
 
 //
-@media (max-width: $breakpoint_mobile) {
+@media (max-width: $section_root_breakpoint_tablet) {
   .hentry .caption,
   .hentry .alignleft,
   .hentry .alignright,
@@ -386,24 +423,29 @@ table > tfoot > tr:last-child > th {
 .size-thumbnail {
   @extend figure;
 }
+
 img.size-full {
   width: auto;
 }
+
 img.wp-smiley {
   border: none;
   margin-bottom: 0;
   margin-top: 0;
   padding: 0;
 }
+
 .wp-caption-text {
-  color: mix($main_color_foreground, $main_color_background, 70%);
+  color: mix($section_main_color_foreground, $section_main_color_background, 70%);
   @extend .small;
 }
-
 
 /**
  * Galleries
  */
+ul.wp-block-gallery {
+  margin: 0;
+}
 .gallery {
   margin-bottom: 1.6em;
 }
@@ -421,6 +463,7 @@ img.wp-smiley {
     max-width: ( 100 / $i ) + '%';
   }
 }
+
 .gallery-columns-6 .gallery-caption,
 .gallery-columns-7 .gallery-caption,
 .gallery-columns-8 .gallery-caption,
@@ -435,157 +478,175 @@ img.wp-smiley {
 /**
  * Forms
  */
-.button,
-button,
-input,
-textarea,
-select,
-.wp-editor-container {
-  border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
-  border-radius: 0;
-  outline: 0;
-  padding: ( ( $form_spacing / 20 ) + em ) ( ( $form_spacing / 10 ) + em );
-  vertical-align: baseline;
-}
-.select2-container {
-  .select2-choice {
-    border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
-    max-width: 98%;
-    > .select2-chosen {
-      padding: ( ( $form_spacing / 20 ) + em ) ( ( $form_spacing / 10 ) + em );
-    }
+fieldset {
+  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+  legend {
+    padding-left: 1em;
+    padding-right: 1em;
   }
 }
-div#select2-drop {
-  border: ( $form_borders + px ) solid mix($main_color_background, $main_color_foreground, 80%);
-}
-.select2-search input {
-  margin-top: .5em;
-}
-input,
-textarea,
-select {
+input, textarea, select {
   background-color: transparent;
 }
+
+
 textarea {
   overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
   resize: vertical;
   vertical-align: top; /* Improves readability and alignment in all browsers */
   width: 99.9%;
 }
+
 input[type="radio"],
 input[type="checkbox"],
-input[type="reset"],
-input[type="submit"],
-select,
-button,
-.button {
+select {
   cursor: pointer;
   @extend %noselect;
 }
+
 select {
-  height: 2.4em;
+  //height: 2.4em;
   max-width: 98%;
-  -webkit-appearance: none;
+  height: auto;
+  -moz-appearance: none;
 }
-.button,
+
+input,
+textarea,
+select,
+.wp-editor-container {
+  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+  outline: 0;
+  padding: (( $typography_form_spacing / 20 ) + em) (( $typography_form_spacing / 10 ) + em);
+  vertical-align: baseline;
+  @extend %roundness;
+  &:focus {
+    border-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
+  }
+}
+
+.select2-container {
+  .select2-selection--single,
+  .select2-choice {
+    border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+    // max-width: 98%;
+    > .select2-chosen {
+      padding: (( $typography_form_spacing / 20 ) + em) (( $typography_form_spacing / 10 ) + em);
+    }
+    @extend %roundness;
+  }
+}
+// Deprecated
+//div#select2-drop {
+//  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+//}
+//.select2-search input {
+//  margin-top: .5em;
+//}
+
+
+.button {
+  cursor: pointer;
+  @extend %noselect;
+  display: inline-block;
+  font-weight: normal;
+  background-color: $section_root_color_primary;
+  border: ($typography_form_borders + px) solid $section_root_color_primary;
+  color: $section_root_color_primary_inverted;
+
+  @if $typography_font_button_text_style {
+    @if $typography_font_button_text_style == 'uppercase' {
+      text-transform: uppercase;
+    } @else {
+      font-variant: $typography_font_button_text_style;
+    }
+  }
+
+  text-decoration: none;
+  .so-panel & {
+    color: $section_root_color_primary_inverted !important;
+    border: ($typography_form_borders + px) solid $section_root_color_primary !important;
+  }
+  vertical-align: baseline;
+  &.secondary {
+    background-color: $section_root_color_secondary;
+    border-color: $section_root_color_secondary;
+    color: $section_root_color_secondary_inverted;
+  }
+
+  -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
+
+  -moz-appearance: none;
+
+  @if $typography_form_button_style == 'border' {
+    background-color: transparent;
+    color: $section_root_color_primary;
+  }
+
+  @if $typography_form_button_style == '' {
+    background-color: transparent;
+    color: $section_root_color_primary;
+    border: none;
+    font-weight: bold;
+  }
+
+  @extend %roundness;
+
+  &:hover,
+  &:focus {
+    background-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
+    border-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
+    color: $section_root_color_primary_inverted;
+    text-decoration: none;
+  }
+
+  &.secondary {
+    background-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
+    border-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
+    color: $section_root_color_secondary_inverted;
+    &:hover,
+    &:focus {
+      background-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
+      border-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
+      color: $section_root_color_secondary_inverted;
+    }
+  }
+
+  &[disabled] {
+    filter: grayscale(95%);
+  }
+}
+
+
 li.button > a,
 a.button,
 button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  display: inline-block;
-  background-color: $color_primary;
-  border: ( $form_borders + px ) solid $color_primary;
-  color: $color_primary_inverted;
-
-  @if $font_button_text_style {
-    @if $font_button_text_style == 'uppercase' {
-      text-transform: uppercase;
-    } @else {
-      font-variant: $font_button_text_style;
-    }
-  }
-
-  text-decoration: none;
-  .so-panel & {
-    color: $color_primary_inverted !important;
-    border: ( $form_borders + px ) solid $color_primary !important;
-  }
-  vertical-align: baseline;
-  &.secondary {
-    background-color: $color_secondary;
-    border-color: $color_secondary;
-    color: $color_secondary_inverted;
-  }
-  -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
-
-  -moz-appearance: none;
-
-  @if $form_button_style == 'border' {
-    background-color: transparent;
-    color: $color_primary;
-  }
-
-  @if $form_button_style == '' {
-    background-color: transparent;
-    color: $color_primary;
-    border: none;
-    font-weight: bold;
-  }
-
-}
-input,
-select,
-textarea {
-  &:focus {
-    outline: none;
-    outline-width: 0;
-    // Because the dummy bloated SiteOrigin we should use !important
-    .so-panel & {
-      outline: none !important;
-    }
-    border-color: mix($color_primary, $main_color_foreground, 90%);
-  }
-}
-.button:focus,
-button:focus,
-input[type="button"]:focus,
-input[type="reset"]:focus,
-input[type="submit"]:focus,
-.button:hover,
-button:hover,
-input[type="button"]:hover,
-input[type="reset"]:hover,
-input[type="submit"]:hover {
-  background-color: mix($color_primary, $main_color_foreground, 90%);
-  border-color: mix($color_primary, $main_color_foreground, 90%);
-  color: $color_primary_inverted;
-  text-decoration: none;
-
-  &.secondary {
-    background-color: mix($color_secondary, $main_color_foreground, 90%);
-    border-color: mix($color_secondary, $main_color_foreground, 90%);
-    color: $color_secondary_inverted;
-  }
+  @extend .button;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
-  padding: 0; /* Addresses excess padding in IE8/9 */
-}
-button::-moz-focus-inner,
-input::-moz-focus-inner { /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
-  border: 0;
-  padding: 0;
-}
-[placeholder]:focus::-webkit-input-placeholder {
-  opacity: 0;
-}
+//
+//input[type="checkbox"],
+//input[type="radio"] {
+//  padding: 0; /* Addresses excess padding in IE8/9 */
+//}
+//
+//button::-moz-focus-inner,
+//input::-moz-focus-inner { /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
+//  border: 0;
+//  padding: 0;
+//}
+//
+//[placeholder]:focus::-webkit-input-placeholder {
+//  opacity: 0;
+//}
+
 label {
   padding-bottom: .4em;
 }
+
 .form-row-wide {
   input,
   select,
@@ -593,39 +654,16 @@ label {
     width: 100%;
   }
 }
-select {
-  height: auto;
-  -moz-appearance: none;
-}
 
 
-/**
- * Typography within posts may be is good idea to revert in .post wrapper
- */
-.columned {
-  column-count: 3;
-  -moz-column-count: 3;
-  -webkit-column-count: 3;
-  column-gap: 1em;
-  -moz-column-gap: 1em;
-  -webkit-column-gap: 1em;
-  vertical-align: top;
-  @for $i from 2 through 5 {
-    &[data-columns="#{$i}"] {
-      -webkit-column-count: $i;
-      -moz-column-count: $i;
-      column-count: $i;
-    }
-  }
-}
-
+// @TODO why this?
 li img {
   margin: 0 .4em 0 0;
   vertical-align: middle;
 }
 
-blockquote {
-  border-left: 4px solid $color_secondary;
+blockquote:not(.wp-block-pullquote) {
+  border-left: 4px solid $section_root_color_secondary;
   @extend .bigger;
   font-style: italic;
   margin: 1em 1%;
@@ -654,30 +692,14 @@ blockquote {
   }
 }
 
-table {
-  // @TODO use opacity as background.
-  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-  border-collapse: collapse;
-  thead {
-    background-color: mix($main_color_background, $main_color_foreground, 80%);
-  }
-  tbody {
-    td, th {
-      border-right: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-      &:last-child {
-        border-right: none;
-      }
-    }
-    tr:nth-child(even) {
-      background-color: mix($main_color_background, $main_color_foreground, 90%);
-    }
-  }
-}
-
 .mejs-container,
 .twitter-tweet {
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
   position: relative;
+}
+
+.avatar {
+  @extend %roundness;
 }

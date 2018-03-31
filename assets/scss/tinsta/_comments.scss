@@ -3,7 +3,9 @@
  */
 .comments-wrapper {
 
-  border-top: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+  $style: 'chat';
+
+  border-top: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
   margin-top: 1em;
 
   .comments-heading {
@@ -26,27 +28,43 @@
 
   .comments-list {
     .comment {
-      margin-bottom: 1em;
-      padding-bottom: 1em;
-      margin-left: $avatar_size + 10px;
 
-      @media (max-width: $breakpoint_tablet) {
+      margin-bottom: 1em;
+      margin-left: $component_avatar_size + 10px;
+      @media (max-width: $section_root_breakpoint_tablet) {
         margin-left: 74px;
+      }
+
+      @if $style == 'chat' {
+        @extend %roundness;
+        padding: 10px;
+        background: mix($section_main_color_background, $section_main_color_foreground, 80%);
       }
 
       > {
         overflow: hidden;
         .comment-meta {
           margin-bottom: 1em;
-          border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+          border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
           .comment-author-avatar {
             float: left;
-            width: $avatar_size + px;
-            margin-left: -($avatar_size + 10px);
+            width: $component_avatar_size + px;
 
-            @media (max-width: $breakpoint_tablet) {
-              width: 64px;
-              margin-left: -74px;
+            @if $style == 'chat' {
+              margin-left: -($component_avatar_size + 20px);
+              margin-top: -10px;
+              @media (max-width: $section_root_breakpoint_tablet) {
+                width: 64px;
+                margin-left: -84px;
+              }
+            }
+            @else {
+              margin-left: -($component_avatar_size + 10px);
+
+              @media (max-width: $section_root_breakpoint_tablet) {
+                width: 64px;
+                margin-left: -74px;
+              }
             }
 
             img {
@@ -59,7 +77,7 @@
             font-weight: bold;
           }
           .comment-time {
-            color: mix($main_color_background, $main_color_foreground, 80%);
+            color: mix($section_main_color_background, $section_main_color_foreground, 80%);
             margin-left: 1em;
           }
           .comment-author,
@@ -80,20 +98,20 @@
           .comment-reply-link {
             @extend .small;
             &:not(:last-child) {
-              border-left: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+              border-left: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
               padding-left: 1em;
             }
           }
           .comment-reply-link {
             &:after {
-              @extend .fa;
-              @extend %fa-reply;
+              @extend .la;
+              @extend %la-reply;
             }
           }
           .comment-edit-link {
             &:before {
-              @extend .fa;
-              @extend %fa-edit;
+              @extend .la;
+              @extend %la-edit;
             }
           }
           .safe-comments-report-link {
@@ -103,14 +121,14 @@
             //  right: 0;
             //  width: 26em;
             //  top: -2.4em;
-            //  background: $main_color_background;
-            //  border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+            //  background: $section_main_color_background;
+            //  border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
             //  padding: .2em;
             //  text-align: center;
             //}
             a:after {
-              @extend .fa;
-              @extend %fa-warning;
+              @extend .la;
+              @extend %la-warning;
             }
           }
         }
@@ -119,7 +137,7 @@
       &.pingback,
       &.trackback {
         time {
-          background: mix($main_color_background, $main_color_foreground, 80%);
+          background: mix($section_main_color_background, $section_main_color_foreground, 80%);
           display: inline-block;
           float: left;
           @extend .small;
@@ -134,32 +152,32 @@
           }
         }
       }
+
     }
     .children {
-      margin-left: $avatar_size_small + 10px;
-      @media (max-width: $breakpoint_tablet) {
+      margin-left: $component_avatar_size_small + 10px;
+      @media (max-width: $section_root_breakpoint_tablet) {
         margin-left: 58px;
       }
-      @media (max-width: $breakpoint_mobile) {
+      @media (max-width: $section_root_breakpoint_mobile) {
         margin-left: 0;
       }
       padding: 0;
-      .children {
-        margin-left: $avatar_size_small + 10px;
-        @media (max-width: $breakpoint_tablet) {
-          margin-left: 58px;
-        }
-        @media (max-width: $breakpoint_mobile) {
-          margin-left: 0;
+      .comment .comment-author-avatar {
+        width: $component_avatar_size_small + px;
+        margin-left: -($component_avatar_size_small + 20px);
+        @media (max-width: $section_root_breakpoint_tablet) {
+          width: 48px;
+          @if $style == 'chat' {
+            margin-left: -68px;
+          }
+          @else {
+            margin-left: -58px;
+          }
         }
       }
-      .comment .comment-author-avatar {
-        width: $avatar_size_small + px;
-        margin-left: -($avatar_size_small + 10px);
-        @media (max-width: $breakpoint_tablet) {
-          width: 48px;
-          margin-left: -58px;
-        }
+      .children .comment .comment-author-avatar {
+        margin-left: -($component_avatar_size_small + 20px);
       }
     }
   }
@@ -189,12 +207,12 @@
     position: relative;
 
     .comments-list & {
-      border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-      border-image: linear-gradient(to top, transparent, mix($main_color_background, $main_color_foreground, 80%)) 1;
+      border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+      border-image: linear-gradient(to top, transparent, mix($section_main_color_background, $section_main_color_foreground, 80%)) 1;
       padding: 1em;
       &:before {
         border: 10px solid transparent;
-        border-bottom: 10px solid mix($main_color_background, $main_color_foreground, 80%);
+        border-bottom: 10px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
         content: '';
         left: 30px;
         position: absolute;
@@ -216,8 +234,8 @@
     #cancel-comment-reply-link {
       float: right;
       &:before {
-        @extend .fa;
-        @extend %fa-close;
+        @extend .la;
+        @extend %la-close;
       }
     }
 
@@ -226,8 +244,8 @@
     }
     .comment-form-avatar {
       float: left;
-      width: $avatar_size + px;
-      @media (max-width: $breakpoint_tablet) {
+      width: $component_avatar_size + px;
+      @media (max-width: $section_root_breakpoint_tablet) {
         width: 64px;
       }
       img {
@@ -235,7 +253,7 @@
         height: auto;
         max-width: 100%;
       }
-      @media (max-width: $breakpoint_mobile) {
+      @media (max-width: $section_root_breakpoint_mobile) {
         float: right;
         width: 42px;
         margin-top: -52px;
@@ -246,11 +264,11 @@
     }
 
     .comment-form {
-      margin-left: $avatar_size + 10px;
-      @media (max-width: $breakpoint_tablet) {
+      margin-left: $component_avatar_size + 10px;
+      @media (max-width: $section_root_breakpoint_tablet) {
         margin-left: 74px;
       }
-      @media (max-width: $breakpoint_mobile) {
+      @media (max-width: $section_root_breakpoint_mobile) {
         margin-left: 0;
         clear: both;
         padding-top: 1em;
@@ -289,10 +307,10 @@
           display: none;
         }
         textarea {
-          height: $avatar_size + px;
+          height: $component_avatar_size + px;
           max-height: unset;
-          min-height: $avatar_size + px;
-          @media (max-width: $breakpoint_tablet) {
+          min-height: 2em;
+          @media (max-width: $section_root_breakpoint_tablet) {
             height: 64px;
             min-height: 64px;
           }
@@ -309,27 +327,4 @@
     }
   }
 
-}
-
-
-/**
- * Login integration
- */
-body.login {
-
-  #login_error {
-    @extend .message;
-    @extend .error;
-  }
-
-  .message.register {
-    background: transparent;
-    border: none;
-    outline: none;
-    text-align: left;
-    padding: 0;
-    margin: 0;
-    color: inherit;
-    @extend h1;
-  }
 }

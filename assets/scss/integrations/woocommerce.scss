@@ -1,0 +1,143 @@
+//@TODO pagination
+
+.woocommerce {
+
+  /**
+   * General
+   */
+  form .form-row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  div.product p.price,
+  div.product span.price {
+    color: inherit;
+  }
+
+  button.button,
+  #respond input#submit,
+  a.button,
+  button.button,
+  input.button,
+  #respond input#submit.alt,
+  a.button.alt,
+  button.button.alt,
+  input.button.alt {
+    @extend .button;
+    &.disabled {
+      filter: grayscale(100);
+    }
+  }
+
+  .woocommerce-error::before,
+  .woocommerce-info::before,
+  .woocommerce-message::before {
+    &:not(.woocommerce-notice) {
+      top: 50%;
+      margin-top: -1em;
+    }
+  }
+
+  /**
+   * Messages and notices
+   */
+  .woocommerce-message {
+    padding: 1em 3em;
+    @extend .message;
+  }
+
+  .woocommerce-error {
+    padding: 1em 3em;
+    @extend .message;
+    @extend .error;
+  }
+  .woocommerce-info {
+    padding: 1em 3em;
+    @extend .message;
+    @extend .info;
+  }
+
+
+  .woocommerce-MyAccount-navigation > ul {
+    @extend .menu;
+  }
+
+
+  /**
+   * Sale badges
+   */
+
+  /**
+   * Products
+   */
+
+
+  ul.products li.product,
+  .woocommerce-page ul.products li.product {
+    text-align: center;
+  }
+
+  ul.products li.product .price {
+    color: $section_main_color_foreground;
+  }
+  span.onsale,
+  ul.products li.product .onsale {
+    background-color: $section_root_color_primary;
+    box-sizing: content-box; // Seems that woocommerce doesn't like border-box
+  }
+
+  .woocommerce-pagination {
+    @extend .pagination;
+  }
+
+  nav.woocommerce-pagination ul {
+    border: none;
+    margin: 0;
+  }
+
+
+
+  div.product .woocommerce-tabs *:before,
+  div.product .woocommerce-tabs *:after {
+    display: none !important;
+  }
+  div.product .woocommerce-tabs ul.tabs li {
+    background-color: mix($section_main_color_background, $section_main_color_foreground, 80%);
+    border-radius: 0;
+  }
+  div.product .woocommerce-tabs ul.tabs li::before {
+    border-radius: 0;
+  }
+
+  #add_payment_method #payment,
+  .woocommerce-cart #payment,
+  .woocommerce-checkout #payment {
+    background: transparent;
+    @extend %roundness;
+  }
+
+  #add_payment_method #payment ul.payment_methods,
+  .woocommerce-cart #payment ul.payment_methods,
+  .woocommerce-checkout #payment ul.payment_methods {
+    border-color: rgba($section_main_color_foreground, .1);
+  }
+
+  table.shop_table {
+    @extend table;
+  }
+
+  form.checkout_coupon,
+  form.login,
+  form.register {
+    @extend %roundness;
+    border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+  }
+
+
+  .wc-layered-nav-term .count {
+    float: right;
+    opacity: .6;
+  }
+
+}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template Name: Thin, No Sidebars
+ * Template Name: Thin
  */
 
 require __DIR__ . '/index.php';

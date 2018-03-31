@@ -1,0 +1,5 @@
+Options -Indexes
+Deny from all
+<Files ~ "screenshot.png">
+  Allow from all
+</Files>

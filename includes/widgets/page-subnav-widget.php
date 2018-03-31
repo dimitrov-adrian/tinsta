@@ -10,13 +10,14 @@ class Tinsta_PageSubnav_Widget extends WP_Widget
 
   function form($instance)
   {
-    $instance = wp_parse_args($instance, array('title' => ''));
+    $instance = wp_parse_args($instance, ['title' => '']);
     ?>
     <p>
-      <label for="<?php echo $this->get_field_id('title')?>">
-        <?php _e('Title:', 'tinsta')?>
+      <label for="<?php echo $this->get_field_id('title') ?>">
+        <?php _e('Title', 'tinsta') ?>
       </label>
-      <input id="<?php echo $this->get_field_id('title')?>" name="<?php echo $this->get_field_name('title')?>" type="text" value="<?php echo esc_attr($instance['title'])?>" />
+      <input id="<?php echo $this->get_field_id('title') ?>" name="<?php echo $this->get_field_name('title') ?>" type="text"
+             value="<?php echo esc_attr($instance['title']) ?>" />
     </p>
     <?php
   }
@@ -24,26 +25,26 @@ class Tinsta_PageSubnav_Widget extends WP_Widget
   function widget($args, $instance)
   {
 
-    $instance = wp_parse_args($instance, array('title' => ''));
+    $instance = wp_parse_args($instance, ['title' => '']);
 
-    if (!is_page()) {
-      return FALSE;
+    if ( ! is_page()) {
+      return false;
     }
 
-    $post = get_post(get_the_ID());
-    $return_state = FALSE;
+    $post         = get_post(get_the_ID());
+    $return_state = false;
 
     ob_start();
 
     $ancestors = get_post_ancestors($post->ID);
-    $root = array_pop($ancestors);
-    $current = ($post->post_parent && $post->post_parent !== $root) ? $post->post_parent : $post->ID;
+    $root      = array_pop($ancestors);
+    $current   = ($post->post_parent && $post->post_parent !== $root) ? $post->post_parent : $post->ID;
 
     $query_args = [
       'child_of' => $current,
-      'depth' => 1,
+      'depth'    => 1,
       'title_li' => '',
-      'echo' => 0,
+      'echo'     => 0,
     ];
 
     $tmp = wp_list_pages($query_args);
@@ -54,27 +55,28 @@ class Tinsta_PageSubnav_Widget extends WP_Widget
       ]);
       echo "<div class=\"base-title\">" . get_the_title($current) . "</div>";
       echo "<ul class=\"menu\">{$tmp}</ul>";
-      $return_state = TRUE;
+      $return_state = true;
     }
-    unset($tmp);
 
     if ($root && $root !== $current) {
+      if (!empty($tmp)) {
+        echo "<p>&nbsp;</p>";
+      }
       $query_args = [
         'child_of' => $root,
-        'depth' => 1,
+        'depth'    => 1,
         'title_li' => '',
-        'echo' => 0,
+        'echo'     => 0,
       ];
-      $tmp = wp_list_pages($query_args);
+      $tmp        = wp_list_pages($query_args);
       if ($tmp) {
         $tmp = strtr($tmp, [
           'current_page_ancestor' => 'current_page_ancestor current-menu-ancestor',
-          'current_page_parent' => 'current_page_parent current-menu-parent',
-          ]);
-        echo "<p>&nbsp;</p>";
+          'current_page_parent'   => 'current_page_parent current-menu-parent',
+        ]);
         echo "<div class=\"base-title\">" . get_the_title($root) . "</div>";
         echo "<ul class=\"menu\">{$tmp}</ul>";
-        $return_state = TRUE;
+        $return_state = true;
       }
     }
 

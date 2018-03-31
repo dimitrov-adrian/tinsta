@@ -1,0 +1,92 @@
+body {
+  background: $section_main_color_background;
+  color: $section_main_color_foreground;
+  #login {
+    form {
+      color: inherit;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+    }
+    form label {
+      color: inherit;
+    }
+    a {
+      background: transparent;
+      form {
+        background: transparent;
+      }
+      color: $section_root_color_primary !important;
+      &:hover {
+        color: $section_root_color_secondary !important;
+      }
+    }
+    #login_error,
+    .message {
+      margin: 1em 0;
+      background: transparent;
+      color: inherit;
+      box-shadow: none;
+    }
+    h1:before {
+      height: 160px;
+      width: 320px;
+      display: inline-block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    h1 a {
+      background: $section_root_color_primary !important;
+      &,&:hover {
+        color: $section_root_color_primary_inverted !important;
+      }
+      width: auto;
+      display: block;
+      text-indent: 0;
+      height: auto;
+      font-size: 48px;
+      @if $effects_roundness {
+        border-radius: ( $effects_roundness / 10 ) + em;
+      }
+      line-height: 1em;
+      padding: 10px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .logo-site-description {
+      font-size: 12px;
+      line-height: 24px;
+    }
+
+
+    .button-primary {
+      background: $section_root_color_primary;
+      color: $section_root_color_primary_inverted;
+      text-shadow: none;
+      border: none;
+      box-shadow: none;
+      @if $effects_roundness {
+        border-radius: ( $effects_roundness / 10 ) + em;
+      }
+      &:hover {
+        background: $section_root_color_secondary;
+        color: $section_root_color_secondary_inverted;
+      }
+    }
+
+    input {
+      color: inherit;
+      background: rgba($section_main_color_foreground, .1);
+      border-color: mix($section_main_color_background, $section_main_color_foreground, 110%);
+      @if $effects_roundness {
+        border-radius: ( $effects_roundness / 10 ) + em;
+      }
+      &:focus {
+        border-color: $section_root_color_primary;
+        box-shadow: 0 0 0 2px $section_root_color_primary;
+      }
+    }
+  }
+}

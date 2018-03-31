@@ -10,37 +10,36 @@
   // Shared.
   .hentry {
 
-    .author-list {
-      text-align: center;
-      .author {
-        display: inline-block;
-        .author-title {
-          font-weight: bold;
-        }
-      }
-    }
-
     .edit-post-link:before {
-      @extend .fa;
-      @extend %fa-edit;
+      @extend .la;
+      @extend %la-edit;
     }
 
     .entry-header {
       &:empty {
         display: none;
       }
-      h1, h2 {
-        margin-top: 0;
-      }
     }
 
     .author-list {
+      float: left;
       clear: both;
+      width: 100%;
+      text-align: center;
       margin-top: 2em;
       margin-bottom: 2em;
       padding: 1em;
-      border: 1px solid mix($main_color_background, $main_color_foreground, 90%);
-      background-color: mix($main_color_background, $main_color_foreground, 95%);
+      border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+      background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
+      @extend .clearfix;
+      @extend %roundness;
+
+      .author {
+        display: inline-block;
+        .author-title {
+          font-weight: bold;
+        }
+      }
     }
 
   }
@@ -63,7 +62,7 @@
     }
 
     .entry-meta {
-      color: mix($main_color_background, $main_color_foreground, 20%);
+      color: mix($section_main_color_background, $section_main_color_foreground, 20%);
       font-variant: all-small-caps;
       > * {
         margin-right: 1em;
@@ -71,29 +70,31 @@
     }
 
     .entry-meta-item:before {
-      @extend .fa;
-      @extend %fa-circle-o;
+      @extend .la;
+      @extend %la-circle-o;
     }
 
+    // Seems that Safari format dates in own way, so could differ from other styles,
+    // but this isn't styling issue, but Safari's
     .entry-meta-time:before {
-      @extend .fa;
-      @extend %fa-calendar;
+      @extend .la;
+      @extend %la-calendar;
     }
 
     .entry-meta-author:before {
-      @extend .fa;
-      @extend %fa-user;
+      @extend .la;
+      @extend %la-user;
     }
 
     .entry-meta-comments:before {
-      @extend .fa;
-      @extend %fa-comments-o;
+      @extend .la;
+      @extend %la-comments-o;
     }
 
     .tags {
       &:before {
-        @extend .fa;
-        @extend %fa-tags;
+        @extend .la;
+        @extend %la-tags;
       }
       a:before {
         @extend var;
@@ -103,8 +104,8 @@
 
     .categories {
       &:before {
-        @extend .fa;
-        @extend %fa-folder-open-o;
+        @extend .la;
+        @extend %la-folder-open-o;
       }
       .post-categories {
         display: inline;
@@ -125,15 +126,15 @@
     }
 
     //.entry-summary,
-    //.entry-content {
-    //  @extend .clearfix;
-    //  &:first-child {
-    //    //margin-top: 0;
-    //  }
-    //  &:not(:last-child) {
-    //    //margin-bottom: 1.6em;
-    //  }
-    //}
+    .entry-content:not(:last-child) {
+      @extend .clearfix;
+
+      // Fix the margin bottom because clearfix.
+      *:last-child {
+        margin-bottom: 0;
+      }
+
+    }
 
   }
 
@@ -142,21 +143,33 @@
     .hentry.default {
 
       .entry-thumbnail-wrapper {
-        margin-bottom: 1em;
+        margin-bottom: 2em;
       }
 
       .entry-header {
         margin: 2em 0 1em 0;
       }
 
-      .entry-footer {
-        padding: 1em 0;
-        border-top: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+      .entry-meta {
+        margin: 1em 0;
+        padding-bottom: 1em;
+        border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
       }
 
       .entry-summary {
         @extend .big;
       }
+
+      .entry-content:not(:last-child) {
+        margin-bottom: 2em;
+      }
+
+      .entry-footer {
+        padding: 1em 0;
+        margin-top: 2em;
+        border-top: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+      }
+
 
       &.layout-contextual-header {
         .entry-header {
@@ -164,7 +177,7 @@
         }
       }
 
-      @media (min-width: $breakpoint_tablet) {
+      @media (min-width: $section_root_breakpoint_tablet) {
         &.layout-left-thumbnail {
           .entry-header {
             @extend .clearfix;
@@ -206,12 +219,22 @@
       margin-top: 2em;
       margin-bottom: 2em;
       padding-bottom: 1em;
-      border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+      border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+
+      &.sticky {
+        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+        background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
+        padding: .6em 1em;
+      }
+
+      .entry-meta {
+        @extend .small;
+      }
 
       // Layout.
       &.layout-boxes {
 
-        @media (min-width: $breakpoint_tablet+1) {
+        @media (min-width: $section_root_breakpoint_tablet+1) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -219,7 +242,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $breakpoint_tablet) {
+        @media (max-width: $section_root_breakpoint_tablet) {
           width: 48%;
           &:not(:nth-child(2n+2)) {
             margin-right: 2%;
@@ -228,7 +251,7 @@
         }
 
         vertical-align: top;
-        border: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
 
         .entry-thumbnail-wrapper img {
           width: 100%;
@@ -252,7 +275,7 @@
 
         text-align: center;
 
-        @media (min-width: $breakpoint_tablet+1) {
+        @media (min-width: $section_root_breakpoint_tablet+1) {
           width: 23.12%;
           &:not(:nth-child(4n+4)) {
             margin-right: 2%;
@@ -260,7 +283,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $breakpoint_tablet) {
+        @media (max-width: $section_root_breakpoint_tablet) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -269,7 +292,7 @@
         }
 
         vertical-align: top;
-        border: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
         min-height: 10em;
 
         .entry-thumbnail-wrapper img {
@@ -277,6 +300,9 @@
         }
         .entry-header {
           margin: 1em;
+          .entry-title {
+            font-size: 1.2em;
+          }
         }
         .entry-meta,
         .entry-summary {
@@ -319,9 +345,7 @@
 
       // Layout.
       &.layout-timeline {
-        width: 80%;
-        margin-left: 10%;
-        margin-right: 10%;
+        margin-left: 10em;
         margin-top: 0;
         margin-bottom: 0;
         &:first-child {
@@ -332,7 +356,7 @@
         }
         position: relative;
         padding: 1em;
-        border-left: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+        border-left: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
         border-bottom: none;
         .entry-meta > * {
           position: absolute;
@@ -342,14 +366,14 @@
         }
         .entry-meta-time {
           top: 1em;
-          background-color: rgba($main_color_foreground, .8);
-          color: $main_color_background;
+          background-color: rgba($section_main_color_foreground, .8);
+          color: $section_main_color_background;
         }
         .entry-thumbnail-wrapper {
           display: none;
         }
         .entry-meta-author {
-          border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 80%);
+          border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
           top: 1em;
           right: 0;
           left: auto;

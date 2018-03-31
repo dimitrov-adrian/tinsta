@@ -9,15 +9,16 @@
   height: 3em;
   line-height: 3em;
   vertical-align: middle;
-  background: $main_color_background;
-  color: $main_color_foreground;
+  background: $section_main_color_background;
+  color: $section_main_color_foreground;
   font-weight: bold;
   text-align: center;
   z-index: 999999998; /* on top of all */
   cursor: pointer;
+  @extend %roundness-bottom;
   &:before {
-    @extend .fa;
-    @extend %fa-close;
+    @extend .la;
+    @extend %la-close;
     line-height: 3em;
   }
 }
@@ -32,8 +33,8 @@
     margin: 0;
     padding: 0;
   }
-  //> li > .sub-menu {
   li {
+    &.current_page_item,
     &.current-menu-parent,
     &.current-menu-ancestor,
     &.current-menu-item {
@@ -45,11 +46,14 @@
   a {
     display: block;
     padding: .3em;
+    .sidebar & {
+      padding: .3em .3em .3em 0;
+    }
     &:hover {
       text-decoration: underline;
     }
   }
-  @media (max-width: $breakpoint_tablet) {
+  @media (max-width: $section_root_breakpoint_tablet) {
     text-align: center;
     > li > .sub-menu {
       display: none;
@@ -76,41 +80,41 @@
     }
 
     > .sub-menu {
-      border: 1px solid rgba(0,0,0,.2);
-
-      // If header and main are close light colors, then invert the sub-menu popup.
-      @if ( abs(lightness($main_color_background) - lightness($header_color_background) ) < 5 ) {
-        background-color: $main_color_foreground;
-        body.effects & {
-          background-color: rgba($main_color_foreground, .92);
-          -webkit-backdrop-filter: saturate(80%) blur(15px);
-        }
-        a {
-          color: $main_color_background;
-        }
-      }
-      @else {
-        background-color: $main_color_background;
-        body.effects & {
-          background-color: rgba($main_color_background, .9);
-          -webkit-backdrop-filter: saturate(80%) blur(15px);
-        }
-        a {
-          color: $main_color_foreground;
-        }
-      }
 
       box-shadow: 1px 4px 20px -10px rgba(0, 0, 0, .9);
+      @extend %roundness-bottom;
+
+      // If header and main are close light colors, then invert the sub-menu popup.
+      @if (abs(lightness($section_main_color_background) - lightness($section_header_color_background) ) < 5) {
+        background-color: $section_main_color_foreground;
+        body.effects & {
+          background-color: rgba($section_main_color_foreground, .92);
+          -webkit-backdrop-filter: saturate(80%) blur(15px);
+        }
+        a {
+          color: $section_main_color_background;
+        }
+        border: 1px solid rgba(0, 0, 0, .2);
+      } @else {
+        background-color: $section_main_color_background;
+        body.effects & {
+          background-color: rgba($section_main_color_background, .9);
+          -webkit-backdrop-filter: saturate(80%) blur(15px);
+        }
+        a {
+          color: $section_main_color_foreground;
+        }
+      }
+
       display: none;
       float: right;
       min-width: 12em;
       position: absolute;
       margin: 0;
-      //text-align: left;
       z-index: 100;
       &:before {
         background-color: inherit;
-        border: 1px solid rgba(0,0,0,.4);
+        border: 1px solid rgba(0, 0, 0, .4);
         border-bottom: none;
         border-left: none;
         content: '';
@@ -120,6 +124,9 @@
         top: -5.8px;
         transform: rotate(-45deg);
         width: 10px;
+        body.effects & {
+          opacity: .8;
+        }
       }
       a {
         padding: .6em;
@@ -134,7 +141,7 @@
 
     // Mouse hovering popup menus should appear only when we have anough room for this.
     &:hover > .sub-menu {
-      @media (min-width: $breakpoint_tablet) {
+      @media (min-width: $section_root_breakpoint_tablet) {
         display: block;
       }
       body.no-js & {
@@ -142,7 +149,7 @@
       }
     }
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       display: block;
       padding: .4em .4em;
     }
@@ -163,24 +170,20 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   right: 2em !important;
   bottom: 2em !important;
   overflow: auto !important;
-  width: calc( 100% - 4em );
-  max-height: calc( 100% - 3em - 4em );
+  width: calc(100% - 4em);
+  max-height: calc(100% - 3em - 4em);
   z-index: 1000 !important;
   transform: translate(0, 0) !important;
-  outline: 2em solid rgba(0,0,0,.80);
-  background: $main_color_background;
+  box-shadow: 0 0 0 300px rgba(0,0,0,.76) !important;
+  background: $section_main_color_background;
   padding: 0 !important;
   margin: 0 !important;
-  &, a {
-    color: $color_primary !important;
-  }
+  @extend %roundness;
+  color: $section_root_color_primary !important;
   a {
+    color: inherit;
     padding: 1em;
-  }
-  > li:not(:last-child) {
-    border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-  }
-  li {
+    border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
     text-align: left;
   }
 }
@@ -195,13 +198,14 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   right: 22px;
   cursor: pointer;
   padding: .4em;
-  background: $color_primary;
-  color: $color_primary_inverted;
+  background: $section_root_color_primary;
+  color: $section_root_color_primary_inverted;
   text-indent: -100px;
-  border-radius: .4em;
+  @extend %roundness;
   width: 2.4em;
   height: 2.4em;
   overflow: hidden;
+  z-index: 101;
   &:before {
     content: '^';
     top: 0;
@@ -215,7 +219,6 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   }
 }
 
-
 /**
  * Main pagination
  */
@@ -223,168 +226,97 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   clear: both;
   overflow: hidden;
   text-align: center;
-
+  margin: 2em auto;
+  //display: inline-block;
+  @extend %roundness;
   .nav-links {
-    @if $pagination_style == 'borders' {
-      border: 1px solid mix($main_color_background, $main_color_foreground, 80%);
-    }
-    @if $pagination_style == 'bold' {
+    @extend .pagination-links;
+  }
+}
+.pagination-links {
+  @if $component_pagination_style == 'borders' {
+    border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+  }
+  @if $component_pagination_style == 'bold' {
+    font-weight: bold;
+  }
+  display: inline-block;
+  max-width: 86%;
+}
+.page-numbers {
+  color: mix($section_main_color_background, $section_main_color_foreground, 50%);
+  position: relative;
+  //display: table-cell;
+  display: inline-block;
+  padding: .8em;
+  text-decoration: none;
+  vertical-align: baseline;
+  &.current {
+    color: $section_root_color_primary;
+    @if $component_pagination_style == 'bold' {
+      text-decoration: underline;
+    } @else {
       font-weight: bold;
     }
-    display: table;
-    margin: 1em auto;
-    table-layout: fixed;
-    max-width: 86%;
-    .page-numbers {
-      color: mix($main_color_background, $main_color_foreground, 50%);
-      position: relative;
-      display: table-cell;
-      padding: .8em;
-      text-decoration: none;
-      vertical-align: middle;
-      &.current {
-        color: $color_primary;
-        @if $pagination_style == 'bold' {
-          text-decoration: underline;
-        }
-        @else {
-          font-weight: bold;
-        }
-      }
-      &.prev,
-      &.next {
-        font-variant: all-small-caps;
-      }
-      &:hover {
-        color: mix($color_primary, $color_primary_inverted, 95%);
-      }
-      &:not(.prev):not(.next) {
-        @media (max-width: $breakpoint_mobile) {
-          display: none;
-        }
-      }
-    }
-    a:first-child:not(:last-child):before {
-      @extend .fa;
-      @extend %fa-angle-left;
-      position: absolute;
-      top: 50%;
-      margin-top: -.5em;
-      left: -1.4em;
-    }
-    a:last-child:not(:first-child):after {
-      @extend .fa;
-      @extend %fa-angle-right;
-      position: absolute;
-      top: 50%;
-      margin-top: -.5em;
-      right: -1.4em;
+  }
+  &.prev,
+  &.next {
+    font-variant: all-small-caps;
+  }
+  &:hover {
+    color: mix($section_root_color_primary, $section_root_color_primary_inverted, 95%);
+  }
+  &:not(.prev):not(.next) {
+    @media (max-width: $section_root_breakpoint_mobile) {
+      display: none;
     }
   }
-}
 
-/**
- * 5star rating
- */
-.fivestar {
-  display: inline-block;
-  height: 1em;
-  line-height: 1em;
-  overflow: hidden;
-  position: relative;
-  text-align: left !important;
-  vertical-align: middle;
-  width: 4.95em;
-
-  &:after {
-    @extend .fa;
-    color: mix($main_color_background, $main_color_foreground, 80%);
-    content: "#{$fivestar_symbol_empty}#{$fivestar_symbol_empty}#{$fivestar_symbol_empty}#{$fivestar_symbol_empty}#{$fivestar_symbol_empty}";
-    display: inline-block;
-    left: 0;
+  a:first-child:not(:last-child):before {
+    @extend .la;
+    @extend %la-angle-left;
     position: absolute;
-    bottom: 0;
-    z-index: 1;
-    text-stroke-width: 1px;
-    text-stroke-color: mix($main_color_background, $main_color_foreground, 70%);
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: mix($main_color_background, $main_color_foreground, 70%);
+    top: 50%;
+    margin-top: -.5em;
+    left: -1.4em;
   }
-  .fivestar-progress {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    bottom: 0;
-    text-indent: -1000px;
-    &:after {
-      @extend .fa;
-      color: $color_secondary;
-      content: "#{$fivestar_symbol_full}#{$fivestar_symbol_full}#{$fivestar_symbol_full}#{$fivestar_symbol_full}#{$fivestar_symbol_full}";
-      display: inline-block;
-      left: 0;
-      bottom: 0;
-      position: absolute;
-      text-indent: 0;
-      z-index: 2;
-      -webkit-text-stroke-width: 1px;
-      -webkit-text-stroke-color: mix($color_secondary, $main_color_foreground, 90%);
-      text-stroke-width: 1px;
-      text-stroke-color: mix($color_secondary, $main_color_foreground, 90%);
-    }
+  a:last-child:not(:first-child):after {
+    @extend .la;
+    @extend %la-angle-right;
+    position: absolute;
+    top: 50%;
+    margin-top: -.5em;
+    right: -1.4em;
   }
 }
-.star-rating-input {
-  color: $color_secondary;
-  display: inline-block;
-  vertical-align: middle;
-  input {
-    display: none;
-  }
-  label {
-    cursor: pointer;
-    display: inline-block;
-    @extend .bigger;
-    height: 1em;
-    overflow: hidden;
-    text-indent: 0;
-    transition: color 70ms ease-in-out;
-    width: 1em;
-    &:before {
-      @extend .fa;
-      content: "#{$fivestar_symbol_full}";
-      display: inline-block;
-      text-shadow: 0 0 0 $main_color_foreground;
-    }
-  }
-  input:checked ~ label {
-    color: mix($main_color_background, $main_color_foreground, 70%);
-    text-shadow: 0 0 0 mix($main_color_background, $main_color_foreground, 20%);
-  }
-}
+
+
 
 /**
  * Breadcrumbs Home > Path > To > Current Page
  */
 .breadcrumbs {
-  overflow: hidden;
-  &,a {
+  margin: 2em 0 0 0;
+  line-height: 2.4em;
+  //font-size: 1.2em;
+  opacity: .6;
+  &, a {
     color: inherit;
   }
   .trail {
     display: inline-block;
     max-width: 28%;
     overflow: hidden;
-    padding: 1em 0;
     position: relative;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
     z-index: 0;
     &:not(:last-child):after {
-      @extend .fa;
-      content: '/';
-      @extend %fa-angle-right;
+      //content: '/';
       margin: 0 .1em 0 .4em;
+      @extend .la;
+      @extend %la-angle-right;
     }
     &:last-child {
       color: inherit;
@@ -398,7 +330,7 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
  * Overlay component.
  */
 .dialog-overlay {
-  background-color: rgba($main_color_foreground, .84);
+  background-color: rgba($section_main_color_foreground, .84);
   bottom: -10%;
   display: none;
 
@@ -410,19 +342,21 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   top: -10%;
   width: 120%;
 
-  z-index: 1000;
+  // Over everything
+  z-index: 999999;
 
   body.effects & {
     -webkit-backdrop-filter: saturate(80%) blur(15px);
   }
 
   .dialog-inner {
-    background-color: $main_color_background;
-    border-radius: 3px;
-    box-shadow: 0 0 0 8px rgba($main_color_background, .2), 0 0 12em rgba(#000, .4);
+    background-color: $section_main_color_background;
+    @extend %roundness;
+    box-shadow: 0 0 0 8px rgba($section_main_color_background, .2), 0 0 12em rgba(#000, .4);
     left: 50%;
     max-height: 420px;
-    max-width: 420px;
+    max-width: 100%;
+    width: 420px;
     overflow: auto;
     padding: 1em;
     position: absolute;
@@ -447,15 +381,17 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
  */
 .context-header {
 
-  color: $main_color_foreground;
+  color: $section_main_color_foreground;
   min-height: 240px;
   padding: 0;
   position: relative;
   width: 100%;
+  margin-top: 2em;
+  margin-bottom: 2em;
 
-  @media (min-width: $breakpoint_mobile) {
-    background-color: $main_color_foreground;
-    color: $main_color_background;
+  @media (min-width: $section_root_breakpoint_mobile) {
+    background-color: $section_main_color_foreground;
+    color: $section_main_color_background;
 
     &.extended {
       margin-bottom: -3.08em;
@@ -483,7 +419,7 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     width: auto;
     z-index: 0;
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       opacity: .5;
     }
 
@@ -493,10 +429,10 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   .breadcrumbs {
     left: 10px;
     position: absolute;
-    text-shadow: 0 0.1em 2em rgba(0,0,0,.2);
+    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
     top: 10px;
     width: 40%;
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       position: static;
       width: auto;
       margin-left: 10px;
@@ -525,11 +461,11 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     padding: 1em 0.6em 1em 0;
     position: absolute;
     right: 10px;
-    text-shadow: 0 0.1em 2em rgba(0,0,0,.2);
+    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
     top: 10px;
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       padding: .4em;
-      background-color: $main_color_background;
+      background-color: $section_main_color_background;
     }
   }
 
@@ -548,23 +484,23 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     padding: 0;
 
     text-align: center;
-    text-shadow: 0 0.1em 2em rgba(0,0,0,.2);
+    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
     width: 84%;
     margin: 0 auto;
     z-index: 10;
 
-    @media (min-width: $breakpoint_tablet) {
+    @media (min-width: $section_root_breakpoint_tablet) {
       font-size: 3em;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @media (min-width: $breakpoint_desktop) {
+    @media (min-width: $section_root_breakpoint_desktop) {
       font-size: 4em;
     }
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       width: 90%;
       font-size: 2.5em;
       margin-bottom: 1em;
@@ -584,24 +520,38 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   margin: 2em auto;
   padding: 1.6em;
   text-align: center;
-  &.ok {
-    background-color: #e3ffd7;
-    border-color: #d2edc7;
-    color: #005700;
-  }
-  &.error {
-    background-color: #ffe4d6;
-    border-color: #eed5c8;
-    color: #570018;
-  }
-  &.info {
-    background-color: #ebfeff;
-    border-color: #dbedee;
-    color: #264d57;
-  }
-  &.warning {
-    background-color: #ffffd7;
-    border-color: #ffedc7;
-    color: #885700;
-  }
+  @extend %roundness;
+}
+.notice {
+  border: 2px solid #e3e3e3;
+}
+.ok {
+  background-color: #e6ffdb;
+  border-color: #cfeac4;
+  color: #104c10;
+}
+.error {
+  background-color: #ffebe0;
+  border-color: #ead2c6;
+  color: #845f4c;
+}
+.info {
+  background-color: #ebf6fb;
+  border-color: #dbedee;
+  color: #3d6380;
+}
+.warning {
+  background-color: #fdfddc;
+  border-color: #efe8cc;
+  color: #79680a;
+}
+.notice {
+  background-color: $section_main_color_background;
+  border-bottom: none;
+  border-right: none;
+  border-left: none;
+  color: #777;
+  margin: 2em auto;
+  padding: 1.6em;
+  text-align: inherit;
 }

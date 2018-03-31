@@ -9,7 +9,7 @@
     margin: 0;
     padding-bottom: .6em;
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       border: none !important;
       text-align: center;
       padding: .6em;
@@ -26,24 +26,25 @@
       list-style: none;
     }
     a {
-      display: block;
+      // Could cause problem with some widgets.
+      //display: block;
     }
   }
 }
-
 
 /**
  * The logo
  */
 .widget_tinsta_logo_widget {
-
+  @extend %roundness;
+  text-align: center;
   &.colored {
-    background-color: $color_secondary;
-    background-image: linear-gradient(-4deg,darken($color_secondary, 10%) 28%,transparent 28%),
-                      linear-gradient(-8deg,$color_secondary 84%,transparent 84%),
-                      linear-gradient(-8deg,lighten($color_secondary, 6%) 84%,transparent 84%),
-                      linear-gradient(-8deg,lighten($color_secondary, 12%) 100%,transparent 100%);
-    color: $color_secondary_inverted;
+    background-color: $section_root_color_secondary;
+    background-image: linear-gradient(-4deg, darken($section_root_color_secondary, 10%) 28%, transparent 28%),
+    linear-gradient(-8deg, $section_root_color_secondary 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($section_root_color_secondary, 6%) 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($section_root_color_secondary, 12%) 100%, transparent 100%);
+    color: $section_root_color_secondary_inverted;
   }
 
   padding: .4em;
@@ -69,12 +70,10 @@
     line-height: 1em;
     opacity: .5;
   }
-  @media (max-width: $breakpoint_tablet) {
-    text-align: center;
+  @media (max-width: $section_root_breakpoint_tablet) {
     margin: 1em;
   }
 }
-
 
 /**
  * Media widget
@@ -94,7 +93,7 @@
 .widget_pages {
   li {
     &:not(:last-child) {
-      border-bottom: 1px solid rgba(mix($main_color_background, $main_color_foreground, 92%), 5);
+      border-bottom: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 92%), 5);
     }
 
     a {
@@ -162,13 +161,6 @@
     tbody td,
     tbody th {
       border: none;
-    }
-    thead {
-      background-color: rgba($main_color_background, .2);
-    }
-    tbody {
-      background-color: rgba($main_color_background, .8);
-      color: $main_color_foreground;
       text-align: center;
     }
     tbody td:hover {
@@ -186,9 +178,6 @@
       @extend .small;
       padding-top: .4em;
       text-transform: uppercase;
-    }
-    a {
-      color: $color_primary;
     }
   }
 }
@@ -244,8 +233,8 @@
     position: relative;
     transition: all 150ms ease-in-out;
     &:before {
-      @extend .fa;
-      @extend %fa-search;
+      @extend .la;
+      @extend %la-search;
       position: absolute;
       color: inherit;
       top: 50%;
@@ -262,6 +251,8 @@
   }
   .search-field {
 
+    @extend %roundness;
+
     body.effects & {
       -webkit-backdrop-filter: saturate(80%) blur(15px);
     }
@@ -270,18 +261,18 @@
     box-sizing: border-box;
     padding: .4em .6em .4em 2.8em;
     width: 100%;
-    background-color: rgba(0,0,0,.16);
+    background-color: rgba(0, 0, 0, .16);
 
     // Backgrounds are in consideration.
     &:focus {
-      background-color: rgba(255,255,255,.08);
+      background-color: rgba(255, 255, 255, .08);
     }
   }
 
   body.effects & {
     &.focus {
       label {
-        background-color: rgba($header_color_background, .98);
+        background-color: rgba($section_header_color_background, .98);
         -webkit-backdrop-filter: saturate(80%) blur(15px);
         position: absolute;
         top: 0;
@@ -295,6 +286,8 @@
       .search-field {
         height: 100%;
         font-size: inherit;
+        border-radius: 0 !important;
+        text-align: center;
       }
     }
   }
@@ -308,6 +301,15 @@
   input {
     max-width: 100%;
   }
+  .login-username,
+  .login-password {
+    label {
+      font-weight: bold;
+      min-width: 14em;
+      max-width: 100%;
+      display: inline-block;
+    }
+  }
 }
 
 /**
@@ -319,8 +321,8 @@
     &.style-icon,
     &.style-iconname {
       &:before {
-        @extend .fa;
-        @extend %fa-user;
+        @extend .la;
+        @extend %la-user;
         margin-right: .6em;
       }
       margin-left: .4em;

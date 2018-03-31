@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 @import "tinsta/_normalize";
+@import "tinsta/_icons-font-loader";
 @import "tinsta/_icons";
 @import "tinsta/_typography";
 @import "tinsta/_components";
@@ -8,5 +9,9 @@
 @import "tinsta/_layout";
 @import "tinsta/_comments";
 @import "tinsta/_entries";
+
 @import "integrations/misc";
 @import "integrations/siteorigin";
+@import "integrations/woocommerce";
+@import "integrations/bbpress";
+

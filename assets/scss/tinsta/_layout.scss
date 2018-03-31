@@ -1,14 +1,45 @@
+@mixin sectionBackground($image_url, $size, $scroll, $repeat, $position_x, $position_y) {
+  @if $image_url {
+    background-image: url($image_url);
+    @if $size {
+      background-size: $size;
+    }
+    @if $scroll {
+      background-attachment: scroll;
+    } @else {
+      background-attachment: fixed;
+    }
+    @if $repeat {
+      background-repeat: repeat;
+    } @else {
+      background-repeat: no-repeat;
+    }
+    @if $position_x {
+      background-position-x: $position_x;
+    }
+    @if $position_y {
+      background-position-y: $position_y;
+    }
+  }
+}
+
+%border-color {
+  border-color: rgba(mix($section_main_color_background, $section_main_color_foreground, 50%), .5);
+}
+
 .wrapper {
   margin: 0 auto;
-  @if $site_wrapper_width {
-    max-width: $site_wrapper_width + px;
+  @if $section_root_width {
+    max-width: $section_root_width + px;
   }
-  min-width: 320px;
+  min-width: 300px;
   width: 100%;
 }
 
 body {
-  background-color: $site_color_background;
+  background-color: $section_root_color_background;
+  color: $section_main_color_foreground;
+  @include sectionBackground($section_root_image, $section_root_image_size, $section_root_image_attachment_scroll, $section_root_image_repeat, $section_root_image_position_x, $section_root_image_position_y);
 }
 
 /**
@@ -17,20 +48,20 @@ body {
 .site-topline-wrapper {
   @extend .clearfix;
   @extend .small;
-  @if $topline_sticky {
+  @if $section_topline_sticky {
     position: sticky;
+    top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    z-index: 100;
+    z-index: 101;
   }
   padding: .2em 0;
   text-align: left;
-  background-color: $topline_color_background;
-  border-bottom: 1px solid mix($topline_color_background, $topline_color_foreground, 90%);
-  color: $topline_color_foreground;
-  @if $topline_color_background_opacity < 100 {
-    background-color: rgba($topline_color_background, ( $topline_color_background_opacity / 100 ) );
+  background-color: $section_topline_color_background;
+  //border-bottom: 1px solid mix($section_topline_color_background, $section_topline_color_foreground, 90%);
+  color: $section_topline_color_foreground;
+  @if $section_topline_color_background_opacity < 100 {
+    background-color: rgba($section_topline_color_background, ($section_topline_color_background_opacity / 100));
   }
 }
 
@@ -41,23 +72,23 @@ body {
   @extend .clearfix;
 
   position: relative;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 100;
+  -js-display: flex;
   display: flex;
 
-  @if $primary_menu_movetop {
+  @if $section_primary_menu_movetop {
     flex-flow: column-reverse;
-  }
-  @else {
+  } @else {
     flex-flow: column;
   }
 
   // Sticky header tweaks.
-  @media (min-width: $breakpoint_tablet) {
+  @media (min-width: $section_root_breakpoint_tablet) {
     body.sticky-header & {
       position: sticky;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 100;
     }
     body.sticky-header.admin-bar & {
       top: 32px;
@@ -65,46 +96,46 @@ body {
   }
 
   // @TODO optimize this
-  @if $header_background_wrapper {
-    background-color: $header_color_background;
-    @if $header_color_background_opacity < 100 {
-      background-color: rgba($header_color_background, ($header_color_background_opacity / 100));
+  @if $section_header_background_wrapper {
+    background-color: $section_header_color_background;
+    @if $section_header_color_background_opacity < 100 {
+      background-color: rgba($section_header_color_background, ($section_header_color_background_opacity / 100));
     }
-    color: $header_color_foreground;
-    @if (abs(lightness($header_color_background) - lightness($main_color_background) ) < 5) {
-      border-bottom: 1px solid mix($header_color_background, $header_color_foreground, 90%);
+    color: $section_header_color_foreground;
+    @if (abs(lightness($section_header_color_background) - lightness($section_main_color_background) ) < 5) {
+      border-bottom: 1px solid mix($section_header_color_background, $section_header_color_foreground, 90%);
     }
-  }
-  @else {
+  } @else {
     .site-header {
       padding: 1em;
-      background-color: $header_color_background;
-      @if $header_color_background_opacity < 100 {
-        background-color: rgba($header_color_background, ($header_color_background_opacity / 100));
+      background-color: $section_header_color_background;
+      @if $section_header_color_background_opacity < 100 {
+        background-color: rgba($section_header_color_background, ($section_header_color_background_opacity / 100));
       }
-      color: $header_color_foreground;
-      @if (abs(lightness($header_color_background) - lightness($main_color_background) ) < 5) {
-        border-bottom: 1px solid mix($header_color_background, $header_color_foreground, 90%);
+      color: $section_header_color_foreground;
+      @if (abs(lightness($section_header_color_background) - lightness($section_main_color_background) ) < 5) {
+        border-bottom: 1px solid mix($section_header_color_background, $section_header_color_foreground, 90%);
       }
     }
   }
 
+  @include sectionBackground($section_header_image, $section_header_image_size, $section_header_image_attachment_scroll, $section_header_image_repeat, $section_header_image_position_x, $section_header_image_position_y);
+
   a, textarea, select, input {
-    color: $header_color_foreground;
+    color: $section_header_color_foreground;
   }
-  a:hover {
-    color: $color_secondary;
-    //text-decoration: none;
-  }
+  //a:hover {
+  //  color: $section_root_color_secondary;
+  //}
 
   .site-header {
     @extend .wrapper;
     -js-display: flex;
     display: flex;
     flex-flow: row wrap;
-    @if $header_padding {
-      padding-top: $header_padding + px;
-      padding-bottom: $header_padding + px;
+    @if $section_header_padding {
+      padding-top: $section_header_padding + px;
+      padding-bottom: $section_header_padding + px;
     }
     justify-content: space-between;
     align-items: center;
@@ -119,19 +150,16 @@ body {
       }
     }
 
-    @media (min-width: $breakpoint_tablet) {
+    @media (min-width: $section_root_breakpoint_tablet) {
       .widget:first-child {
         margin-left: 0;
       }
       .widget:last-child {
         margin-right: 0;
       }
-      .search-form {
-        max-width: 200px;
-      }
     }
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       flex-flow: column;
       // Reset user defined (from Customizer) padding from top and bottom.
       padding-top: 0;
@@ -139,19 +167,20 @@ body {
       .widget {
         margin: 1em;
         max-width: 100%;
+        width: auto !important;
       }
     }
 
     // Logo widget tweaks
     .widget_tinsta-logo {
-      color: lighten($header_color_foreground, 10%);
+      color: lighten($section_header_color_foreground, 10%);
     }
 
     // All nav menus in header.
     .widget_nav_menu {
       .menu {
         @extend .menu-inline;
-        @media (min-width: $breakpoint_tablet) {
+        @media (min-width: $section_root_breakpoint_tablet) {
           > li {
             position: relative;
             > a {
@@ -165,6 +194,7 @@ body {
             > .sub-menu {
               left: 50%;
               transform: translateX(-50%);
+              @extend %roundness-bottom;
               &:before {
                 left: 50% !important;
                 margin-left: -5px;
@@ -182,13 +212,16 @@ body {
    */
   .site-primary-menu {
 
-    background-color: $primary_menu_color_background;
-    @if $primary_menu_color_background_opacity < 100 {
-      background-color: rgba($primary_menu_color_background, ($primary_menu_color_background_opacity / 100));
+    background-color: $section_primary_menu_color_background;
+    @if $section_primary_menu_color_background_opacity < 100 {
+      background-color: rgba($section_primary_menu_color_background, ($section_primary_menu_color_background_opacity / 100));
       body.effects & {
         -webkit-backdrop-filter: saturate(80%) blur(15px);
       }
     }
+
+    // Doesn't supports.
+    // @include sectionBackground($section_primary_menu_image, $section_primary_menu_image_size, $section_primary_menu_image_attachment_scroll, $section_primary_menu_image_repeat, $section_primary_menu_image_position_x, $section_primary_menu_image_position_y);
 
     position: relative;
     @extend .clearfix;
@@ -196,17 +229,26 @@ body {
       @extend .wrapper;
       @extend .menu-inline;
 
+      @if $section_primary_menu_aligncenter {
+        text-align: center;
+      }
+
       > li {
         > a {
-          color: $primary_menu_color_foreground;
+          color: $section_primary_menu_color_foreground;
+          font-weight: normal;
         }
         > .sub-menu {
+          @extend %roundness-bottom;
+          @if $section_primary_menu_aligncenter {
+            text-align: initial;
+          }
           &:before {
             display: none;
           }
           border-top: none !important;
           a {
-            color: $primary_menu_color_background;
+            color: $section_primary_menu_color_background;
           }
         }
       }
@@ -216,23 +258,28 @@ body {
       > .current-menu-ancestor > a,
       > li.current-menu-item > a,
       > li.menu-item-has-children:hover > a:hover {
-        background-color: $primary_menu_color_foreground;
-        color: $primary_menu_color_background;
+        @if (abs(lightness($section_primary_menu_color_foreground) - lightness($section_primary_menu_color_background))  < 20) {
+          background-color: $section_primary_menu_color_foreground;
+          color: invert($section_primary_menu_color_background);
+        }
+        @else {
+          background-color: $section_primary_menu_color_foreground;
+          color: $section_primary_menu_color_background;
+        }
       }
     }
   }
 }
-
 
 /**
  * The main container area
  */
 .site-container-wrapper {
 
-  color: $main_color_foreground;
-  background-color: $main_color_background;
-  @if $main_color_background_opacity < 100 {
-    background-color: rgba($main_color_background, ( $main_color_background_opacity / 100 ) );
+  color: $section_main_color_foreground;
+  background-color: $section_main_color_background;
+  @if $section_main_color_background_opacity < 100 {
+    background-color: rgba($section_main_color_background, ($section_main_color_background_opacity / 100));
   }
 
   .site-container {
@@ -240,58 +287,101 @@ body {
     @extend .wrapper;
 
     vertical-align: top;
-    table-layout: fixed;
-    display: table;
-
-    // @TODO replace table with flex and re-arrange the sidebars like [main], [primary sidebar], [secondary sidebar] then re-arrange with flex order.
-    // right now, there is some issue with .site-main{} it goes over-sized.
-    //flex-flow: row wrap;
-    //justify-content: space-between;
-    //display: flex;
-    //.sidebar {
-    //  flex-grow: 0;
-    //  flex-shrink: 0;
-    //}
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 
     .site-main {
-      display: table-cell;
+
+      @include sectionBackground($section_main_image, $section_main_image_size, $section_main_image_attachment_scroll, $section_main_image_repeat, $section_main_image_position_x, $section_main_image_position_y);
+
       vertical-align: top;
-      width: auto;
+      flex-grow: 1;
+      flex-shrink: 1;
+      order: 1;
+      min-width: 0; // Fixes the enormous <pre>
+
+      @if ( $section_sidebar_primary_color_background or $section_sidebar_secondary_color_background ) {
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+
     }
 
     body.page-template-template-thin & {
-      display: block;
       width: 50%;
+      max-width: 50%;
     }
 
-    body.page-template-template-thick & {
-      display: block;
+    body.page-template-template-fullwidth & {
       width: 100%;
       max-width: 100%;
     }
 
     .sidebar {
-      display: table-cell;
+      flex-grow: 0;
+      flex-shrink: 0;
       vertical-align: top;
-      padding-right: 2em;
+      padding-bottom: 2em;
       padding-top: 2em;
-      @if $sidebar_primary_width {
-        width: $sidebar_primary_width + px;
-      }
-      @if $sidebar_primary_color_background {
-        background-color: $sidebar_primary_color_background;
-        color: $sidebar_primary_color_foreground;
+
+      &.sidebar-primary {
+        order: 0;
+        @if $section_sidebar_primary_width {
+          width: $section_sidebar_primary_width + px;
+        }
+        @if $section_sidebar_primary_color_foreground {
+          color: $section_sidebar_primary_color_foreground;
+        }
+        @if ( $section_sidebar_primary_color_background and ( $section_sidebar_primary_color_background != $section_main_color_background ) ) {
+          background-color: $section_sidebar_primary_color_background;
+          padding-right: 1em;
+          padding-left: 1em;
+
+          // Invert colors if the background is dark as the primary color.
+          @if abs(lightness($section_sidebar_primary_color_background) - lightness($section_root_color_primary)) < 40% {
+            color: $section_root_color_primary_inverted;
+            a {
+              color: $section_root_color_primary_inverted;
+            }
+            a:hover {
+              color: $section_root_color_primary;
+            }
+          }
+
+        } @else {
+          padding-right: 1em;
+          padding-left: 0;
+        }
       }
 
       &.sidebar-secondary {
-        @if $sidebar_secondary_width {
-          width: $sidebar_secondary_width + px;
+        order: 2;
+        @if $section_sidebar_secondary_width {
+          width: $section_sidebar_secondary_width + px;
         }
-        padding-left: 2em;
-        padding-right: 0;
-        @if $sidebar_secondary_color_background {
-          background-color: $sidebar_secondary_color_background;
-          color: $sidebar_secondary_color_foreground;
+        @if $section_sidebar_secondary_color_foreground {
+          color: $section_sidebar_secondary_color_foreground;
+        }
+        @if ( $section_sidebar_secondary_color_background and ( $section_sidebar_secondary_color_background  != $section_main_color_background ) ) {
+          background-color: $section_sidebar_secondary_color_background;
+          padding-right: 1em;
+          padding-left: 1em;
+        } @else {
+          padding-left: 1em;
+          padding-right: 0;
+        }
+
+        // Invert colors if the background is dark as the primary color.
+        @if abs(lightness($section_sidebar_secondary_color_background) - lightness($section_root_color_primary)) < 40% {
+          color: $section_root_color_primary_inverted;
+          a {
+            color: $section_root_color_primary_inverted;
+          }
+          a:hover {
+            color: $section_root_color_primary;
+          }
         }
       }
 
@@ -304,25 +394,32 @@ body {
 
     }
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       width: 96%;
       margin-left: 2%;
       margin-right: 2%;
+      flex-flow: column;
       .site-main {
-        display: table-header-group;
+        order: 1;
+        width: auto !important;
+        padding: 0;
+        margin-top: 1em;
+        margin-bottom: 1em;
         &:not(:last-child) {
-          border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 90%);
+          border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+          padding-bottom: 1em;
         }
       }
-      .sidebar,
-      .sidebar.sidebar-secondary {
-        display: table-row-group;
+      .sidebar {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        width: auto !important;
+        order: 2;
       }
     }
 
   }
 }
-
 
 /**
  * Footer
@@ -330,10 +427,12 @@ body {
 .site-footer-wrapper {
   @extend .clearfix;
 
-  background-color: $footer_color_background;
-  @if $footer_color_background_opacity < 100 {
-    background-color: rgba($footer_color_background, ( $footer_color_background_opacity / 100 ) );
+  background-color: $section_footer_color_background;
+  @if $section_footer_color_background_opacity < 100 {
+    background-color: rgba($section_footer_color_background, ($section_footer_color_background_opacity / 100));
   }
+
+  @include sectionBackground($section_footer_image, $section_footer_image_size, $section_footer_image_attachment_scroll, $section_footer_image_repeat, $section_footer_image_position_x, $section_footer_image_position_y);
 
   body.effects:not(.boxed) & {
     box-shadow: inset 0 9px 8px -8px rgba(0, 0, 0, .5);
@@ -349,16 +448,15 @@ body {
     margin-bottom: 1em;
     text-align: center;
 
-
-    @if $footer_background_highlight_inner {
-      background: rgba( $footer_color_foreground , .1);
+    @if $section_footer_background_highlight_inner {
+      background: rgba($section_footer_color_foreground, .1);
     }
 
-    @media (max-width: $breakpoint_tablet) {
+    @media (max-width: $section_root_breakpoint_tablet) {
       margin-bottom: 0;
     }
 
-    @media (max-width: $breakpoint_mobile) {
+    @media (max-width: $section_root_breakpoint_mobile) {
       flex-flow: column;
       display: block;
       width: 100%;
@@ -377,11 +475,11 @@ body {
         margin-right: auto;
       }
 
-      @media (max-width: $breakpoint_tablet) and (min-width: $breakpoint_mobile) {
+      @media (max-width: $section_root_breakpoint_tablet) and (min-width: $section_root_breakpoint_mobile) {
         max-width: 48%;
       }
 
-      @media (max-width: $breakpoint_mobile) {
+      @media (max-width: $section_root_breakpoint_mobile) {
         max-width: none;
         width: auto;
       }
@@ -389,36 +487,39 @@ body {
     }
 
   }
-  &, input, textarea, select, a, .widgettitle, button {
-    color: $footer_color_foreground
+  &, input, textarea, select, .widgettitle, button {
+    color: $section_footer_color_foreground;
   }
-  a:hover {
-    color: $color_secondary;
-    text-decoration: none;
+  a {
+    color: mix($section_footer_color_foreground, $section_root_color_primary, 80%);
+    &:hover {
+      color: $section_root_color_secondary;
+      text-decoration: none;
+    }
   }
   input, textarea, select {
-    background-color: darken($footer_color_background, 7%);
-    border-color: darken($footer_color_background, 10%);
+    background-color: darken($section_footer_color_background, 7%);
+    border-color: darken($section_footer_color_background, 10%);
     body.effects {
       box-shadow: inset 0 2px 3px rgba(0, 0, 0, .1);
     }
-    color: $footer_color_foreground;
+    color: $section_footer_color_foreground;
     &:focus {
-      background-color: darken($footer_color_background, 4%);
+      background-color: darken($section_footer_color_background, 4%);
     }
   }
   input[type=button], input[type=submit], input[type=reset], button, .button {
-    background-color: darken($footer_color_background, 7%);
-    border-color: darken($footer_color_background, 7%);
+    background-color: darken($section_footer_color_background, 7%);
+    border-color: darken($section_footer_color_background, 7%);
     box-shadow: none;
-    color: $footer_color_foreground;
+    color: $section_footer_color_foreground;
     &:hover {
-      background-color: darken($footer_color_background, 5%);
-      border-color: darken($footer_color_background, 5%);
+      background-color: darken($section_footer_color_background, 5%);
+      border-color: darken($section_footer_color_background, 5%);
     }
   }
   .widget .widgettitle {
-    border-bottom: 1px solid mix($footer_color_foreground, $footer_color_background, 10%);
+    border-bottom: 1px solid mix($section_footer_color_foreground, $section_footer_color_background, 10%);
     margin: 0 0 .8em 0;
     padding: .8em 0;
     text-align: center;
@@ -426,14 +527,13 @@ body {
   }
 }
 
-
 /**
  * Bottom
  */
 .site-bottomline-wrapper {
   @extend .clearfix;
   @extend .small;
-  @if $bottomline_sticky {
+  @if $section_bottomline_sticky {
     position: sticky;
     left: 0;
     right: 0;
@@ -442,31 +542,25 @@ body {
   }
   padding: 1em;
   text-align: center;
-  background-color: $bottomline_color_background;
-  border-top: 1px solid mix($bottomline_color_background, $bottomline_color_foreground, 90%);
-  color: $bottomline_color_foreground;
-  @if $bottomline_color_background_opacity < 100 {
-    background-color: rgba($bottomline_color_background, ( $bottomline_color_background_opacity / 100 ) );
+  background-color: $section_bottomline_color_background;
+  color: $section_bottomline_color_foreground;
+  @if $section_bottomline_color_background_opacity < 100 {
+    background-color: rgba($section_bottomline_color_background, ($section_bottomline_color_background_opacity / 100));
   }
 }
-
 
 /**
  * Error 404 page
  */
 body.error404 {
-  #main {
-    box-shadow: 2px 2px 28px -8px rgba(0, 0, 0, .9);
+  .error-content-wrapper {
     margin: 2em auto;
-    max-width: $breakpoint_tablet;
-    min-width: $breakpoint_mobile;
+    max-width: $section_root_breakpoint_tablet;
+    min-width: $section_root_breakpoint_mobile;
     width: 90%;
     padding: 2em;
     .title {
       @extend .base-title;
-    }
-    .content {
-      border-bottom: 1px solid mix($main_color_background, $main_color_foreground, 90%);
     }
     .site-info {
       @extend .base-title;
@@ -475,12 +569,11 @@ body.error404 {
   }
 }
 
-
 /**
  * Boxed layout
  */
 body.boxed {
-  @media (min-width: $breakpoint_tablet) {
+  @media (min-width: $section_root_breakpoint_tablet) {
     .site-topline-wrapper,
     .site-header-wrapper,
     .site-container-wrapper,
@@ -510,23 +603,28 @@ body.boxed {
   }
 }
 
-
 /**
- * Frontpage
+ * Login integration
  */
-.frontpage-under {
-  @media (min-width: $breakpoint_tablet) {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    .frontpage-under-primary {
-      width: 60%;
-      display: table-cell;
-      vertical-align: top;
-    }
-    .frontpage-under-secondary {
-      display: table-cell;
-      vertical-align: top;
-    }
+body.login {
+
+  #login_error {
+    @extend .message;
+    @extend .error;
+  }
+
+  .message.register {
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    @extend .big;
+  }
+
+  [aria-describedby="login_error"] {
+    @extend .error;
   }
 }

@@ -3,7 +3,7 @@
   <div class="comment-meta">
 
     <div class="comment-author-avatar">
-      <?php echo get_avatar(get_comment_author_email(), get_theme_mod('avatar_size')) ?>
+      <?php echo get_avatar(get_comment_author_email(), get_theme_mod('component_avatar_size')) ?>
     </div>
 
     <div class="comment-author">

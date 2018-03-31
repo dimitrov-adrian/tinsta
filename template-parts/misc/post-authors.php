@@ -30,5 +30,6 @@ if (!$authors) {
             ' . get_the_author_meta( 'display_name', $author_id) . '
             </a>'?>
     </div>
+  </div>
   <?php endforeach?>
 </div>

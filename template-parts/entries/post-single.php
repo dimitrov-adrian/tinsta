@@ -19,13 +19,9 @@
     <div class="entry-meta">
 
       <time class="entry-meta-time" datetime="<?php the_time('c') ?>" pubdate="pubdate">
-        <?php if (get_theme_mod('post_link_date', true)): ?>
-          <a href="<?php echo get_month_link(get_post_time('Y'), get_post_time('m')) ?>">
-            <?php the_time(get_option('date_format')) ?>
-          </a>
-        <?php else: ?>
+        <a href="<?php echo get_month_link(get_post_time('Y'), get_post_time('m')) ?>">
           <?php the_time(get_option('date_format')) ?>
-        <?php endif ?>
+        </a>
       </time>
 
       <?php if (get_comments_number()): ?>
@@ -62,8 +58,8 @@
 
   <div class="entry-content">
     <?php
-    the_content(sprintf(__('Continue reading %s', 'tinsta'), '<span class="screen-reader-text">' . get_the_title() . '</span>'));
-    tinsta_pagination('singular');
+      the_content(sprintf(__('Continue reading %s', 'tinsta'), '<span class="screen-reader-text">' . get_the_title() . '</span>'));
+      tinsta_pagination('singular');
     ?>
   </div>
 
@@ -71,9 +67,9 @@
 
     <?php if ($categories = get_the_terms(get_the_ID(), 'category')): ?>
       <div class="entry-footer-row categories">
-      <span class="entry-footer-categories-label">
-        <?php _e('Categories: ', 'tinsta') ?>
-      </span>
+        <span class="entry-footer-categories-label">
+          <?php _e('Categories: ', 'tinsta') ?>
+        </span>
         <?php echo get_the_category_list() ?>
       </div>
     <?php endif ?>

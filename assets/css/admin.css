@@ -1,7 +1,25 @@
-#customize-control-site_topline .CodeMirror-wrap,
-#customize-control-site_bottomline .CodeMirror-wrap,
-#customize-control-social_networks_code .CodeMirror-wrap,
-#customize-control-header_markup .CodeMirror-wrap,
-#customize-control-footer_markup .CodeMirror-wrap {
+/* Make code editor almost full height for next controls */
+#customize-control-component_site_topline .CodeMirror-wrap,
+#customize-control-component_site_bottomline .CodeMirror-wrap,
+#customize-control-component_social_networks_code .CodeMirror-wrap,
+#customize-control-component_header_markup .CodeMirror-wrap,
+#customize-control-component_footer_markup .CodeMirror-wrap {
   height: calc( 100vh - 260px );
+}
+
+/* Fix the bottom border in customizer settings */
+#customize-theme-controls .control-section:last-of-type.open {
+  border-bottom: none;
+}
+
+/* Tinsta Widget Addons */
+.tinsta-widget-fieldset {
+  border: 1px solid #ddd;
+  margin-bottom: 1em;
+  padding: 1em;
+}
+.tinsta-widget-fieldset legend {
+  font-weight: bold;
+  padding-left: .6em;
+  padding-right: .6em;
 }
