@@ -1,6 +1,10 @@
 html {
   box-sizing: border-box;
-  // -webkit-tap-highlight-color: mix($section_root_color_secondary, $section_root_color_secondary_inverted, 60%);
+  -webkit-tap-highlight-color: $region_root_color_secondary;
+
+  -webkit-touch-callout:none;                /* prevent callout to copy image, etc when tap to hold */
+  -webkit-text-size-adjust:none;             /* prevent webkit from resizing text to fit */
+  -webkit-tap-highlight-color:rgba(0,0,0,0); /* prevent tap highlight color / shadow */
 }
 
 html[dir="rtl"],
@@ -11,63 +15,42 @@ html[dir="rtl"] body {
 
 // @TODO a11y focus outline
 
-
 *,
 *:before,
 *:after {
-  /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior; see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
+  /* Inherit box-sizing to make it easier to change the property for components that leverage other behavior;
+     see http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
   box-sizing: inherit;
 }
 
-// @TODO add to elements
-%roundness {
-  @if $effects_roundness {
-    border-radius: ( $effects_roundness / 7 ) + 'em';
-  }
-}
-%roundness-bottom {
-  @if $effects_roundness {
-    border-bottom-left-radius: ( $effects_roundness / 7 ) + 'em';
-    border-bottom-right-radius: ( $effects_roundness / 7 ) + 'em';
-  }
-}
-
-%noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 // Seems that placeholders can't be chained.
-::-webkit-input-placeholder {
-  color: inherit;
-}
+::-webkit-input-placeholder { color: inherit }
+::-moz-placeholder { color: inherit }
+:-ms-input-placeholder { color: inherit }
 
-::-moz-placeholder {
-  color: inherit;
-}
-
-:-ms-input-placeholder {
-  color: inherit;
-}
-
+/**
+ * The body that should contain all base typography and color settings.
+ */
 body {
 
   @if $typography_font_size {
     font-size: $typography_font_size + px;
   }
+
+  @if $typography_font_line_height {
+    line-height: ( $typography_font_line_height / 100 ) ;
+  }
+
   font-weight: normal;
-  line-height: 1.72em;
   font-style: normal;
+
   @if $typography_font_google {
     font-family: $typography_font_google, $typography_font_family;
   } @else {
     font-family: $typography_font_family;
   }
 
-  @media (max-width: $section_root_breakpoint_tablet) {
+  @media (max-width: $region_root_breakpoint_tablet) {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -87,35 +70,22 @@ body {
     word-wrap: break-word;
   }
 
+  -webkit-font-smoothing: subpixel-antialiased;
+
+  @if $typography_text_enhancements {
+    text-rendering: optimizeLegibility;
+    backface-visibility: hidden;
+    font-kerning: normal;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: grayscale;
+  }
+
 }
 
-p {
-  overflow: hidden;
-}
-
-button,
-input,
-select,
-textarea {
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  font-weight: inherit;
-}
-
-.small {
-  font-size: .9em;
-}
-
-.big {
-  font-size: 1.2em;
-}
-
-.bigger {
-  font-size: 1.4em;
-}
-
+/**
+ * Screen reader text.
+ */
 .screen-reader-text {
   clip: rect(1px, 1px, 1px, 1px);
   height: 1px;
@@ -124,12 +94,12 @@ textarea {
   width: 1px;
   word-wrap: normal !important; /* Many screen reader and browser combinations announce broken words as they would appear visually. */
   &:focus {
-    background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
+    background-color: $region_main_color_background;
     box-shadow: 4px 4px 0 rgba(0, 0, 0, .4);
     clip: auto !important;
-    color: $section_root_color_primary;
+    color: $region_root_color_primary;
     display: block;
-    @extend .big;
+    @extend %big;
     font-weight: 700;
     height: auto;
     left: 5px;
@@ -141,38 +111,75 @@ textarea {
   }
 }
 
+.color-primary {
+  color: $region_root_color_primary;
+}
+
+.color-secondary {
+  color: $region_root_color_secondary;
+}
+
+.wrapper {
+  @extend %wrapper;
+}
+
+.small {
+  @extend %small;
+}
+
+.big {
+  @extend %big;
+}
+
+.bigger {
+  @extend %bigger;
+}
+
 .clearfix {
-  &:after {
-    clear: both;
-    content: '';
-    display: table;
-  }
+  @extend %clearfix;
+}
+
+.disabled,
+&[disabled] {
+  @extend %disabled;
+}
+
+p {
+  // @TODO Should find different way to deal with floated images in <p> element.
+  // overflow: hidden;
+  margin: 16px 0;
+  padding: 0;
 }
 
 img {
-  height: auto;
-  max-width: 100%;
-  width: auto;
 
-  -ms-interpolation-mode: nearest-neighbor; // IE 7+ (non-standard property)
-  image-rendering: -webkit-optimize-contrast; // Safari 6, UC Browser 9.9
-  image-rendering: -webkit-crisp-edges; // Safari 7+
-  image-rendering: -moz-crisp-edges; // Firefox 3.6+
-  image-rendering: -o-crisp-edges; // Opera 12
-  image-rendering: crisp-edges;
+  // This is evil
+  //height: auto;
+  //max-width: 100%;
+  //width: auto;
 
-  @media (max-width: $section_root_breakpoint_mobile) {
+  // With mobiles with such resolution it's better to show images pixelated (IMHO)
+  @media (max-width: 480px) {
     image-rendering: pixelated;
   }
-
 }
 
+img, video {
+  max-width: 100%
+}
+
+// @TODO there was some reason to do this hack, but can't remember.
+//li img {
+//  margin: 0 .4em 0 0;
+//  vertical-align: middle;
+//}
+
 a {
-  color: $section_root_color_primary;
+  color: $region_root_color_primary;
   text-decoration: none;
 
   &:hover {
-    color: $section_root_color_secondary;
+    color: $region_root_color_secondary;
     //text-decoration: underline; // underlined decoration could make troubles with icons
     abbr {
       border-bottom-width: 0;
@@ -186,14 +193,13 @@ h3,
 h4,
 h5,
 h6,
-.base-title {
+.base-title,
+%base-title{
 
   @if $typography_font_headings_google {
     font-family: $typography_font_headings_google;
-  } @else {
-    @if $typography_font_family_headings {
-      font-family: $typography_font_family_headings;
-    }
+  } @else if $typography_font_family_headings {
+    font-family: $typography_font_family_headings;
   }
 
   @if $typography_font_headings_style {
@@ -205,7 +211,37 @@ h6,
   }
 
   font-weight: bold;
-  //line-height: 1.4em;
+  line-height: 1em;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+
+h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+h4 {
+  font-size: 1em;
+  margin: 1.33em 0;
+}
+
+h5 {
+  font-size: 0.83em;
+  margin: 1.67em 0;
+}
+
+h6 {
+  font-size: 0.75em;
+  margin: 2.33em 0;
 }
 
 details > summary {
@@ -249,18 +285,20 @@ i {
 }
 
 kbd {
-  background-color: mix($section_main_color_foreground, $section_main_color_background, 90%);
+  background-color: rgba($region_root_color_foreground, .8);
   border-radius: .26em;
   box-shadow: inset 1px -1px 1px rgba(#000, 0.25);
-  color: $section_main_color_background;
+  color: $region_main_color_background;
   padding: 2px 4px;
 }
 
+.size-thumbnail,
 figure {
   margin: 0 0 1.5em 0;
   padding: 0;
   max-width: 100%;
   overflow: hidden;
+  text-align: center;
 }
 
 .alignleft {
@@ -296,11 +334,6 @@ img.alignright {
   text-align: center;
 }
 
-img.default-image {
-  filter: grayscale(100%);
-  opacity: .4;
-}
-
 pre,
 code,
 kbd,
@@ -310,11 +343,17 @@ var {
   margin-left: .1em;
   margin-right: .1em;
 }
+code {
+  padding-left: .2em;
+  padding-right: .2em;
+  display: inline-block;
+}
+code,
+pre {
+  background-color: rgba($region_root_color_foreground, .08);
+}
 
 pre {
-  // @TODO use opacity as background.
-  background-color: rgba($section_main_color_foreground, .08);
-  color: mix($section_main_color_background, $section_main_color_foreground, 5%);
   margin-bottom: 1.6em;
   max-width: 100%;
   overflow: auto;
@@ -322,106 +361,101 @@ pre {
 }
 
 blockquote {
+  @extend %bigger;
   quotes: "" "";
   &:before,
   &:after {
     content: "";
   }
+  border-top: 4px solid $region_root_color_secondary;
+  border-bottom: 4px solid $region_root_color_secondary;
+  font-style: italic;
+  margin: 1em 1%;
+  overflow: hidden;
+  padding: 0 .6em;
+  position: relative;
+}
+
+blockquote,
+cite {
+  line-height: 1.72em;
 }
 
 q {
-  @extend .big;
+  @extend %big;
   font-style: oblique;
   quotes: "“" "”" "‘" "’";
 }
 
 hr {
+  @include border($region_root_color_foreground, '-bottom');
   border: none;
-  border-top: 1px solid rgba($section_main_color_foreground, .2);
   clear: both;
+  margin-top: 1.5em;
   margin-bottom: 1.5em;
   zoom: 1;
 }
 
 table {
-  border-collapse: separate;
   border-spacing: 0;
-  margin: 0 0 1.6em;
+  margin-bottom: 1.5em;
   table-layout: fixed; /* Prevents HTML tables from becoming too wide */
   width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  @include border($region_root_color_foreground, '', 1);
+
+  thead {
+    background-color: opa(muted($region_main_color_background, $region_root_color_foreground));
+  }
 
   td, th {
-    border-left: 0;
-    border-top: 0;
     padding: .4em;
   }
 
-   > tr > td:last-child,
-   > tr > th:last-child,
-   > tfoot > tr:first-child td,
-   > tfoot > tr:first-child th {
+  thead tr:last-child > th,
+  thead tr:last-child > td,
+  tbody tr:first-child > th {
+    border-bottom: 1px solid rgba($region_root_color_foreground, .12);
+  }
+
+  tbody th,
+  tbody td,
+  thead th,
+  thead td {
+    border-right: 1px solid rgba($region_root_color_foreground, .12);
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  > tr > td:last-child,
+  > tr > th:last-child,
+  > tfoot > tr:first-child td,
+  > tfoot > tr:first-child th {
     border-left: 0;
   }
 
-   > tfoot > tr:first-child :last-child,
-   > thead > tr > :last-child,
-   > tbody > tr > :last-child,
-   > tfoot > tr > :last-child {
+  > tfoot > tr:first-child :last-child,
+  > thead > tr > :last-child,
+  > tbody > tr > :last-child,
+  > tfoot > tr > :last-child {
     border-right: 0;
   }
 
-   > tr:last-child > td,
-   > tr:last-child > th,
-   > tbody > tr:last-child > td,
-   > tbody > tr:last-child > th,
-   > tfoot > tr:last-child > td,
-   > tfoot > tr:last-child > th {
+  > tr:last-child > td,
+  > tr:last-child > th,
+  > tbody > tr:last-child > td,
+  > tbody > tr:last-child > th,
+  > tfoot > tr:last-child > td,
+  > tfoot > tr:last-child > th {
     border-bottom: 0;
   }
-}
 
-table {
-  border: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .4);
-  border-collapse: collapse;
-  thead {
-    background-color: rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .2);
+  tr:nth-child(even) {
+    background-color: opa(muted($region_main_color_background, $region_root_color_foreground));
   }
-  tbody {
-    //background: rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .1);
-    td, th {
-      border-right: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 80%), .4);
-      &:last-child {
-        border-right: none;
-      }
-    }
-    tr:nth-child(even) {
-      background-color: rgba(mix($section_main_color_background, $section_main_color_foreground, 90%), .2);
-    }
-  }
-}
 
-//
-@media (max-width: $section_root_breakpoint_tablet) {
-  .hentry .caption,
-  .hentry .alignleft,
-  .hentry .alignright,
-  .hentry figure {
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-    display: block;
-    width: auto;
-    min-width: unset;
-    max-width: 100%;
-    float: none;
-    clear: both;
-  }
-}
-
-.size-thumbnail {
-  @extend figure;
 }
 
 img.size-full {
@@ -436,8 +470,35 @@ img.wp-smiley {
 }
 
 .wp-caption-text {
-  color: mix($section_main_color_foreground, $section_main_color_background, 70%);
-  @extend .small;
+  color: rgba($region_root_color_foreground, .7);
+  @extend %small;
+}
+
+/* wp-caption */
+.wp-caption {
+  color: rgba($region_root_color_foreground, .7);
+  background: rgba($region_root_color_background, .7);
+  max-width: 96%; /* Image does not overflow the content area */
+  padding: 5px 3px 10px;
+  text-align: center;
+
+  &.alignnone {
+      margin: 5px 20px 20px 0;
+  }
+  &.alignleft {
+      margin: 5px 20px 20px 0;
+  }
+  &.alignright {
+      margin: 5px 0 20px 20px;
+  }
+  img {
+      border: 0 none;
+      height: auto;
+      margin: 0;
+      max-width: 98.5%;
+      padding: 0;
+      width: auto;
+  }
 }
 
 /**
@@ -464,13 +525,6 @@ ul.wp-block-gallery {
   }
 }
 
-.gallery-columns-6 .gallery-caption,
-.gallery-columns-7 .gallery-caption,
-.gallery-columns-8 .gallery-caption,
-.gallery-columns-9 .gallery-caption {
-  display: none;
-}
-
 .gallery-icon img {
   margin: 0 auto;
 }
@@ -479,174 +533,17 @@ ul.wp-block-gallery {
  * Forms
  */
 fieldset {
-  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+  min-width: 0; // https://thatemil.com/blog/2015/01/03/reset-your-fieldset/
+  @include border($region_root_color_foreground);
+  border-width: $typography_bordering + px;
   legend {
     padding-left: 1em;
     padding-right: 1em;
   }
 }
-input, textarea, select {
-  background-color: transparent;
-}
-
-
-textarea {
-  overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
-  resize: vertical;
-  vertical-align: top; /* Improves readability and alignment in all browsers */
-  width: 99.9%;
-}
-
-input[type="radio"],
-input[type="checkbox"],
-select {
-  cursor: pointer;
-  @extend %noselect;
-}
-
-select {
-  //height: 2.4em;
-  max-width: 98%;
-  height: auto;
-  -moz-appearance: none;
-}
-
-input,
-textarea,
-select,
-.wp-editor-container {
-  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
-  outline: 0;
-  padding: (( $typography_form_spacing / 20 ) + em) (( $typography_form_spacing / 10 ) + em);
-  vertical-align: baseline;
-  @extend %roundness;
-  &:focus {
-    border-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
-  }
-}
-
-.select2-container {
-  .select2-selection--single,
-  .select2-choice {
-    border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
-    // max-width: 98%;
-    > .select2-chosen {
-      padding: (( $typography_form_spacing / 20 ) + em) (( $typography_form_spacing / 10 ) + em);
-    }
-    @extend %roundness;
-  }
-}
-// Deprecated
-//div#select2-drop {
-//  border: ($typography_form_borders + px) solid mix($section_main_color_background, $section_main_color_foreground, 80%);
-//}
-//.select2-search input {
-//  margin-top: .5em;
-//}
-
-
-.button {
-  cursor: pointer;
-  @extend %noselect;
-  display: inline-block;
-  font-weight: normal;
-  background-color: $section_root_color_primary;
-  border: ($typography_form_borders + px) solid $section_root_color_primary;
-  color: $section_root_color_primary_inverted;
-
-  @if $typography_font_button_text_style {
-    @if $typography_font_button_text_style == 'uppercase' {
-      text-transform: uppercase;
-    } @else {
-      font-variant: $typography_font_button_text_style;
-    }
-  }
-
-  text-decoration: none;
-  .so-panel & {
-    color: $section_root_color_primary_inverted !important;
-    border: ($typography_form_borders + px) solid $section_root_color_primary !important;
-  }
-  vertical-align: baseline;
-  &.secondary {
-    background-color: $section_root_color_secondary;
-    border-color: $section_root_color_secondary;
-    color: $section_root_color_secondary_inverted;
-  }
-
-  -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
-
-  -moz-appearance: none;
-
-  @if $typography_form_button_style == 'border' {
-    background-color: transparent;
-    color: $section_root_color_primary;
-  }
-
-  @if $typography_form_button_style == '' {
-    background-color: transparent;
-    color: $section_root_color_primary;
-    border: none;
-    font-weight: bold;
-  }
-
-  @extend %roundness;
-
-  &:hover,
-  &:focus {
-    background-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
-    border-color: mix($section_root_color_primary, $section_main_color_foreground, 90%);
-    color: $section_root_color_primary_inverted;
-    text-decoration: none;
-  }
-
-  &.secondary {
-    background-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
-    border-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
-    color: $section_root_color_secondary_inverted;
-    &:hover,
-    &:focus {
-      background-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
-      border-color: mix($section_root_color_secondary, $section_main_color_foreground, 90%);
-      color: $section_root_color_secondary_inverted;
-    }
-  }
-
-  &[disabled] {
-    filter: grayscale(95%);
-  }
-}
-
-
-li.button > a,
-a.button,
-button,
-input[type="button"],
-input[type="reset"],
-input[type="submit"] {
-  @extend .button;
-}
-
-//
-//input[type="checkbox"],
-//input[type="radio"] {
-//  padding: 0; /* Addresses excess padding in IE8/9 */
-//}
-//
-//button::-moz-focus-inner,
-//input::-moz-focus-inner { /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
-//  border: 0;
-//  padding: 0;
-//}
-//
-//[placeholder]:focus::-webkit-input-placeholder {
-//  opacity: 0;
-//}
-
 label {
   padding-bottom: .4em;
 }
-
 .form-row-wide {
   input,
   select,
@@ -654,24 +551,91 @@ label {
     width: 100%;
   }
 }
-
-
-// @TODO why this?
-li img {
-  margin: 0 .4em 0 0;
+button,
+input,
+select,
+textarea {
+  vertical-align: baseline;
+  color: inherit;
+  line-height: inherit;
+}
+input[type="radio"],
+input[type="checkbox"] {
+  @extend %noselect;
+  cursor: pointer;
   vertical-align: middle;
+  padding: 0; /* Addresses excess padding in IE8/9 */
+}
+select {
+  @extend %noselect;
+  cursor: pointer;
+  height: auto;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+input,
+textarea,
+select,
+.wp-editor-container,
+.select2-container .select2-selection--single,
+.select2-container .select2-choice {
+  @include roundness();
+  padding: (( $typography_form_spacing *(1/100) ) + em) (( $typography_form_spacing *(2/100) ) + em);
+  outline: 0;
+
+  @include border($region_root_color_foreground);
+  background-color: $region_main_color_background;
+  &:focus {
+    border-color: $region_root_color_primary;
+  }
+
+}
+.select2-container .select2-selection--single > .select2-chosen,
+.select2-container .select2-choice > .select2-chosen {
+  padding: (( $typography_form_spacing *(1/100) ) + em) (( $typography_form_spacing *(2/100) ) + em);
+}
+textarea {
+  overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
+  resize: vertical;
+  vertical-align: top; /* Improves readability and alignment in all browsers */
+  width: 99.9%;
+  @include roundness('', 0.5);
 }
 
-blockquote:not(.wp-block-pullquote) {
-  border-left: 4px solid $section_root_color_secondary;
-  @extend .bigger;
-  font-style: italic;
-  margin: 1em 1%;
-  overflow: hidden;
-  padding: 0 .6em;
-  position: relative;
+//li.button > a, // What's the case of this?
+//a.button, // What's the case of this?
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  @extend %noselect;
+  @include roundness();
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-appearance: none; /* Corrects inability to style clickable 'input' types in iOS */
+  -moz-appearance: none;
+  font-weight: normal;
+
+  @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_primary);
+  &.secondary {
+    @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_secondary);
+  }
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
+  border: 0;
+  padding: 0;
+}
+[placeholder]:focus::-webkit-input-placeholder {
+  opacity: 0;
 }
 
+/**
+ * Embedable containers
+ */
 .media-container {
   height: 0;
   margin-left: auto;
@@ -691,7 +655,6 @@ blockquote:not(.wp-block-pullquote) {
     width: 100%;
   }
 }
-
 .mejs-container,
 .twitter-tweet {
   margin-left: auto;
@@ -700,6 +663,75 @@ blockquote:not(.wp-block-pullquote) {
   position: relative;
 }
 
+/**
+ * Menu
+ */
+.menu,
+.menu li,
+.menu > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu {
+  // .menu-item {
+  //   // Break the submenu widths
+  //   //position: relative;
+  // }
+  li {
+    &.current_page_item,
+    &.current-menu-parent,
+    &.current-menu-ancestor,
+    &.current-menu-item {
+      > a {
+        font-weight: bold;
+      }
+    }
+  }
+  a {
+    display: block;
+    &:hover {
+      text-decoration: underline;
+    }
+    .description {
+      display: block;
+      line-height: .8em;
+      font-size: .8em;
+      text-decoration: none;
+    }
+  }
+}
+
+
+/**
+ * Avatars
+ */
 .avatar {
-  @extend %roundness;
+  @include roundness();
+}
+
+//
+@media (max-width: $region_root_breakpoint_tablet) {
+  .hentry .caption,
+  .hentry .alignleft,
+  .hentry .alignright,
+  .hentry figure {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    display: block;
+    width: auto;
+    min-width: unset;
+    max-width: 100%;
+    float: none;
+    clear: both;
+  }
+}
+.hentry {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }

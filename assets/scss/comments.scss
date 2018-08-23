@@ -1,0 +1,349 @@
+@charset "UTF-8";
+
+$la-is-loaded: true;
+@import "tinsta/_functions";
+
+@import "tinsta/_icons";
+
+/**
+ * Comments list
+ */
+.comments-wrapper {
+
+  // Experiment to apply region styles here
+  // allows customize the colors, and set background image.
+  @if ( false ) {
+    background :rgb(48, 73, 118);
+    padding: 2em;
+    @include roundness();
+  } @else {
+    margin: 2em 0;
+  }
+
+  .comments-heading {
+    display: block;
+    font-weight: bold;
+    margin: 2em;
+    text-align: center;
+  }
+
+  .no-comments {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .comments-toolbar {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    text-align: right;
+  }
+
+  .comments-list {
+    @extend %clearfix;
+
+    @media (min-width: 421px) {
+      .children {
+        margin-left: 1em;
+      }
+    }
+
+    .comment {
+
+      margin-bottom: 2em;
+      clear: both;
+      overflow: hidden;
+
+      .comment-author-avatar {
+        width: $component_avatar_size + px;
+        @media (min-width: 421px) {
+          float: left;
+          margin-right: 20px;
+          @if ($component_comments_style == 'chat') {
+            margin-top: 2.50em; // the default comment-meta height
+          }
+        }
+        @media (max-width: 420px) {
+          margin: 0 auto;
+        }
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+      .comment-meta {
+        .comment-author,
+        .comment-time,
+        .comment-edit-link,
+        .comment-reply-link {
+          display: inline-block;
+        }
+        .comment-author {
+          font-weight: bold;
+        }
+        .comment-time {
+          color: muted($region_root_color_foreground);
+          margin-left: 1em;
+        }
+        .comment-edit-link,
+        .comment-reply-link,
+        .safe-comments-report-link {
+          float: right;
+          margin-left: 1em;
+          @extend %small;
+          &:not(:last-child) {
+            padding-left: 1em;
+          }
+        }
+        .comment-reply-link {
+          &:after {
+            @extend %la;
+            content: $la-reply;
+          }
+        }
+        .comment-edit-link {
+          &:before {
+            @extend %la;
+            content: $la-edit;
+          }
+        }
+        .safe-comments-report-link {
+          a:after {
+            @extend %la;
+            content: $la-warning;
+          }
+        }
+      }
+      .comment-content {
+        @media (min-width: 421px) {
+          margin-left: $component_avatar_size + 20px;
+        }
+        margin-top: .8em;
+        @if ($component_comments_style == 'chat') {
+          @include roundness();
+          background-color: opa(muted($region_main_color_background, $region_root_color_foreground));
+          border-top: none;
+          padding: 10px;
+        } @else {
+          @include border($region_root_color_foreground, '-top');
+        }
+        //img {
+        //  display: block;
+        //  height: auto;
+        //  max-width: 100%;
+        //}
+      }
+
+      &.pingback,
+      &.trackback {
+        time {
+          background: muted($region_root_color_foreground);
+          float: left;
+          @extend %small;
+          padding: .3em;
+          text-align: center;
+          width: 7.4em;
+        }
+        .comment-pingback-content {
+          margin-left: 7em;
+          a {
+            display: block;
+          }
+        }
+      }
+
+    }
+
+    @media (min-width: 421px) {
+      .children {
+        margin-left: $component_avatar_size + 20px;
+        @media (max-width: $region_root_breakpoint_tablet) {
+          margin-left: ( $component_avatar_size - $component_avatar_size_small ) + px;
+        }
+        .comment {
+          margin-bottom: 1em;
+        }
+        .comment-author-avatar {
+          width: $component_avatar_size_small + px;
+        }
+        .comment-content {
+          margin-left: $component_avatar_size_small + 20px;
+        }
+        .children {
+          margin-left: $component_avatar_size_small + 20px;
+          @media (max-width: $region_root_breakpoint_tablet) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    @media (min-width: 421px) {
+      @if ($component_comments_style == 'chat') {
+        .comment:nth-child(even) {
+          .comment-author-avatar {
+            float: right;
+            margin-right: 0;
+            margin-left: 20px;
+          }
+          .comment-content {
+            margin-right: $component_avatar_size + 20px;
+            margin-left: 0;
+          }
+        }
+        .children .comment:nth-child(even) .comment-content {
+          margin-right: $component_avatar_size_small + 20px;
+          margin-left: 0;
+        }
+
+      }
+    }
+
+  }
+
+  &.hide-avatars {
+    .comments-list .comment {
+      .comment-author-avatar {
+        display: none;
+      }
+      .comment-content {
+        margin-left: 0;
+      }
+    }
+    .children,
+    .children .children {
+      margin-left: 20px;
+    }
+  }
+
+
+  /**
+   * Comment form
+   */
+  .comment-respond {
+
+    @extend %clearfix;
+    margin: 1em 0;
+    position: relative;
+
+    .comment-notes {
+      @extend %small;
+      margin: .6em 0;
+    }
+
+    .form-allowed-tags {
+      @extend %small;
+      margin: .6em 0;
+    }
+
+    #cancel-comment-reply-link {
+      float: right;
+      &:before {
+        @extend %la;
+        content: $la-close;
+      }
+    }
+
+    .required {
+      color: red;
+    }
+    .comment-form-avatar {
+      float: left;
+      width: $component_avatar_size + px;
+      @media (max-width: $region_root_breakpoint_tablet) {
+        width: 64px;
+      }
+      img {
+        display: block;
+        height: auto;
+      }
+      @media (max-width: $region_root_breakpoint_mobile) {
+        float: right;
+        width: 42px;
+        margin-top: -52px;
+        .comments-list & {
+          display: none;
+        }
+      }
+    }
+
+    .comment-form {
+      margin-left: $component_avatar_size + 10px;
+      @media (max-width: $region_root_breakpoint_tablet) {
+        margin-left: 74px;
+      }
+      @media (max-width: $region_root_breakpoint_mobile) {
+        margin-left: 0;
+        clear: both;
+        padding-top: 1em;
+      }
+      //position: relative;
+      overflow: hidden;
+      padding-bottom: 3em;
+
+      .logged-in-as,
+      .comment-notes {
+        bottom: 0;
+        position: absolute;
+      }
+
+      p {
+        label {
+          display: inline-block;
+          width: 12em;
+        }
+      }
+
+      // Exceptions.
+      .comment-form-cookies-consent label {
+        width: auto;
+      }
+
+      input[type="checkbox"] {
+        margin-right: .4em;
+        margin-top: -.2em;
+      }
+
+      .comment-form-comment {
+        margin-top: 0;
+        label {
+          display: none;
+        }
+        textarea {
+          height: $component_avatar_size + px;
+          max-height: unset;
+          min-height: $component_avatar_size + px;
+          @media (max-width: $region_root_breakpoint_tablet) {
+            height: 64px;
+            min-height: 64px;
+          }
+        }
+      }
+
+    }
+
+  }
+
+  .comments-list .comment-respond {
+    @include border($region_root_color_foreground, '', 1);
+    padding: 1em;
+    &:before {
+      border: 10px solid transparent;
+      @include border($region_root_color_foreground, '-bottom', 10);
+      content: '';
+      left: 30px;
+      position: absolute;
+      top: -11px;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &.hide-avatars {
+    .comment-form-avatar {
+      display: none;
+    }
+    .comment-respond .comment-form {
+      margin-left: 0;
+    }
+  }
+
+}

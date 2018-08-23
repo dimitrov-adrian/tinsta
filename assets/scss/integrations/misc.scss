@@ -16,8 +16,8 @@
 
 .cmb-form {
   .cmb-repeat-table .cmb-remove-row > .cmb-remove-row-button:before {
-    @extend .la;
-    @extend %la-trash-o;
+    @extend %la;
+    content: $la-trash-o;
   }
 }
 

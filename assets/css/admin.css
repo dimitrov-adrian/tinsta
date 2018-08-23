@@ -8,11 +8,22 @@
 }
 
 /* Fix the bottom border in customizer settings */
-#customize-theme-controls .control-section:last-of-type.open {
+#customize-theme-controls .control-region:last-of-type.open {
   border-bottom: none;
 }
 
-/* Tinsta Widget Addons */
+/* Hide next fields because are not relevant */
+.menu-item-tinsta-sidebar .field-link-target,
+.menu-item-tinsta-sidebar .field-xfn,
+.menu-item-tinsta-sidebar .field-description,
+.menu-item-tinsta-current-logged-user .field-link-target,
+.menu-item-tinsta-current-logged-user .field-xfn,
+.menu-item-tinsta-current-logged-user .field-description
+{
+  display: none !important;
+}
+
+  /* Tinsta Widget Addons */
 .tinsta-widget-fieldset {
   border: 1px solid #ddd;
   margin-bottom: 1em;

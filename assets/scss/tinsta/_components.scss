@@ -1,167 +1,26 @@
 /*
- * Back button
+ * Mobile menu and back button.
  */
 .mobile-back-button {
+  @include roundness('bottom');
+  z-index: $z-index-modal;
   position: fixed;
   top: 0;
   right: 0;
   left: 0;
   height: 3em;
   line-height: 3em;
-  vertical-align: middle;
-  background: $section_main_color_background;
-  color: $section_main_color_foreground;
+  background: $region_main_color_background;
+  color: $region_root_color_foreground;
   font-weight: bold;
   text-align: center;
-  z-index: 999999998; /* on top of all */
   cursor: pointer;
-  @extend %roundness-bottom;
   &:before {
-    @extend .la;
-    @extend %la-close;
+    @extend %la;
+    content: $la-close;
     line-height: 3em;
   }
 }
-
-/**
- * Generic menu styling
- */
-.menu {
-  &,
-  li {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  li {
-    &.current_page_item,
-    &.current-menu-parent,
-    &.current-menu-ancestor,
-    &.current-menu-item {
-      > a {
-        font-weight: bold;
-      }
-    }
-  }
-  a {
-    display: block;
-    padding: .3em;
-    .sidebar & {
-      padding: .3em .3em .3em 0;
-    }
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  @media (max-width: $section_root_breakpoint_tablet) {
-    text-align: center;
-    > li > .sub-menu {
-      display: none;
-    }
-  }
-}
-
-/**
- * Inline menu, must be used only with .menu
- */
-&.menu-inline {
-  > li {
-
-    &.right {
-      float: right;
-    }
-
-    display: inline-block;
-
-    > a {
-      padding: .6em 1em;
-      position: relative;
-      border: none;
-    }
-
-    > .sub-menu {
-
-      box-shadow: 1px 4px 20px -10px rgba(0, 0, 0, .9);
-      @extend %roundness-bottom;
-
-      // If header and main are close light colors, then invert the sub-menu popup.
-      @if (abs(lightness($section_main_color_background) - lightness($section_header_color_background) ) < 5) {
-        background-color: $section_main_color_foreground;
-        body.effects & {
-          background-color: rgba($section_main_color_foreground, .92);
-          -webkit-backdrop-filter: saturate(80%) blur(15px);
-        }
-        a {
-          color: $section_main_color_background;
-        }
-        border: 1px solid rgba(0, 0, 0, .2);
-      } @else {
-        background-color: $section_main_color_background;
-        body.effects & {
-          background-color: rgba($section_main_color_background, .9);
-          -webkit-backdrop-filter: saturate(80%) blur(15px);
-        }
-        a {
-          color: $section_main_color_foreground;
-        }
-      }
-
-      display: none;
-      float: right;
-      min-width: 12em;
-      position: absolute;
-      margin: 0;
-      z-index: 100;
-      &:before {
-        background-color: inherit;
-        border: 1px solid rgba(0, 0, 0, .4);
-        border-bottom: none;
-        border-left: none;
-        content: '';
-        height: 10px;
-        left: 1em;
-        position: absolute;
-        top: -5.8px;
-        transform: rotate(-45deg);
-        width: 10px;
-        body.effects & {
-          opacity: .8;
-        }
-      }
-      a {
-        padding: .6em;
-      }
-      .current-menu-item {
-        > a {
-          border: none;
-          font-weight: bold;
-        }
-      }
-    }
-
-    // Mouse hovering popup menus should appear only when we have anough room for this.
-    &:hover > .sub-menu {
-      @media (min-width: $section_root_breakpoint_tablet) {
-        display: block;
-      }
-      body.no-js & {
-        display: block;
-      }
-    }
-
-    @media (max-width: $section_root_breakpoint_tablet) {
-      display: block;
-      padding: .4em .4em;
-    }
-
-  }
-}
-
-/**
- * Mobile sub-menu
- */
-.menu > li.menu-item-has-children.sub-menu-overlay-active > ul.sub-menu,
-body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
 .mobile-menu {
   display: block !important;
   position: fixed !important;
@@ -170,52 +29,89 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   right: 2em !important;
   bottom: 2em !important;
   overflow: auto !important;
-  width: calc(100% - 4em);
-  max-height: calc(100% - 3em - 4em);
-  z-index: 1000 !important;
+  width: calc(100% - 4em) !important;
+  max-height: calc(100% - 3em - 4em) !important;
+  z-index: $z-index-modal !important;
   transform: translate(0, 0) !important;
-  box-shadow: 0 0 0 300px rgba(0,0,0,.76) !important;
-  background: $section_main_color_background;
-  padding: 0 !important;
+  box-shadow: 0 0 0 300px rgba(0, 0, 0, .76) !important;
+  background: $region_main_color_background !important;
+  padding: 1em !important;
   margin: 0 !important;
-  @extend %roundness;
-  color: $section_root_color_primary !important;
-  a {
-    color: inherit;
+  @include roundness();
+  color: $region_root_color_foreground !important;
+  li > a {
+    @include border($region_root_color_foreground, '-bottom', 1);
     padding: 1em;
-    border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
-    text-align: left;
+    color: inherit;
+    text-align: unset;
+  }
+}
+
+/**
+ * Generic menu styling
+ */
+.menu-item-type-tinsta-nav-menu-frontpage {
+  .custom-logo {
+    display: inline-block;
+    max-height: 1.6em;
+    max-width: 5em;
+    height: auto;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+.menu-item-type-tinsta-nav-menu-current-user {
+  .avatar {
+    display: inline-block;
+    height: 1.6em;
+    width: 1.6em;
+    margin-right: 1em;
+    vertical-align: bottom;
   }
 }
 
 /**
  * Scroll Top button
  */
-.scrolltop-button {
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  right: 22px;
-  cursor: pointer;
-  padding: .4em;
-  background: $section_root_color_primary;
-  color: $section_root_color_primary_inverted;
-  text-indent: -100px;
-  @extend %roundness;
-  width: 2.4em;
-  height: 2.4em;
-  overflow: hidden;
-  z-index: 101;
-  &:before {
-    content: '^';
-    top: 0;
-    position: absolute;
-    width: 100%;
-    line-height: 1.6em;
-    font-size: 2em;
-    text-align: center;
-    right: 0;
-    text-indent: 0;
+@if $component_scrolltop {
+  .scrolltop-button {
+    @include roundness();
+    z-index: $z-index-modal - 1;
+    display: none;
+    position: fixed;
+    @if $component_scrolltop == 'bottom-right' {
+      bottom: 1.4em;
+      right: 2.4em;
+    } @else if $component_scrolltop == 'bottom-left' {
+      bottom: 1.4em;
+      left: 2.4em;
+    } @else if $component_scrolltop == 'top-right' {
+      top: 1.4em;
+      right: 2.4em;
+    } @else if $component_scrolltop == 'top-left' {
+      top: 1.4em;
+      left: 2.4em;
+    }
+    width: 2.4em;
+    height: 2.4em;
+    overflow: hidden;
+    padding: .4em;
+    text-indent: 100px;
+    background: $region_root_color_primary;
+    color: $region_main_color_background;
+    cursor: pointer;
+    &:before {
+      @extend %la;
+      content: $la-angle-double-up;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      font-size: 1.6em;
+      line-height: 1.5em;
+      text-align: center;
+      text-indent: 0;
+    }
   }
 }
 
@@ -223,106 +119,109 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
  * Main pagination
  */
 .pagination {
+  @include roundness();
   clear: both;
   overflow: hidden;
   text-align: center;
   margin: 2em auto;
-  //display: inline-block;
-  @extend %roundness;
-  .nav-links {
-    @extend .pagination-links;
-  }
-}
-.pagination-links {
-  @if $component_pagination_style == 'borders' {
-    border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
-  }
+  max-width: 86%;
   @if $component_pagination_style == 'bold' {
     font-weight: bold;
   }
-  display: inline-block;
-  max-width: 86%;
+  a,
+  span {
+    @extend .pagination-item;
+  }
+  .nav-links {
+    @extend .pagination-items;
+  }
 }
-.page-numbers {
-  color: mix($section_main_color_background, $section_main_color_foreground, 50%);
-  position: relative;
-  //display: table-cell;
+.pagination-items {
   display: inline-block;
-  padding: .8em;
+  @if $component_pagination_style == 'bordered' {
+    @include border($region_root_color_foreground);
+    @include roundness();
+  }
+}
+.pagination-item {
+  color: muted($region_root_color_foreground);
+  display: inline-block;
+  position: relative;
+  padding: .4em .8em;
   text-decoration: none;
-  vertical-align: baseline;
+  @if $component_pagination_style == 'bordered' {
+    &:not(:last-child) {
+      @include border($region_root_color_foreground, '-right');
+      margin-left: -2%; // Magic number because the inline-block spacing
+    }
+  }
+  &:hover {
+    color: $region_root_color_primary;
+  }
   &.current {
-    color: $section_root_color_primary;
+    color: $region_root_color_primary;
     @if $component_pagination_style == 'bold' {
       text-decoration: underline;
+    } @else if $component_pagination_style == '' {
+      @include border($region_root_color_foreground);
     } @else {
       font-weight: bold;
     }
   }
   &.prev,
   &.next {
-    font-variant: all-small-caps;
+    text-transform: uppercase;
   }
-  &:hover {
-    color: mix($section_root_color_primary, $section_root_color_primary_inverted, 95%);
+  @media (max-width: $region_root_breakpoint_mobile) {
+    border-right: none !important;
   }
-  &:not(.prev):not(.next) {
-    @media (max-width: $section_root_breakpoint_mobile) {
-      display: none;
-    }
+  &.prev:not(:last-child):before {
+    @extend %la;
+    content: $la-angle-left;
+    margin-top: -.24em; /* Magic number because the LineAwesome font */
   }
-
-  a:first-child:not(:last-child):before {
-    @extend .la;
-    @extend %la-angle-left;
-    position: absolute;
-    top: 50%;
-    margin-top: -.5em;
-    left: -1.4em;
-  }
-  a:last-child:not(:first-child):after {
-    @extend .la;
-    @extend %la-angle-right;
-    position: absolute;
-    top: 50%;
-    margin-top: -.5em;
-    right: -1.4em;
+  &.next:not(:first-child):after {
+    @extend %la;
+    content: $la-angle-right;
+    margin-top: -.24em; /* Magic number because the LineAwesome font */
   }
 }
-
-
 
 /**
  * Breadcrumbs Home > Path > To > Current Page
  */
 .breadcrumbs {
-  margin: 2em 0 0 0;
+  margin-top: 2em;
   line-height: 2.4em;
-  //font-size: 1.2em;
-  opacity: .6;
-  &, a {
-    color: inherit;
-  }
+  color: inherit;
   .trail {
+    @extend .breadcrumb-trail;
+  }
+}
+.breadcrumb-trail {
+  display: inline-block;
+  max-width: 28%;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  vertical-align: middle; // have strange behavior
+  white-space: nowrap;
+  color: inherit;
+  &:hover {
+    color: $region_root_color_primary;
+  }
+  &:not(:last-child):after {
+    @extend %la;
+    content: $la-angle-right;
     display: inline-block;
-    max-width: 28%;
-    overflow: hidden;
-    position: relative;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-    white-space: nowrap;
-    z-index: 0;
-    &:not(:last-child):after {
-      //content: '/';
-      margin: 0 .1em 0 .4em;
-      @extend .la;
-      @extend %la-angle-right;
-    }
-    &:last-child {
-      color: inherit;
-      padding-right: 0;
-      pointer-events: none;
-    }
+    width: 1em;
+    margin: 0 .1em 0 .4em;
+    line-height: 1em;
+  }
+  &:last-child {
+    color: inherit;
+    padding-right: 0;
+    pointer-events: none;
   }
 }
 
@@ -330,38 +229,29 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
  * Overlay component.
  */
 .dialog-overlay {
-  background-color: rgba($section_main_color_foreground, .84);
-  bottom: -10%;
   display: none;
-
-  // Because safari scroll exceed scrolling area, is better to set the overlay a bit bigger.
-  height: 120%;
-  left: -10%;
   position: fixed;
-  right: -10%;
-  top: -10%;
-  width: 120%;
-
-  // Over everything
-  z-index: 999999;
-
-  body.effects & {
-    -webkit-backdrop-filter: saturate(80%) blur(15px);
-  }
-
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($region_root_color_foreground, .84);
+  z-index: $z-index-modal - 1;
   .dialog-inner {
-    background-color: $section_main_color_background;
-    @extend %roundness;
-    box-shadow: 0 0 0 8px rgba($section_main_color_background, .2), 0 0 12em rgba(#000, .4);
-    left: 50%;
-    max-height: 420px;
-    max-width: 100%;
-    width: 420px;
-    overflow: auto;
-    padding: 1em;
+    @include roundness();
     position: absolute;
     top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
+    width: 560px;
+    max-width: 90%;
+    max-height: 420px;
+    background-color: $region_main_color_background;
+    color: $region_root_color_foreground;
+    overflow: auto;
+    padding: 1em;
     .content {
       max-height: 340px;
       overflow: auto;
@@ -378,31 +268,27 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
 
 /**
  * Context Header
+ * @TODO refactor
+ * @TODO optimize
  */
 .context-header {
 
-  color: $section_main_color_foreground;
+  color: $region_root_color_foreground;
   min-height: 240px;
   padding: 0;
   position: relative;
   width: 100%;
-  margin-top: 2em;
-  margin-bottom: 2em;
+  //margin-top: 2em;
+  //margin-bottom: 2em;
 
-  @media (min-width: $section_root_breakpoint_mobile) {
-    background-color: $section_main_color_foreground;
-    color: $section_main_color_background;
+  @media (min-width: $region_root_breakpoint_mobile) {
+    background-color: $region_root_color_foreground;
+    color: $region_main_color_background;
 
     &.extended {
       margin-bottom: -3.08em;
       margin-left: -10%;
       width: 120%;
-    }
-
-    body.boxed & {
-      margin-left: -1em;
-      margin-right: -1em;
-      width: auto;
     }
   }
 
@@ -413,13 +299,12 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   img {
     display: block;
     height: auto;
-    min-height: 100%;
-    min-width: 100%;
+    max-height: 100%;
+    width: 100%;
     position: relative;
-    width: auto;
     z-index: 0;
 
-    @media (max-width: $section_root_breakpoint_tablet) {
+    @media (max-width: $region_root_breakpoint_tablet) {
       opacity: .5;
     }
 
@@ -432,7 +317,7 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
     top: 10px;
     width: 40%;
-    @media (max-width: $section_root_breakpoint_tablet) {
+    @media (max-width: $region_root_breakpoint_tablet) {
       position: static;
       width: auto;
       margin-left: 10px;
@@ -463,9 +348,9 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     right: 10px;
     text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
     top: 10px;
-    @media (max-width: $section_root_breakpoint_tablet) {
+    @media (max-width: $region_root_breakpoint_tablet) {
       padding: .4em;
-      background-color: $section_main_color_background;
+      background-color: $region_main_color_background;
     }
   }
 
@@ -489,18 +374,14 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
     margin: 0 auto;
     z-index: 10;
 
-    @media (min-width: $section_root_breakpoint_tablet) {
+    @media (min-width: $region_root_breakpoint_tablet) {
       font-size: 3em;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @media (min-width: $section_root_breakpoint_desktop) {
-      font-size: 4em;
-    }
-
-    @media (max-width: $section_root_breakpoint_tablet) {
+    @media (max-width: $region_root_breakpoint_tablet) {
       width: 90%;
       font-size: 2.5em;
       margin-bottom: 1em;
@@ -520,10 +401,7 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   margin: 2em auto;
   padding: 1.6em;
   text-align: center;
-  @extend %roundness;
-}
-.notice {
-  border: 2px solid #e3e3e3;
+  @include roundness();
 }
 .ok {
   background-color: #e6ffdb;
@@ -546,12 +424,37 @@ body.no-js .menu > li.menu-item-has-children:active > ul.sub-menu,
   color: #79680a;
 }
 .notice {
-  background-color: $section_main_color_background;
+  background-color: $region_main_color_background;
   border-bottom: none;
   border-right: none;
-  border-left: none;
-  color: #777;
+  border-top: none;
+  border-left-width: 2px;
   margin: 2em auto;
   padding: 1.6em;
   text-align: inherit;
+  border-radius: 0;
+}
+
+/**
+ * Agreement
+ */
+#site-enter-agreement .dialog-inner {
+  @if $component_site_agreement_style == 'top'  {
+    top: 1em;
+    bottom: unset;
+    transform: translate(-50%, 0);
+  } @else if $component_site_agreement_style == 'bottom'  {
+    top: unset;
+    bottom: 1em;
+    transform: translate(-50%, 0);
+  } @else if $component_site_agreement_style == 'bottomfull'  {
+    max-width: unset;
+    min-width: unset;
+    width: 100%;
+    top: unset;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: unset;
+  }
 }

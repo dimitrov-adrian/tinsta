@@ -5,15 +5,102 @@
  * Only hooks that are responsible for front-end and NOT for admin/back-end interface.
  */
 
+/**
+ * Some internal calls that are in help of the Tinsta theme.
+ */
+add_action( 'template_redirect', function () {
+  if (!empty($_GET['tinsta-resolve-user-avatar'])) {
+    $avatar_url = get_avatar_url($_GET['tinsta-resolve-user-avatar'], [
+      'size' => empty($_GET['s']) || !is_numeric($_GET['s']) ? null : $_GET['s'],
+    ]);
+    wp_redirect($avatar_url);
+    exit;
+  }
+});
+
 
 /**
- * Add extra markup in header.
+ * Add extra markup in header, SEO/MEO and other hacks to be good for Google.
  */
 add_action('wp_head', function () {
+
   echo get_theme_mod('component_header_markup');
-  if (is_singular() && pings_open()) {
-    printf('<link rel="pingback" href="%s">' . "\n", get_bloginfo('pingback_url'));
+
+  // <meta name="format-detection" content="telephone=yes"/>
+  printf('<meta name="theme-color" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
+  printf('<meta name="msapplication-TileColor" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
+  echo '<meta content="yes" name="apple-mobile-web-app-capable">';
+  echo '<meta content="black" name="apple-mobile-web-app-status-bar-style">';
+  echo '<meta content="' . get_bloginfo('sitename') . '" name="apple-mobile-web-app-title">';
+
+  if (get_theme_mod('misc_seo')) {
+    $description = '';
+    $keywords = [];
+
+    if (is_singular()) {
+      the_post();
+
+      printf('<meta name="author" content="%s" />', esc_attr(get_the_author()));
+      if (pings_open()) {
+        printf('<link rel="pingback" href="%s">', esc_attr(get_bloginfo('pingback_url')));
+      }
+
+      $thumbnail = get_the_post_thumbnail_url(get_the_ID());
+      if ($thumbnail) {
+        echo '<meta content="' . esc_attr($thumbnail) . '" itemprop="thumbnailUrl" />';
+      }
+
+      echo '<meta property="article:published_time" content="' . get_the_time('r') . '" />';
+
+      foreach (wp_get_object_terms(get_the_ID(), get_taxonomies(['public' => true])) as $term) {
+        $keywords[] = $term->name;
+      }
+
+      $description = get_the_excerpt();
+    }
+
+
+    if ($keywords) {
+      printf('<meta name="keywords" content="%s" />', esc_attr(implode(', ', $keywords)));
+      // <meta property="article:tag" content="{$keyword}" />
+    }
+
+    if (is_archive()) {
+      $description = category_description();
+    }
+
+    if (empty($description)) {
+      $description = get_bloginfo('description');
+    }
+    $description = apply_filters('the_excerpt_rss', $description);
+    $description = strip_tags($description);
+    $description = substr($description, 0, 160);
+    $description = esc_attr($description);
+
+    printf('<meta name="description" content="%s" />', esc_attr($description));
+
+    printf('<meta name="publisher" content="%s" />', esc_attr(get_bloginfo('name')));
+
+    // Skip SEO friendly metas
+    if (tinsta_is_login_page()) {
+      // last is added by WC by default
+      echo '<meta name="robots" content="noindex, nofollow" />';
+    }
+    elseif ( is_tax() || ( is_archive() && (!empty($_GET['orderby']) || !empty($_GET['order']) ) ) ) {
+      echo '<meta name="robots" content="noindex, follow" />';
+    }
+
   }
+});
+
+/**
+ * Fix shortcodes in feeds
+ */
+add_filter('the_content_rss', function($content = '') {
+  $content = do_shortcode($content);
+  //$content = preg_replace("/\[caption.*\[\/caption\]/", '', $content);
+  //$content = preg_replace("/\[googlevideo.*\[\/googlevideo\]/", '', $content);
+  return $content;
 });
 
 /**
@@ -21,24 +108,34 @@ add_action('wp_head', function () {
  */
 add_action('wp_footer', function () {
   echo get_theme_mod('component_footer_markup');
-  if (get_theme_mod('component_site_agreement_enable')) {
-    get_template_part('template-parts/misc/agreement');
+
+  $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
+  if (
+     ! ($privacy_policy_page_id && is_page($privacy_policy_page_id)) 
+     && get_theme_mod('component_site_agreement_enable')
+  ) {
+    get_template_part('template-parts/components/agreement');
   }
+
 });
+
 
 /**
  * Enqueue scripts and styles.
  */
 add_action('wp_enqueue_scripts', function () {
 
+  // Tinsta theme hash.
+  $theme_hash = substr(md5(is_customize_preview() ? microtime(1) : serialize(get_transient('tinsta_theme'))), 2, 4);
+
   $fonts_google = [];
 
   if (get_theme_mod('typography_font_google')) {
-    $fonts_google[] = urldecode(trim(get_theme_mod('typography_font_google')));
+    $fonts_google[] = urldecode( trim( get_theme_mod('typography_font_google')));
   }
 
   if (get_theme_mod('typography_font_headings_google')) {
-    $fonts_google[] = urldecode(trim(get_theme_mod('typography_font_headings_google')));
+    $fonts_google[] = urldecode( trim( get_theme_mod('typography_font_headings_google')));
   }
 
   if ($fonts_google) {
@@ -51,89 +148,80 @@ add_action('wp_enqueue_scripts', function () {
 
   // Enqueue stylesheets.
   $stylesheet = tinsta_get_stylesheet('default');
-  $stylesheet_hash = is_customize_preview() ? microtime(1) : substr(md5(serialize(get_transient('tinsta_theme'))), 2, 4);
-  wp_enqueue_style('tinsta-stylesheet', $stylesheet, [], $stylesheet_hash);
+  wp_enqueue_style('tinsta-stylesheet', $stylesheet, [], $theme_hash);
 
-  // Legacy supports.
-  if (get_theme_mod('misc_legacy_support')) {
+  // https://github.com/aFarkas/html5shiv
+  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/scripts/html5shiv.min.js', [], '3.7.3');
+  wp_script_add_data('html5shiv', 'conditional', 'lte IE 9');
 
-    wp_enqueue_script('jquery');
+  // https://github.com/corysimmons/selectivizr2
+  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/scripts/selectivizr2.min.js', [], '1.0.9');
+  wp_script_add_data('selectivizr', 'conditional', 'lte IE 8');
 
-    // https://github.com/jonathantneal/flexibility
-    wp_enqueue_script('flexibility', get_template_directory_uri() . '/assets/scripts/flexibility.js', [], '2.0.1');
-    wp_script_add_data('flexibility', 'conditional', 'let IE 10');
+  // Seems that this make more mess than benefits, it cause 403 (Forbidden)
+  // https://github.com/LeaVerou/prefixfree
+  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/scripts/prefixfree.min.js', [], '1.0.7');
+  wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
 
-    // https://github.com/wilddeer/stickyfill
-    wp_enqueue_script('stickyfill', get_template_directory_uri() . '/assets/scripts/stickyfill.min.js', [], '2.0.3');
-    wp_script_add_data('stickyfill', 'conditional', 'lte IE 11');
-
-    // https://github.com/aFarkas/html5shiv
-    wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/scripts/html5shiv.min.js', [], '3.7.3');
-    wp_script_add_data('html5shiv', 'conditional', 'lte IE 9');
-
-    // https://github.com/corysimmons/selectivizr2
-    wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/scripts/selectivizr2.min.js', ['jquery'], '1.0.9');
-    wp_script_add_data('selectivizr', 'conditional', 'lte IE 9');
-
-    // Seems that this make more mess than benefits, it cause 403 (Forbidden)
-    // https://github.com/LeaVerou/prefixfree
-    // wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/scripts/prefixfree.min.js', [], '1.0.7');
+  // Add nice scroll if when enabled.
+  if (get_theme_mod('effects_smooth_scroll')) {
+    wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/scripts/smoothscroll.min.js', [], '1.4.6', true);
   }
 
-  if (get_theme_mod('misc_nice_scroll')) {
-    wp_enqueue_script('jquery-nicescroll', get_template_directory_uri() . '/assets/scripts/jquery.nicescroll.min.js', ['jquery'], '3.7.6', true);
+  // Add nice scroll if when enabled.
+  if (get_theme_mod('effects_lazy_load')) {
+    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/scripts/lazy-load.js', [], '1.0', true);
   }
-
-  wp_register_script('masonry', get_template_directory_uri() . '/assets/scripts/masonry.pkgd.min.js', [], '4.2.1', true);
 
   // Theme's script.
   wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/scripts/main.js', [], wp_get_theme()->get('Version'), true);
   wp_localize_script('tinsta', 'tinsta', [
-    'menuLabel'   => __('Menu', 'tinsta'),
-    'closeLabel'  => __('Close', 'tinsta'),
-    'top'         => __('Top', 'tinsta'),
-    'scrolltop'   => get_theme_mod('component_scrolltop'),
+    'siteUrl' => home_url(),
+    'assetsDir' => get_template_directory_uri() . '/assets/',
+    'fullHeight' => get_theme_mod('region_root_height_full'),
+    'menuLabel' => __('Menu', 'tinsta'),
+    'closeLabel' => __('Close', 'tinsta'),
+    'top' => __('Top', 'tinsta'),
+    'scrolltop' => get_theme_mod('component_scrolltop'),
     'breakpoints' => [
-      'desktop' => get_theme_mod('section_root_breakpoint_desktop'),
-      'tablet'  => get_theme_mod('section_root_breakpoint_tablet'),
-      'mobile'  => get_theme_mod('section_root_breakpoint_mobile'),
+      'tablet' => get_theme_mod('region_root_breakpoint_tablet'),
+      'mobile' => get_theme_mod('region_root_breakpoint_mobile'),
     ],
   ]);
 
   // Comment respond form reply script.
-  if (is_singular() && comments_open()) {
-    wp_enqueue_script('comment-reply');
+  if (is_singular()) {
+    if (have_comments() || comments_open()) {
+      // Enqueue stylesheets.
+      wp_enqueue_style('tinsta-comments', tinsta_get_stylesheet('comments'), [], $theme_hash);
+    }
+    if (comments_open()) {
+      wp_enqueue_script('comment-reply');
+    }
   }
 
+  // Hack to use async.
+  add_filter('script_loader_tag', function ($tag, $handle, $src) {
+    if (in_array($handle, ['comment-reply', 'smoothscroll', 'tinsta'])) {
+      $tag = str_replace('src=', ' async src=', $tag);
+    }
+    return $tag;
+  }, 10, 3);
+
 });
+
 
 /**
  * Alter body classes.
  */
 add_filter('body_class', function ($classes, $class) {
 
-  if (get_theme_mod('section_root_height_full')) {
-    $classes[] = 'full-height';
-  }
-
-  if (get_theme_mod('section_header_sticky')) {
-    $classes[] = 'sticky-header';
-  }
-
-  if (get_theme_mod('section_header_disable')) {
-    $classes[] = 'disable-header';
-  }
-
   if (get_theme_mod('effects')) {
     $classes[] = 'effects';
   }
 
-  if (get_theme_mod('section_root_layout')) {
-    $classes[] = get_theme_mod('section_root_layout');
-  }
-
   // Add class of hfeed to non-singular pages.
-  if ( ! is_singular()) {
+  if (!is_singular()) {
     $classes[] = 'hfeed';
   }
 
@@ -143,6 +231,7 @@ add_filter('body_class', function ($classes, $class) {
   ]);
 
 }, 10, 2);
+
 
 /**
  * Alter post classes
@@ -157,15 +246,10 @@ add_filter('post_class', function ($classes, $class, $post_id) {
 
   if ($post) {
 
-    if ( ! is_singular()) {
+    if (!is_singular()) {
       $layout = get_theme_mod("post_type_{$post->post_type}_layout_archive");
       if ($layout) {
         $classes['layout'] = 'layout-' . $layout;
-      }
-
-      if (get_theme_mod("post_type_{$post->post_type}_masonry")) {
-        $classes['masonry'] = 'masonry';
-        wp_enqueue_script('masonry');
       }
 
     }
@@ -185,6 +269,7 @@ add_filter('post_class', function ($classes, $class, $post_id) {
 
 }, 6, 3);
 
+
 /**
  * Wrap videos in embed HTML in media container to allow better aspect ratio with responsive.
  */
@@ -198,6 +283,7 @@ add_filter('embed_oembed_html', function ($html, $url, $attr) {
   return $html;
 
 }, 10, 3);
+
 
 /**
  * Alter post contents
@@ -213,25 +299,19 @@ add_filter('the_content', function ($content) {
     if ($component_outdated_post_time && (int)get_the_time('U') + ((int)$component_outdated_post_time * 60 * 60 * 24) < time()) {
       $component_outdated_post_message = get_theme_mod('component_outdated_post_message');
       $component_outdated_post_message = str_replace('%time%', human_time_diff(get_the_time('U')), $component_outdated_post_message);
-      $content               .= '
-        <div class="message warning">
-          ' . $component_outdated_post_message . '
-        </div>';
+      $content .= "
+        <div class=\"message warning\">
+          {$component_outdated_post_message}
+        </div>";
     }
 
     if (get_theme_mod("post_type_{$post->post_type}_append_authors")) {
       ob_start();
-      locate_template('template-parts/misc/post-authors.php', true, false);
+      locate_template('template-parts/components/post-authors.php', true, false);
       $content .= ob_get_clean();
     }
 
-    if ( ! is_admin_bar_showing() ) {
-
-      if ( function_exists('is_woocommerce') && is_page() && is_woocommerce() ) {
-        return $content;
-      }
-
-      // When use edit_post_link() no need to add one more translation.
+    if (is_user_logged_in() && !is_admin_bar_showing()) {
       ob_start();
       edit_post_link(null, '<p>', '</p>');
       $content = ob_get_clean() . $content;
@@ -242,17 +322,22 @@ add_filter('the_content', function ($content) {
 
 }, 100, 2);
 
-/**
- * Override the excerpt more char at ends.
- */
-add_filter('excerpt_more', function ($read_more = '') {
-  $mod_read_more = get_theme_mod('misc_excerpt_more', $read_more);
-  if ($mod_read_more) {
-    $read_more = ' ' . $mod_read_more;
-  }
 
-  return $read_more;
+/**
+ * Filter the except length to X words.
+ */
+add_filter( 'excerpt_length', function ( $length ) {
+  
+  $post = get_post();
+  $new_length = get_theme_mod("post_type_{$post->post_type}_archive_show_excerpt_words", $length);
+  
+  if ($new_length) {
+    return $new_length;
+  }
+  
+  return $length;
 });
+
 
 /**
  * Alter comment fields:
@@ -262,25 +347,26 @@ add_filter('excerpt_more', function ($read_more = '') {
 add_filter('comment_form_defaults', function ($defaults) {
 
   // Enable auto-completion for fields
-
-  if ( ! empty($defaults['fields']['author'])) {
+  if (!empty($defaults['fields']['author'])) {
     $defaults['fields']['author'] = str_replace('<input ', '<input autocomplete="name" ', $defaults['fields']['author']);
   }
-
-  if ( ! empty($defaults['fields']['url'])) {
+  if (!empty($defaults['fields']['url'])) {
     $defaults['fields']['url'] = str_replace('<input ', '<input autocomplete="on" ', $defaults['fields']['url']);
   }
-
-  if ( ! empty($defaults['fields']['email'])) {
+  if (!empty($defaults['fields']['email'])) {
     $defaults['fields']['email'] = str_replace('<input ', '<input autocomplete="email" ', $defaults['fields']['email']);
   }
 
   // Append avatar to comment post form.
-  $defaults['title_reply_after'] .= '<div class="comment-form-avatar">' . get_avatar(get_current_user_id(), get_theme_mod('component_avatar_size')) . '</div>';
+  $defaults['title_reply_after'] .= '
+    <div class="comment-form-avatar">'
+    . get_avatar(get_current_user_id(), get_theme_mod('component_avatar_size')) . '
+    </div>';
 
   return $defaults;
 
 }, 1000);
+
 
 /**
  * Security reasons, Format comment text.
@@ -295,128 +381,125 @@ add_filter('comment_text', function ($comment_text, $comment, $args) {
 
   $allowed_html_tags = '';
   foreach (array_keys($allowedtags) as $tag) {
-    $allowed_html_tags .= "<$tag>";
+    $allowed_html_tags .= "<{$tag}>";
   }
 
   return strip_tags($comment_text, $allowed_html_tags);
 
 }, 10, 3);
 
-/**
- * Allow widgets to be included
- */
-if ( ! shortcode_exists('widget')) {
-  add_shortcode('widget', function ($atts) {
-    if (class_exists($atts['type'], false) && is_subclass_of($atts['type'], 'WP_Widget')) {
-      ob_start();
-      the_widget($atts['type'], $atts);
-
-      return ob_get_clean();
-    }
-
-    return ' <!-- Inactive Widget --> ';
-  });
-}
 
 /**
  * Proccess widget's tinsta related settings
  */
 add_filter('dynamic_sidebar_params', function ($params) {
   global $wp_registered_widgets;
-  if ( ! empty($wp_registered_widgets[$params[0]['widget_id']]['callback'])) {
+  if (!empty($wp_registered_widgets[$params[0]['widget_id']]['callback'])) {
     $widget = $wp_registered_widgets[$params[0]['widget_id']]['callback'][0];
     /*** @var $widget \WP_Widget */
     $settings = $widget->get_settings();
     if (isset($settings[$params[1]['number']])) {
+
       $settings = $settings[$params[1]['number']];
-      if ( ! empty($settings['tinsta_widget_size_enable']) && $settings['tinsta_widget_size_enable'] == 'on' && ! empty($settings['tinsta_widget_size'])) {
+
+      if (!empty($settings['tinsta_widget_size_enable']) && $settings['tinsta_widget_size_enable'] == 'on' && !empty($settings['tinsta_widget_size'])) {
         $replacement = "style=\"width:{$settings['tinsta_widget_size']}%;\"";
         $params[0]['before_widget'] = str_replace('class="', " $replacement class=\"", $params[0]['before_widget']);
       }
+
+      if (!empty($settings['tinsta_boxed']) && $settings['tinsta_boxed'] == 'on') {
+        $params[0]['before_widget'] = str_replace('class="', 'class="wrapper ', $params[0]['before_widget']);
+      }
+
     }
   }
 
   return $params;
 });
 
+
 /**
- * Theming login pages.
- *
- * Theming modes:
- * empty   - no changes at all
- * brand   - only titles, colors and logo
- * full    - integrate into theme
+ * Add first level menu items, root-menu-item class.
  */
-if ( !empty($GLOBALS['pagenow']) && in_array($GLOBALS['pagenow'], [ 'wp-login.php', 'wp-register.php' ])):
-add_action('login_init', function () {
+add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
+  if ($depth < 1) {
+    $classes[] = 'root-menu-item';
+  }
+  return $classes;
+}, 10, 4);
 
-  $system_page_login_theming = get_theme_mod('system_page_login_theming');
 
-  // Is we have no theming mode then just do nothing.
-  if ( ! $system_page_login_theming ) {
-    return;
+/**
+ * Add description to menu items
+ */
+add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
+
+  if (!empty($item->description)) {
+    $item_output = str_replace('</a>', '<span class="description">' . $item->description . '</span></a>', $item_output);
   }
 
-  // For interim login, fallback to brand integration mode.
-  if ( !empty($_REQUEST['interim-login']) ) {
-    $system_page_login_theming = 'brand';
-  }
+  return $item_output;
 
-  // Brand mode
-  if ($system_page_login_theming == 'brand') {
+}, 10, 4);
 
-    wp_enqueue_style('tinsta-login-brand', tinsta_get_stylesheet('login'));
+function _scifibg__next_link_attributes() {
+  return ' class="button next" rel="next" ';
+}
+function _scifibg__prev_link_attributes() {
+  return ' class="button prev" rel="prev" ';
+}
+add_filter('next_posts_link_attributes', '_scifibg__next_link_attributes');
+add_filter('next_comments_link_attributes', '_scifibg__next_link_attributes');
+add_filter('previous_posts_link_attributes', '_scifibg__prev_link_attributes');
+add_filter('previous_comments_link_attributes', '_scifibg__prev_link_attributes');
 
-    add_action('login_head', function() {
-      $custom_logo_id = get_theme_mod( 'custom_logo' );
-      if ($custom_logo_id) {
-        $custom_logo_image = wp_get_attachment_image_src($custom_logo_id, 'full');
-        echo '
-        <style>
-          body #login h1:before {
-            content:"";
-            background-image: url("' . $custom_logo_image[0]  . '") !important; 
-          }
-        </style>
-        ';
+
+add_action('tinsta_before_html_1111', function() {
+
+  ob_start(function($content) {
+    $image_contents = [];
+    $skip = 2;
+    $cb = function($matches) use (&$skip) {
+      static $image_contents = [];
+      if ($skip > 0) {
+        $skip--;
+        return $matches[0];
       }
-    });
 
-    add_filter('login_headerurl', function () {
-      return home_url();
-    });
+      // check if png,gif,jpg
+      if (preg_match('#\.(jpe?g|png|gif)(?|$)#i', $matches[2])) {
+        $new_src = explode('?', $matches[2], 2);
+        if (empty($new_src[1])) {
+          $new_src[1] = 'w=10&h=10&filter=blurgaussian&smooth=1&quality=1';
+        } else {
+          $new_src[1] .= '&w=10&h=10&filter=blurgaussian&smooth=1&quality=1';
+        }
 
-    add_filter('login_headertitle', function () {
-      return get_bloginfo('blogname');
-    });
+        $srconly = implode('?', $new_src);
+        $type = pathinfo($new_src[0], PATHINFO_EXTENSION);
+        $image_contents_cur_hash = md5($srconly);
+        if ($type) {
+          if (empty($image_contents[$image_contents_cur_hash])) {
+            $image_contents[$image_contents_cur_hash] = base64_encode(file_get_contents($srconly));
+          }
+          $srconly = 'data:image/' . $type . ';base64,' . $image_contents[$image_contents_cur_hash];
+        }
 
-  } // Full mode.
-  elseif ($system_page_login_theming == 'full') {
+        $new_src = 'src="' . $srconly . '" data-src=';
 
-    wp_deregister_style('login');
+      } else {
+        $new_src = 'data-src=';
+      }
 
-    add_filter('login_body_class', 'get_body_class');
-    add_filter('login_headerurl', '__return_null');
-    add_filter('login_headertitle', '__return_null');
+      return strtr($matches[0], [
+        'src=' => $new_src,
+        'srcset=' => 'data-srcset=',
+      ]);
 
-    add_action('login_head', function () {
+    };
 
-      // shake effect fall in troubles when login form is not the first form in the document.
-      remove_action( 'login_head', 'wp_shake_js', 12 );
+    $content = preg_replace_callback( '#<img([^>]+?)src=[\'"]?([^\'"\s>]+)[\'"]?([^>]*)>#i', $cb, $content);
 
-      wp_meta();
-
-      wp_head();
-    });
-
-    add_action('login_header', function () {
-      locate_template('template-parts/misc/header.php', true);
-    });
-
-    add_action('login_footer', function () {
-      locate_template('template-parts/misc/footer.php', true);
-    });
-  }
-
+    return $content;
+  });
 });
-endif;

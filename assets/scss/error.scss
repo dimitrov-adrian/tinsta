@@ -1,0 +1,23 @@
+/**
+ * Error page
+ */
+.error-content-wrapper {
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, .2);
+  margin: 2em auto;
+  max-width: 800px;
+  min-width: 320px;
+  width: 90%;
+  padding: 2em;
+}
+.content {
+  border-bottom: 1px solid rgba(0,0,0, .2);
+  padding-bottom: 2em;
+}
+.site-info {
+  margin: 1em;
+  text-align: right;
+  overflow: hidden;
+  a:first-child {
+    float: left;
+  }
+}

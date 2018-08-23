@@ -1,0 +1,247 @@
+$z-index-modal: 999999999;
+$z-index-normal: 100;
+$z-index-low: 0;
+
+$brightness-base: ( ( 50 *( $typography_brightness / 90) ) + 5 ) / 1.5;
+
+/**
+ * Produce readable inverted color based on color. black -> white, white -> black and etc.
+ */
+@function colorInvert($color, $coef: 50) {
+  $ci: desaturate(adjust_hue($color, 15deg), 20%);
+  $sat: saturation($color);
+  $lci: lightness($ci);
+  $lc: lightness($color);
+  $scoef: $sat * 1.5;
+  @if ($scoef < 10) {
+    $scoef: 65;
+  }
+  @if $lc > $scoef or $lc > 85 {
+    $ci: darken($ci, $coef);
+  } @else {
+    $ci: lighten($ci, 100% - $lc);
+  }
+  @return $ci;
+}
+
+@mixin border($color, $pos: null, $width: null) {
+  @if $width == null {
+    $width: $typography_bordering;
+  }
+  border#{$pos}: $width * 1px solid mix(colorInvert($color, $typography_brightness), $color, 100% - $typography_brightness);
+  border#{$pos}: $width * 1px solid rgba($color, $brightness-base / 100);
+}
+
+@function opa($color) {
+  @return rgba($color, $brightness-base / 1.5 / 100);
+}
+
+@function muted($color) {
+  @return mix($color, colorInvert($color), 50%);
+}
+
+@mixin shadow() {
+  // box-shadow: effects_shadows
+}
+
+@mixin roundness($pos: '', $coef: 1) {
+  @if $typography_roundness {
+    $val: ( $typography_roundness / ( 50 / $coef ) ) + 'em';
+    @if $pos == '' {
+      border-radius: $val;
+    } @else if $pos == 'top' {
+      border-top-left-radius: $val;
+      border-top-right-radius: $val;
+    } @else if $pos == 'bottom' {
+      border-bottom-left-radius: $val;
+      border-bottom-right-radius: $val;
+    }
+  }
+}
+
+/**
+ * Background image
+ */
+@mixin backgroundImage($image, $size, $scroll, $repeat, $x, $y) {
+  @if $image {
+    background-image: url($image);
+    @if $size {
+      background-size: $size;
+    }
+    @if $scroll {
+      background-attachment: scroll;
+    } @else {
+      background-attachment: fixed;
+    }
+    @if $repeat {
+      background-repeat: repeat;
+    } @else {
+      background-repeat: no-repeat;
+    }
+    @if $x {
+      background-position-x: $x;
+    }
+    @if $y {
+      background-position-y: $y;
+    }
+  }
+}
+
+/**
+ * Region Colors
+ */
+@mixin regionColors($foreground: null, $background: null, $background_opacity: 100, $primary_color: null, $secondary_color: null) {
+
+  @if ($background) {
+
+    @if ($background_opacity == 0) {
+      background-color: transparent;
+    } @else if ($background_opacity < 100) {
+      background-color: rgba($background, ($background_opacity / 100));
+    } @else {
+      background-color: $background;
+    }
+  }
+
+  @if ($foreground) {
+    color: $foreground;
+  }
+
+  @if ($primary_color and $primary_color != $region_root_color_primary) {
+    a {
+      color: $primary_color;
+    }
+  }
+
+  @if ($secondary_color and and $secondary_color != $region_root_color_secondary) {
+    a:hover {
+      color: $secondary_color;
+    }
+  }
+
+  @if (
+    $background and $foreground and $primary_color and $secondary_color
+      and ( $background != $region_main_color_background or $foreground != $region_root_color_foreground or $primary_color != $region_root_color_primary or $secondary_color != $region_root_color_secondary )
+  ) {
+
+    input,
+    textarea,
+    .wp-editor-container,
+    .select2-container .select2-selection--single,
+    .select2-container .select2-choice {
+      @include border($foreground);
+      background-color: transparent;
+      &:focus {
+        border-color: $primary_color;
+      }
+    }
+    select {
+      background-color: $background;
+      @include border($foreground);
+      &:focus {
+        border-color: $primary_color;
+      }
+    }
+
+    .button,
+    button,
+    input[type="button"],
+    input[type="reset"],
+    input[type="submit"] {
+      @include button($background, $foreground, $primary_color);
+      &.secondary {
+        @include button($background, $foreground, $secondary_color);
+      }
+    }
+  }
+
+}
+
+@mixin button($background, $foreground, $color) {
+
+  @if $typography_font_button_text_style {
+    @if $typography_font_button_text_style == 'uppercase' {
+      text-transform: uppercase;
+    } @else {
+      font-variant: $typography_font_button_text_style;
+    }
+  }
+
+  @if $typography_form_button_style == 'border' {
+    border: ($typography_bordering + px) solid $color;
+    background: transparent;
+    color: $color;
+    &:hover,
+    &:focus {
+      background-color: $color;
+      border-color: $color;
+      color: $background;
+    }
+  } @else if $typography_form_button_style == 'fill' {
+    border: ($typography_bordering + px) solid $color;
+    color: $background;
+    background: $color;
+    &:hover,
+    &:focus {
+      background-color: mix($color, $foreground, 80%);
+      border-color: mix($color, $foreground, 80%);
+      color: $background;
+    }
+  } @else {
+    color: $color;
+    font-weight: bold;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}
+
+@mixin noselect() {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -ms-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+%noselect {
+  @include noselect;
+}
+
+%wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  @if $region_root_width {
+    max-width: $region_root_width + px;
+  }
+  min-width: 300px;
+  width: 100%;
+}
+
+%small {
+  font-size: .92em;
+}
+
+%big {
+  font-size: 1.22em;
+}
+
+%bigger {
+  font-size: 1.44em;
+}
+
+%clearfix {
+  &:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+%disabled {
+  filter: grayscale(100%);
+}

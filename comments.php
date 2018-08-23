@@ -38,7 +38,7 @@ if ( ! get_option('show_avatars')) {
     <?php echo get_comments_number_text() ?>
   </div>
 
-  <?php if (have_comments() && get_comments_number() > 1): ?>
+  <?php if ( get_theme_mod('component_comments_order_selector') && have_comments() && get_comments_number() > 1): ?>
     <div class="comments-toolbar">
       <label>
         <?php _e('Order: ', 'tinsta') ?>

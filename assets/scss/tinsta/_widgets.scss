@@ -3,13 +3,17 @@
  */
 .widget {
 
+  &:empty {
+    display: none !important;
+  }
+
   .widgettitle {
-    @extend .base-title;
+    @extend %base-title;
 
     margin: 0;
     padding-bottom: .6em;
 
-    @media (max-width: $section_root_breakpoint_tablet) {
+    @media (max-width: $region_root_breakpoint_tablet) {
       border: none !important;
       text-align: center;
       padding: .6em;
@@ -18,44 +22,60 @@
   }
 
   margin-bottom: 2em;
+
   > ul {
     margin: 0;
   }
+
   ul {
     li {
       list-style: none;
     }
-    a {
-      // Could cause problem with some widgets.
-      //display: block;
-    }
   }
+
+  @media (max-width: $region_root_breakpoint_mobile) {
+    float: none;
+    max-width: none;
+    width: auto !important;
+  }
+
 }
 
 /**
  * The logo
  */
 .widget_tinsta_logo_widget {
-  @extend %roundness;
+  @include roundness();
+
   text-align: center;
+
   &.colored {
-    background-color: $section_root_color_secondary;
-    background-image: linear-gradient(-4deg, darken($section_root_color_secondary, 10%) 28%, transparent 28%),
-    linear-gradient(-8deg, $section_root_color_secondary 84%, transparent 84%),
-    linear-gradient(-8deg, lighten($section_root_color_secondary, 6%) 84%, transparent 84%),
-    linear-gradient(-8deg, lighten($section_root_color_secondary, 12%) 100%, transparent 100%);
-    color: $section_root_color_secondary_inverted;
+    background-color: $region_root_color_secondary;
+    background-image: linear-gradient(-4deg, darken($region_root_color_secondary, 10%) 28%, transparent 28%),
+                      linear-gradient(-8deg, $region_root_color_secondary 84%, transparent 84%),
+                      linear-gradient(-8deg, lighten($region_root_color_secondary, 6%) 84%, transparent 84%),
+                      linear-gradient(-8deg, lighten($region_root_color_secondary, 12%) 100%, transparent 100%);
+                      color: $region_main_color_background;
   }
 
-  padding: .4em;
+  &.colored-inverted {
+    background-color: $region_header_color_foreground;
+    background-image: linear-gradient(-4deg, darken($region_header_color_foreground, 10%) 28%, transparent 28%),
+                      linear-gradient(-8deg, $region_header_color_foreground 84%, transparent 84%),
+                      linear-gradient(-8deg, lighten($region_header_color_foreground, 6%) 84%, transparent 84%),
+                      linear-gradient(-8deg, lighten($region_header_color_foreground, 12%) 100%, transparent 100%);
+    color: $region_header_color_background;
+  }
 
   .custom-logo-link {
     img {
-      max-height: 48px;
-      max-width: 256px;
+      //max-height: 48px;
+      //max-width: 256px;
+      height: auto;
+      width: auto;
     }
     &.noimage {
-      @extend .base-title;
+      @extend %base-title;
       color: inherit;
       font-variant: small-caps;
       font-size: 2.8em;
@@ -66,11 +86,11 @@
     }
   }
   .logo-site-description {
-    @extend .small;
-    line-height: 1em;
-    opacity: .5;
+    @extend %small;
+    padding: 0 .6em;
+    opacity: $typography_brightness / 100;
   }
-  @media (max-width: $section_root_breakpoint_tablet) {
+  @media (max-width: $region_root_breakpoint_tablet) {
     margin: 1em;
   }
 }
@@ -93,10 +113,10 @@
 .widget_pages {
   li {
     &:not(:last-child) {
-      border-bottom: 1px solid rgba(mix($section_main_color_background, $section_main_color_foreground, 92%), 5);
+      @include border($region_root_color_foreground, '-bottom', 1);
     }
-
     a {
+      display: inline-block;
       padding: .4em 0;
     }
   }
@@ -107,14 +127,14 @@
  */
 .widget_archive,
 .widget_categories {
-  li {
-    a {
-      display: inline-block;
-      padding: .4em .4em .4em 0;
-    }
-  }
   select {
     width: 100%;
+  }
+}
+
+.widget_nav_menu {
+  a {
+    padding: .4em 0;
   }
 }
 
@@ -125,9 +145,6 @@
 .widget_recent_comments {
   li {
     margin-bottom: 1em;
-    a {
-      display: inline;
-    }
   }
 }
 
@@ -137,10 +154,11 @@
 .widget_tag_cloud {
   .tagcloud {
     text-align: center;
-  }
-  a {
-    display: inline-block;
-    vertical-align: middle;
+    a {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1em;
+    }
   }
 }
 
@@ -148,14 +166,11 @@
  * Calendar widget
  */
 .widget_calendar {
-  border-collapse: separate;
-  border-spacing: 2px;
-  @extend .small;
-  width: 100%;
+  @extend %small;
   table {
-    border: none;
-    border-collapse: collapse;
+    width: 100%;
     margin-bottom: 0;
+    border: none;
     thead td,
     thead th,
     tbody td,
@@ -163,20 +178,8 @@
       border: none;
       text-align: center;
     }
-    tbody td:hover {
-      background-color: transparent;
-    }
-    tbody .pad {
-      background: none;
-    }
-    tfoot #next {
-      @extend .small;
-      padding-top: .4em;
-      text-transform: uppercase;
-    }
-    tfoot #prev {
-      @extend .small;
-      padding-top: .4em;
+    tfoot td {
+      @extend %small;
       text-transform: uppercase;
     }
   }
@@ -187,10 +190,10 @@
  */
 .widget_rss {
   li a.rsswidget {
-    @extend .big;
+    @extend %big;
   }
   .rss-date {
-    @extend .small;
+    @extend %small;
     font-variant: all-small-caps;
   }
   .rssSummary {
@@ -217,10 +220,6 @@
 /**
  * Search Widget
  */
-
-/**
- * Default search form
- */
 .widget_search {
   color: inherit;
   .search-submit {
@@ -233,8 +232,8 @@
     position: relative;
     transition: all 150ms ease-in-out;
     &:before {
-      @extend .la;
-      @extend %la-search;
+      @extend %la;
+      content: $la-search;
       position: absolute;
       color: inherit;
       top: 50%;
@@ -246,49 +245,18 @@
       font-size: 1.4em;
       vertical-align: middle;
       text-align: center;
-      z-index: 10;
     }
   }
   .search-field {
-
-    @extend %roundness;
-
-    body.effects & {
-      -webkit-backdrop-filter: saturate(80%) blur(15px);
-    }
-
+    @include roundness();
     border: none !important;
     box-sizing: border-box;
     padding: .4em .6em .4em 2.8em;
     width: 100%;
-    background-color: rgba(0, 0, 0, .16);
-
-    // Backgrounds are in consideration.
+    background-color: rgba(0, 0, 0, .16) !important;
     &:focus {
-      background-color: rgba(255, 255, 255, .08);
-    }
-  }
-
-  body.effects & {
-    &.focus {
-      label {
-        background-color: rgba($section_header_color_background, .98);
-        -webkit-backdrop-filter: saturate(80%) blur(15px);
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        font-size: 2em;
-        z-index: 100;
-      }
-      .search-field {
-        height: 100%;
-        font-size: inherit;
-        border-radius: 0 !important;
-        text-align: center;
-      }
+      background-color: rgba(255, 255, 255, .08) !important;
+      color: initial;
     }
   }
 
@@ -313,16 +281,23 @@
 }
 
 /**
+ * Nav menu widget.
+ */
+.widget_nav_menu {
+  max-width: 100%;
+}
+
+/**
  * User menu widget
  */
-.widget_tinsta_usermenu_widget {
+.widget_tinsta_userprofile_widget {
   .user-info {
     font-weight: bold;
     &.style-icon,
     &.style-iconname {
       &:before {
-        @extend .la;
-        @extend %la-user;
+        @extend %la;
+        content: $la-user;
         margin-right: .6em;
       }
       margin-left: .4em;
@@ -333,8 +308,8 @@
     }
     .avatar {
       display: inline-block;
-      width: 48px;
-      height: 48px;
+      max-width: 48px;
+      max-height: 48px;
       margin-right: 1em;
       vertical-align: middle;
     }

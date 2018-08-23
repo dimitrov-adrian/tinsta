@@ -1,18 +1,24 @@
 .entries-no-result {
-  @extend .bigger;
-  font-weight: lighter;
+  @extend %bigger;
   margin: 3em 0;
   text-align: center;
 }
 
+.site-entries:last-child .hentry:last-child {
+  border-bottom: none !important;
+}
+
 .site-entries {
+
+  margin-top: 1em;//@TODO
+  margin-bottom: 1em;//@TODO this adds extra space at bottom which is an issue.
 
   // Shared.
   .hentry {
 
     .edit-post-link:before {
-      @extend .la;
-      @extend %la-edit;
+      @extend %la;
+      content: $la-edit;
     }
 
     .entry-header {
@@ -26,14 +32,11 @@
       clear: both;
       width: 100%;
       text-align: center;
-      margin-top: 2em;
       margin-bottom: 2em;
-      padding: 1em;
-      border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
-      background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
-      @extend .clearfix;
-      @extend %roundness;
-
+      padding: 2em 0 1em 0;
+      @extend %clearfix;
+      @include border($region_root_color_foreground, '-top', 1);
+      @include roundness();
       .author {
         display: inline-block;
         .author-title {
@@ -47,7 +50,7 @@
   // Default only.
   .hentry.default {
 
-    @extend .clearfix;
+    @extend %clearfix;
 
     .entry-thumbnail-wrapper {
       text-align: center;
@@ -62,39 +65,39 @@
     }
 
     .entry-meta {
-      color: mix($section_main_color_background, $section_main_color_foreground, 20%);
-      font-variant: all-small-caps;
+      color: muted($region_root_color_foreground);
       > * {
         margin-right: 1em;
+        display: inline-block;
       }
     }
 
     .entry-meta-item:before {
-      @extend .la;
-      @extend %la-circle-o;
+      @extend %la;
+      content: $la-circle-o;
     }
 
     // Seems that Safari format dates in own way, so could differ from other styles,
     // but this isn't styling issue, but Safari's
     .entry-meta-time:before {
-      @extend .la;
-      @extend %la-calendar;
+      @extend %la;
+      content: $la-calendar;
     }
 
     .entry-meta-author:before {
-      @extend .la;
-      @extend %la-user;
+      @extend %la;
+      content: $la-user;
     }
 
     .entry-meta-comments:before {
-      @extend .la;
-      @extend %la-comments-o;
+      @extend %la;
+      content: $la-comments-o;
     }
 
     .tags {
       &:before {
-        @extend .la;
-        @extend %la-tags;
+        @extend %la;
+        content: $la-tags;
       }
       a:before {
         @extend var;
@@ -104,8 +107,8 @@
 
     .categories {
       &:before {
-        @extend .la;
-        @extend %la-folder-open-o;
+        @extend %la;
+        content: $la-folder-open-o;
       }
       .post-categories {
         display: inline;
@@ -127,10 +130,10 @@
 
     //.entry-summary,
     .entry-content:not(:last-child) {
-      @extend .clearfix;
+      @extend %clearfix;
 
       // Fix the margin bottom because clearfix.
-      *:last-child {
+      > *:last-child {
         margin-bottom: 0;
       }
 
@@ -153,11 +156,11 @@
       .entry-meta {
         margin: 1em 0;
         padding-bottom: 1em;
-        border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+        @include border($region_root_color_foreground, '-bottom', 1);
       }
 
       .entry-summary {
-        @extend .big;
+        @extend %big;
       }
 
       .entry-content:not(:last-child) {
@@ -167,7 +170,7 @@
       .entry-footer {
         padding: 1em 0;
         margin-top: 2em;
-        border-top: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+        @include border($region_root_color_foreground, '-top', 1);
       }
 
 
@@ -177,14 +180,13 @@
         }
       }
 
-      @media (min-width: $section_root_breakpoint_tablet) {
+      @media (min-width: $region_root_breakpoint_tablet) {
         &.layout-left-thumbnail {
           .entry-header {
-            @extend .clearfix;
+            @extend %clearfix;
           }
           margin-top: 2em;
           .entry-thumbnail-wrapper {
-            display: inline-block;
             float: left;
             width: 40%;
           }
@@ -195,11 +197,10 @@
         }
         &.layout-right-thumbnail {
           .entry-header {
-            @extend .clearfix;
+            @extend %clearfix;
           }
           margin-top: 2em;
           .entry-thumbnail-wrapper {
-            display: inline-block;
             float: right;
             width: 40%;
           }
@@ -219,22 +220,22 @@
       margin-top: 2em;
       margin-bottom: 2em;
       padding-bottom: 1em;
-      border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+      @include border($region_root_color_foreground, '-bottom', 1);
 
       &.sticky {
-        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
-        background-color: mix($section_main_color_background, $section_main_color_foreground, 95%);
+        @include border($region_root_color_foreground);
+        background-color: opa($region_root_color_foreground);
         padding: .6em 1em;
       }
 
       .entry-meta {
-        @extend .small;
+        @extend %small;
       }
 
       // Layout.
       &.layout-boxes {
 
-        @media (min-width: $section_root_breakpoint_tablet+1) {
+        @media (min-width: $region_root_breakpoint_tablet+1) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -242,7 +243,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $section_root_breakpoint_tablet) {
+        @media (max-width: $region_root_breakpoint_tablet) {
           width: 48%;
           &:not(:nth-child(2n+2)) {
             margin-right: 2%;
@@ -251,7 +252,7 @@
         }
 
         vertical-align: top;
-        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+        @include border($region_root_color_foreground);
 
         .entry-thumbnail-wrapper img {
           width: 100%;
@@ -261,13 +262,13 @@
           margin: 1em;
         }
 
-        body.effects & {
-          transition: transform 75ms ease-in-out, box-shadow 100ms ease-in-out;
-          &:hover {
-            transform: scale(1.02);
-            box-shadow: 0 18px 60px -18px rgba(0, 0, 0, .6);
-          }
-        }
+        //body.effects & {
+        //  transition: transform 75ms ease-in-out, box-shadow 100ms ease-in-out;
+        //  &:hover {
+        //    transform: scale(1.02);
+        //    box-shadow: 0 18px 60px -18px rgba(0, 0, 0, .6);
+        //  }
+        //}
       }
 
       // Layout.
@@ -275,7 +276,7 @@
 
         text-align: center;
 
-        @media (min-width: $section_root_breakpoint_tablet+1) {
+        @media (min-width: $region_root_breakpoint_tablet+1) {
           width: 23.12%;
           &:not(:nth-child(4n+4)) {
             margin-right: 2%;
@@ -283,7 +284,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $section_root_breakpoint_tablet) {
+        @media (max-width: $region_root_breakpoint_tablet) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -292,7 +293,7 @@
         }
 
         vertical-align: top;
-        border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 90%);
+        @include border($region_root_color_foreground);
         min-height: 10em;
 
         .entry-thumbnail-wrapper img {
@@ -324,6 +325,9 @@
         .entry-thumbnail-wrapper {
           width: 25%;
           float: left;
+          img {
+            margin-left: 0;
+          }
         }
         .entry-header,
         .entry-summary {
@@ -336,6 +340,9 @@
         .entry-thumbnail-wrapper {
           width: 25%;
           float: right;
+          img {
+            margin-right: 0;
+          }
         }
         .entry-header,
         .entry-summary {
@@ -356,36 +363,43 @@
         }
         position: relative;
         padding: 1em;
-        border-left: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+        @include border($region_root_color_foreground, '-left', 1);
+        border-top: none;
+        border-right: none;
         border-bottom: none;
+        .entry-title {
+          margin-top: 0;
+        }
         .entry-meta > * {
           position: absolute;
           transform: translateX(-100%);
           left: 0;
-          padding: 0 .4em;
+          padding: 0 1em;
         }
         .entry-meta-time {
           top: 1em;
-          background-color: rgba($section_main_color_foreground, .8);
-          color: $section_main_color_background;
+          line-height: 1.2em;
+          width: 10em;
+          padding: .2em 1em;
+          text-align: right;
         }
         .entry-thumbnail-wrapper {
           display: none;
         }
         .entry-meta-author {
-          border-bottom: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+          @include border($region_root_color_foreground, '-bottom', 1);
           top: 1em;
           right: 0;
           left: auto;
           transform: translate(0, 0);
-          opacity: .5;
+          opacity: $typography_brightness / 100;
         }
       }
 
       // Layout.
       &.layout-poetry {
         text-align: center;
-        @extend .bigger;
+        @extend %bigger;
         .entry-title {
           font-weight: normal;
         }
@@ -394,6 +408,11 @@
         }
         border-bottom-width: 3px;
         border-bottom-style: dashed;
+        &.sticky {
+          background: transparent;
+          border-width: 3px;
+          border-style: dashed;
+        }
       }
 
     }

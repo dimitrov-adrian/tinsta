@@ -16,6 +16,7 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
     $instance = wp_parse_args($instance, ['title' => '', 'image' => '', 'secondary' => '']);
 
     ?>
+
     <p>
       <label for="<?php echo $this->get_field_id('title') ?>">
         <?php _e('Title', 'tinsta') ?>
@@ -27,7 +28,10 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
       <label for="<?php echo $this->get_field_id('image') ?>">
         <?php _e('Image', 'tinsta') ?> URL
       </label>
-      <input id="<?php echo $this->get_field_id('image') ?>" name="<?php echo $this->get_field_name('image') ?>" type="url"
+      <input id="<?php echo $this->get_field_id('image') ?>"
+             name="<?php echo $this->get_field_name('image') ?>"
+             type="url"
+             class="tinsta-media-picker"
              value="<?php echo esc_attr($instance['image']) ?>" />
     </p>
     <p>
@@ -39,6 +43,11 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
         echo empty($instance['secondary']) ? '' : esc_html($instance['secondary']);
         ?></textarea>
     </p>
+
+    <script>
+
+    </script>
+
     <?php
 
   }
@@ -55,6 +64,7 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
       return;
     }
 
+    echo $args['before_widget'];
     ?>
     <div class="context-header">
       <?php if (empty($instance['image'])): ?>
@@ -73,5 +83,6 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
       <?php endif ?>
     </div>
     <?php
+    echo $args['after_widget'];
   }
 }

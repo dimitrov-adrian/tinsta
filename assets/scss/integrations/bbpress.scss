@@ -1,10 +1,16 @@
+/**
+ * @TODO do a full bbpress scss integration
+ * https://gist.github.com/cdils/ac1f5cf0b64977046d66314b1758109f could be good starting point.
+ */
+
 body.bbpress {
 
+  
   span.bbp-admin-links a {
-    @extend .small;
-    color: mix($section_main_color_foreground, $section_main_color_background, 50%);
+    font-size: .9em;
+    color: mix($region_root_color_foreground, $region_main_color_background, 50%);
     &:hover {
-      color: $section_root_color_secondary;
+      color: $region_root_color_secondary;
     }
   }
 
@@ -31,7 +37,7 @@ body.bbpress {
 
   #bbpress-forums li.bbp-body ul.forum,
   #bbpress-forums li.bbp-body ul.topic {
-    border-top: 1px solid rgba($section_main_color_foreground, .1);
+    border-top: 1px solid rgba($region_root_color_foreground, .1);
   }
 
   #bbpress-forums div.odd,
@@ -42,8 +48,8 @@ body.bbpress {
   }
 
   #bbpress-forums .hentry .bbp-reply-author {
-    background: rgba($section_main_color_foreground, .1);
-    border: 1px solid rgba($section_main_color_foreground, .2);
+    background: rgba($region_root_color_foreground, .1);
+    border: 1px solid rgba($region_root_color_foreground, .2);
   }
 
   #bbpress-forums div.bbp-forum-content,
@@ -59,7 +65,7 @@ body.bbpress {
   #bbpress-forums div.bbp-forum-header,
   #bbpress-forums div.bbp-topic-header,
   #bbpress-forums div.bbp-reply-header {
-    //background: rgba($section_main_color_foreground, .5);
+    //background: rgba($region_root_color_foreground, .5);
     border-top: 1px solid #ddd;
     padding: 0;
     background: transparent;
@@ -69,7 +75,7 @@ body.bbpress {
   .bbp-topics ul.super-sticky,
   .bbp-topics ul.sticky,
   .bbp-forum-content ul.sticky {
-    background: rgba($section_root_color_primary, .08) !important;
+    background: rgba($region_root_color_primary, .08) !important;
   }
 
   .bbp-template-notice {
@@ -78,11 +84,11 @@ body.bbpress {
 
   #bbpress-forums .bbp-forum-info .bbp-forum-content,
   #bbpress-forums p.bbp-topic-meta {
-    @extend .small;
+    font-size: .9em;
   }
 
   #bbpress-forums > #subscription-toggle .subscription-toggle {
-    @extend .small;
+    font-size: .9em;
     @extend .button;
     padding: 0 .2em;
     line-height: 1.2em;
@@ -107,27 +113,32 @@ body.bbpress {
 
   #bbpress-forums li.bbp-header,
   #bbpress-forums li.bbp-footer {
-    margin: 1em 0;
-    background: rgba($section_main_color_foreground, .1);
+    margin: 0;
+    background: rgba($region_root_color_foreground, .1);
     border: none;
   }
 
-  #bbpress-forums fieldset.bbp-form {
-    @extend fieldset;
-  }
+  //#bbpress-forums fieldset.bbp-form {
+  //  @extend fieldset;
+  //}
 
   #bbpress-forums span.bbp-reply-post-date {
-    background: rgba($section_main_color_foreground, .1);
+    background: rgba($region_root_color_foreground, .1);
     margin: 0;
     display: inline-block;
     padding: 0 .4em;
-    border: 1px solid rgba($section_main_color_foreground, .1);
+    border: 1px solid rgba($region_root_color_foreground, .1);
     border-top: none;
-    @extend .small;
+    font-size: .9em;
   }
 
   #bbpress-forums div.bbp-topic-tags {
     float: left;
+  }
+
+  #bbpress-forums li.bbp-body ul.forum:first-child,
+  #bbpress-forums li.bbp-body ul.topic:first-child {
+    border-top: none;
   }
 
 

@@ -23,7 +23,7 @@
  *
  *  some of the condition tags: 'comments_open', 'pings_open', 'is_home', 'is_front_page',
  * 'is_date', 'is_year', 'is_month', 'is_day', 'is_404', 'is_attachment', 'has_excerpt',
- * 'has_post_thumbnail', 'is_user_logged_in', 'is_rtl', 'in_the_loop', 'is_section_main_query',
+ * 'has_post_thumbnail', 'is_user_logged_in', 'is_rtl', 'in_the_loop', 'is_region_main_query',
  * 'is_singular', 'is_archive', 'is_search', 'is_paged',
  *
  * Example usage:
@@ -50,42 +50,44 @@
  *  TRUE - pass
  *  FALSE - fail
  */
-function tinsta_compute_rule($rules) {
+function tinsta_compute_rule($rules)
+{
   global $wp, $wp_query;
-  if (is_admin() || !$rules) {
-    return TRUE;
+  if (is_admin() || ! $rules) {
+    return true;
   }
   // Check for array of rules.
   if (is_array($rules)) {
     $rules = array_filter($rules);
     foreach ($rules as $rule) {
       if (tinsta_compute_rule($rule)) {
-        return TRUE;
+        return true;
       }
     }
-    return FALSE;
+
+    return false;
   }
-  $rules = strtr($rules, array("\n" => ' ', "\r" => ' '));
+  $rules = strtr($rules, ["\n" => ' ', "\r" => ' ']);
   // Handle conditions... OR conditions... OR ... like arrray
   if (strpos($rules, ' OR ')) {
     $multirule = array_filter(explode(' OR ', $rules));
     return tinsta_compute_rule($multirule);
   }
+
   $cururl = $wp->query_string;
-  $rules = preg_split('#[\s\&]+#', $rules, -1, PREG_SPLIT_NO_EMPTY);
+  $rules  = preg_split('#[\s\&]+#', $rules, -1, PREG_SPLIT_NO_EMPTY);
   foreach ($rules as $rule) {
-    $rule = explode('=', $rule, 2);
-    $name = $rule[0];
+    $rule    = explode('=', $rule, 2);
+    $name    = $rule[0];
     $has_arg = isset($rule[1]);
-    $args = $has_arg ? array_map('trim', explode(',', $rule[1])) : array();
+    $args    = $has_arg ? array_map('trim', explode(',', $rule[1])) : [];
     if ($name{0} == '!') {
-      $negate = TRUE;
-      $name = substr($name, 1);
+      $negate = true;
+      $name   = substr($name, 1);
+    } else {
+      $negate = false;
     }
-    else {
-      $negate = FALSE;
-    }
-    $state = TRUE;
+    $state = true;
     // URL checking
     if ($name == 'url') {
       $urlmatch = 0;
@@ -95,71 +97,61 @@ function tinsta_compute_rule($rules) {
           break;
         }
       }
-      if (!$urlmatch) {
-        $state = FALSE;
+      if ( ! $urlmatch) {
+        $state = false;
       }
-    }
-    // Post type check
+    } // Post type check
     elseif ($name == 'post_type') {
       if (is_singular()) {
-        if (!is_singular($args)) {
-          $state = FALSE;
+        if ( ! is_singular($args)) {
+          $state = false;
+        }
+      } else {
+        if ( ! is_post_type_archive($args)) {
+          $state = false;
         }
       }
-      else {
-        if (!is_post_type_archive($args)) {
-          $state = FALSE;
-        }
-      }
-    }
-    // Post format
+    } // Post format
     elseif ($name == 'post_format') {
-      if (!in_array(get_post_format(), $args)) {
-        $state = FALSE;
+      if ( ! in_array(get_post_format(), $args)) {
+        $state = false;
       }
-    }
-    // Taxonomy.
+    } // Taxonomy.
     elseif (preg_match('#^taxonomy\:([^\s]+)#i', $name, $matches)) {
       if (is_singular()) {
         if ($has_arg) {
-          if (!has_term($args, $matches[1])) {
-            $state = FALSE;
+          if ( ! has_term($args, $matches[1])) {
+            $state = false;
           }
         }
-      }
-      else {
+      } else {
         if ($has_arg) {
-          if (!is_tax($matches[1], $args)) {
-            $state = FALSE;
+          if ( ! is_tax($matches[1], $args)) {
+            $state = false;
           }
-        }
-        else {
-          if (!is_tax($matches[1])) {
-            $state = FALSE;
+        } else {
+          if ( ! is_tax($matches[1])) {
+            $state = false;
           }
         }
       }
-    }
-    // GET request checks
+    } // GET request checks
     elseif (preg_match('#^get\:([^\s]+)#i', $name, $matches)) {
-      if (!isset($_GET[$matches[1]])) {
-        $state = FALSE;
+      if ( ! isset($_GET[$matches[1]])) {
+        $state = false;
       }
       if ($has_arg) {
-        if (!in_array($_GET[$matches[1]], $args)) {
-          $state = FALSE;
+        if ( ! in_array($_GET[$matches[1]], $args)) {
+          $state = false;
         }
       }
-    }
-    // Even/Odd
+    } // Even/Odd
     elseif ($name == 'is_even') {
-      $state = !($wp_query->current_post%2);
-    }
-    elseif ($name == 'is_odd') {
-      $state = $wp_query->current_post%2;
-    }
-    // Check for conditions tags that shouldn't accept args
-    elseif (in_array($name, array(
+      $state = ! ($wp_query->current_post % 2);
+    } elseif ($name == 'is_odd') {
+      $state = $wp_query->current_post % 2;
+    } // Check for conditions tags that shouldn't accept args
+    elseif (in_array($name, [
       'comments_open',
       'pings_open',
       'is_home',
@@ -176,40 +168,38 @@ function tinsta_compute_rule($rules) {
       'is_user_logged_in',
       'is_rtl',
       'in_the_loop',
-      'is_section_main_query',
+      'is_region_main_query',
       'is_paged',
       'is_search',
       'is_archive',
       'wp_attachment_is_image',
-    ))) {
+    ])) {
       $state = call_user_func($name);
-    }
-    // Check for conditions tags that accept args
-    elseif (in_array($name, array(
+    } // Check for conditions tags that accept args
+    elseif (in_array($name, [
       'is_singular',
       'is_post_type_archive',
       'is_author',
-    ))) {
+    ])) {
       $state = call_user_func($name, $args);
-    }
-    // If current page is login page.
-    elseif ($name == 'is_login_page') {
-      $state = ( $GLOBALS['pagenow'] === 'wp-login.php' );
-    }
-    // Unknown condition.
+    } // If current page is login page.
+    elseif ($name == 'tinsta_is_login_page') {
+      $state = tinsta_is_login_page();
+    } // Unknown condition.
     else {
-      $state = FALSE;
+      $state = false;
     }
     // Allow others to interact with the compute rule.
     $state = apply_filters('tinsta_compute_rule', $state, $name, $args);
     if ($negate) {
-      $state = !$state;
+      $state = ! $state;
     }
-    if (!$state) {
-      return FALSE;
+    if ( ! $state) {
+      return false;
     }
   }
-  return TRUE;
+
+  return true;
 }
 
 add_filter('sidebars_widgets', function ($sidebars_widgets) {
@@ -217,9 +207,10 @@ add_filter('sidebars_widgets', function ($sidebars_widgets) {
 });
 
 add_filter('widget_update_callback', function ($instance, $new_instance, $widget, $object) {
-  $instance = wp_parse_args( (array) $new_instance, [
+  $instance = wp_parse_args((array)$new_instance, [
     'tinsta_widget_logic' => '',
   ]);
+
   return $instance;
 }, 10, 4);
 
@@ -234,11 +225,11 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
 
   <p>
     <legend>
-      <?php _e('Logic', 'tinsta')?>
+      <?php _e('Logic', 'tinsta') ?>
     </legend>
     <textarea name="<?php echo $object->get_field_name('tinsta_widget_logic') ?>"
               id="<?php echo $object->get_field_id('tinsta_widget_logic') ?>"
-              class="widefat"><?php echo esc_attr($instance['tinsta_widget_logic'])?></textarea>
+              class="widefat"><?php echo esc_attr($instance['tinsta_widget_logic']) ?></textarea>
   </p>
 
   <?php

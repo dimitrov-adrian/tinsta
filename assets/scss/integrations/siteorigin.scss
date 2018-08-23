@@ -6,3 +6,8 @@
     @extend .button;
   }
 }
+/** todo fix buttons in siteorigin panels. */
+button .so-panel & {
+  color: $region_main_color_background !important;
+  border: ($typography_bordering + px) solid $region_root_color_primary !important;
+}

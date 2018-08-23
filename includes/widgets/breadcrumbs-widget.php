@@ -19,7 +19,7 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
     $trail              = [];
     $min_trails_to_show = 1;
 
-    if (get_theme_mod('component_breadcrumbs_include_home', true)) {
+    if (get_theme_mod('component_breadcrumbs_include_home')) {
       $trail[get_home_url()] = get_bloginfo('name');
       $min_trails_to_show++;
     }
@@ -29,13 +29,13 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
     } elseif (is_tag()) {
       $trail[] = single_term_title('', true);
     } elseif (is_month()) {
-      $trail[] = sprintf(__('Archives: %s', 'insta'), get_the_time('F, Y'));
+      $trail[] = sprintf(__('Archives: %s', 'tinsta'), get_the_time('F, Y'));
     } elseif (is_year()) {
-      $trail[] = sprintf(__('Archives: %s', 'insta'), get_the_time('Y'));
+      $trail[] = sprintf(__('Archives: %s', 'tinsta'), get_the_time('Y'));
     } elseif (is_author()) {
-      $trail[] = __('Posts by %s', 'insta');
+      $trail[] = __('Posts by %s', 'tinsta');
     } elseif (is_day()) {
-      $trail[] = sprintf(__('Archives: %s', 'insta'), get_the_time('F jS, Y'));
+      $trail[] = sprintf(__('Archives: %s', 'tinsta'), get_the_time('F jS, Y'));
     } elseif (is_home()) {
       $trail[] = single_post_title('', false);
     } else {
@@ -101,6 +101,8 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
       return;
     }
 
+
+    echo $args['before_widget'];
     ?>
     <div class="breadcrumbs">
       <?php foreach ($trail as $trail_link => $trail_label): ?>
@@ -109,6 +111,7 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
       <?php endforeach ?>
     </div>
     <?php
+    echo $args['after_widget'];
   }
 
 }

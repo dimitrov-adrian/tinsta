@@ -43,16 +43,28 @@
 
   </header>
 
-  <?php if (get_the_excerpt() && ! post_password_required()): ?>
+  <?php if ( get_theme_mod("post_type_" . get_post_type() . "_archive_show") == 'full' ):?>
+    
     <div class="entry-summary">
-      <?php the_excerpt() ?>
+      <?php the_content() ?>
     </div>
-  <?php endif ?>
 
-  <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt())): ?>
-    <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
-      <?php _e('Read more', 'tinsta') ?>
-    </a>
-  <?php endif ?>
+  <?php else:?>
+    
+    <?php if (get_the_excerpt() && ! post_password_required()): ?>
+      <div class="entry-summary">
+        <?php the_excerpt() ?>
+      </div>
+    <?php endif ?>
+
+    <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt())): ?>
+      <p>
+        <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
+          <?php _e('Read more', 'tinsta') ?>
+        </a>
+      </p>
+    <?php endif ?>
+
+  <?php endif?>
 
 </article>

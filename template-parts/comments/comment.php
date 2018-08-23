@@ -17,8 +17,9 @@
     </a>
 
     <?php
-    // Always show comment reply link, regardless of the depth.
-    comment_reply_link(['max_depth' => get_option('thread_comments_depth'), 'depth' => 1]) ?>
+      // Always show comment reply link, regardless of the depth.
+      comment_reply_link(['max_depth' => get_option('thread_comments_depth'), 'depth' => 1]);
+    ?>
 
     <?php edit_comment_link() ?>
 

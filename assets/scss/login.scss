@@ -1,24 +1,33 @@
+@import "tinsta/_functions";
+
 body {
-  background: $section_main_color_background;
-  color: $section_main_color_foreground;
+  background: $region_main_color_background;
+  color: $region_root_color_foreground;
   #login {
+    padding-top: 4%;
     form {
       color: inherit;
       background: transparent;
       box-shadow: none;
       border: none;
+      padding-bottom: 2em;
+      margin-top: 0;
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.2);
     }
     form label {
       color: inherit;
+    }
+    form .forgetmenot {
+      margin-top: .6em;
     }
     a {
       background: transparent;
       form {
         background: transparent;
       }
-      color: $section_root_color_primary !important;
+      color: $region_root_color_primary !important;
       &:hover {
-        color: $section_root_color_secondary !important;
+        color: $region_root_color_secondary !important;
       }
     }
     #login_error,
@@ -37,21 +46,19 @@ body {
       background-position: center center;
     }
     h1 a {
-      background: $section_root_color_primary !important;
-      &,&:hover {
-        color: $section_root_color_primary_inverted !important;
-      }
+      // background: $region_root_color_primary !important;
+      // &,&:hover {
+      //   color: $region_main_color_background !important;
+      // }
       width: auto;
       display: block;
       text-indent: 0;
       height: auto;
       font-size: 48px;
-      @if $effects_roundness {
-        border-radius: ( $effects_roundness / 10 ) + em;
-      }
+      @include roundness();
       line-height: 1em;
       padding: 10px;
-      margin: 0;
+      margin: .6em 0 0 0;
       text-align: center;
     }
 
@@ -62,31 +69,31 @@ body {
 
 
     .button-primary {
-      background: $section_root_color_primary;
-      color: $section_root_color_primary_inverted;
+      background: $region_root_color_primary;
+      color: $region_main_color_background;
       text-shadow: none;
       border: none;
       box-shadow: none;
-      @if $effects_roundness {
-        border-radius: ( $effects_roundness / 10 ) + em;
-      }
+      @include roundness();
       &:hover {
-        background: $section_root_color_secondary;
-        color: $section_root_color_secondary_inverted;
+        background: $region_root_color_secondary;
+        color: $region_main_color_background;
       }
     }
 
     input {
       color: inherit;
-      background: rgba($section_main_color_foreground, .1);
-      border-color: mix($section_main_color_background, $section_main_color_foreground, 110%);
-      @if $effects_roundness {
-        border-radius: ( $effects_roundness / 10 ) + em;
-      }
+      background: rgba($region_root_color_foreground, .1);
+      border-color: mix($region_main_color_background, $region_root_color_foreground, 110%);
+      padding: .2em .6em;
+      line-height: 1.2em;
+      border-width: 0;
+      @include roundness();
       &:focus {
-        border-color: $section_root_color_primary;
-        box-shadow: 0 0 0 2px $section_root_color_primary;
+        border-color: $region_root_color_primary;
+        box-shadow: 0 0 0 ($typography_bordering + px) $region_root_color_primary;
       }
     }
+
   }
 }

@@ -79,11 +79,11 @@
   }
 
   ul.products li.product .price {
-    color: $section_main_color_foreground;
+    color: $region_root_color_foreground;
   }
   span.onsale,
   ul.products li.product .onsale {
-    background-color: $section_root_color_primary;
+    background-color: $region_root_color_primary;
     box-sizing: content-box; // Seems that woocommerce doesn't like border-box
   }
 
@@ -96,31 +96,32 @@
     margin: 0;
   }
 
-
-
-  div.product .woocommerce-tabs *:before,
-  div.product .woocommerce-tabs *:after {
-    display: none !important;
-  }
-  div.product .woocommerce-tabs ul.tabs li {
-    background-color: mix($section_main_color_background, $section_main_color_foreground, 80%);
+  div.product .woocommerce-tabs ul.tabs li,
+  .woocommerce div.product .woocommerce-tabs ul.tabs::before {
+    background-color: mix($region_main_color_background, $region_root_color_foreground, 80%);
+    border-color: mix($region_main_color_background, $region_root_color_foreground, 80%);
     border-radius: 0;
   }
-  div.product .woocommerce-tabs ul.tabs li::before {
-    border-radius: 0;
+  .woocommerce div.product .woocommerce-tabs ul.tabs li.active {
+    background-color: $region_main_color_background;
+    border-bottom-color: $region_main_color_background;
+  }
+  div.product .woocommerce-tabs ul.tabs li:before,
+  div.product .woocommerce-tabs ul.tabs li:after {
+    display: none;
   }
 
   #add_payment_method #payment,
   .woocommerce-cart #payment,
   .woocommerce-checkout #payment {
     background: transparent;
-    @extend %roundness;
+    @include roundness();
   }
 
   #add_payment_method #payment ul.payment_methods,
   .woocommerce-cart #payment ul.payment_methods,
   .woocommerce-checkout #payment ul.payment_methods {
-    border-color: rgba($section_main_color_foreground, .1);
+    border-color: rgba($region_root_color_foreground, .1);
   }
 
   table.shop_table {
@@ -130,8 +131,8 @@
   form.checkout_coupon,
   form.login,
   form.register {
-    @extend %roundness;
-    border: 1px solid mix($section_main_color_background, $section_main_color_foreground, 80%);
+    @include roundness();
+    border: 1px solid mix($region_main_color_background, $region_root_color_foreground, 80%);
   }
 
 
