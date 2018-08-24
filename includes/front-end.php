@@ -5,6 +5,7 @@
  * Only hooks that are responsible for front-end and NOT for admin/back-end interface.
  */
 
+
 /**
  * Some internal calls that are in help of the Tinsta theme.
  */
@@ -83,7 +84,6 @@ add_action('wp_head', function () {
 
     // Skip SEO friendly metas
     if (tinsta_is_login_page()) {
-      // last is added by WC by default
       echo '<meta name="robots" content="noindex, nofollow" />';
     }
     elseif ( is_tax() || ( is_archive() && (!empty($_GET['orderby']) || !empty($_GET['order']) ) ) ) {
@@ -91,17 +91,22 @@ add_action('wp_head', function () {
     }
 
   }
+
+  if (get_theme_mod('effects_lazyload')) {
+    tinsta_lazyload_start_buffer();
+  }
+
 });
+
 
 /**
  * Fix shortcodes in feeds
  */
 add_filter('the_content_rss', function($content = '') {
   $content = do_shortcode($content);
-  //$content = preg_replace("/\[caption.*\[\/caption\]/", '', $content);
-  //$content = preg_replace("/\[googlevideo.*\[\/googlevideo\]/", '', $content);
   return $content;
 });
+
 
 /**
  * Add extra markup in footer.
@@ -169,8 +174,8 @@ add_action('wp_enqueue_scripts', function () {
   }
 
   // Add nice scroll if when enabled.
-  if (get_theme_mod('effects_lazy_load')) {
-    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/scripts/lazy-load.js', [], '1.0', true);
+  if (get_theme_mod('effects_lazyload')) {
+    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/scripts/lazyload.js', [], '1.0', true);
   }
 
   // Theme's script.
@@ -442,64 +447,3 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
 }, 10, 4);
 
-function _scifibg__next_link_attributes() {
-  return ' class="button next" rel="next" ';
-}
-function _scifibg__prev_link_attributes() {
-  return ' class="button prev" rel="prev" ';
-}
-add_filter('next_posts_link_attributes', '_scifibg__next_link_attributes');
-add_filter('next_comments_link_attributes', '_scifibg__next_link_attributes');
-add_filter('previous_posts_link_attributes', '_scifibg__prev_link_attributes');
-add_filter('previous_comments_link_attributes', '_scifibg__prev_link_attributes');
-
-
-add_action('tinsta_before_html_1111', function() {
-
-  ob_start(function($content) {
-    $image_contents = [];
-    $skip = 2;
-    $cb = function($matches) use (&$skip) {
-      static $image_contents = [];
-      if ($skip > 0) {
-        $skip--;
-        return $matches[0];
-      }
-
-      // check if png,gif,jpg
-      if (preg_match('#\.(jpe?g|png|gif)(?|$)#i', $matches[2])) {
-        $new_src = explode('?', $matches[2], 2);
-        if (empty($new_src[1])) {
-          $new_src[1] = 'w=10&h=10&filter=blurgaussian&smooth=1&quality=1';
-        } else {
-          $new_src[1] .= '&w=10&h=10&filter=blurgaussian&smooth=1&quality=1';
-        }
-
-        $srconly = implode('?', $new_src);
-        $type = pathinfo($new_src[0], PATHINFO_EXTENSION);
-        $image_contents_cur_hash = md5($srconly);
-        if ($type) {
-          if (empty($image_contents[$image_contents_cur_hash])) {
-            $image_contents[$image_contents_cur_hash] = base64_encode(file_get_contents($srconly));
-          }
-          $srconly = 'data:image/' . $type . ';base64,' . $image_contents[$image_contents_cur_hash];
-        }
-
-        $new_src = 'src="' . $srconly . '" data-src=';
-
-      } else {
-        $new_src = 'data-src=';
-      }
-
-      return strtr($matches[0], [
-        'src=' => $new_src,
-        'srcset=' => 'data-srcset=',
-      ]);
-
-    };
-
-    $content = preg_replace_callback( '#<img([^>]+?)src=[\'"]?([^\'"\s>]+)[\'"]?([^>]*)>#i', $cb, $content);
-
-    return $content;
-  });
-});

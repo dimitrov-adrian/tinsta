@@ -1,7 +1,7 @@
 <div class="wrap">
 
   <h1>
-    <?php echo __('Tinsta', 'tinsta') , ' / ' , __('Tools', 'tinsta') ?>
+    <?php _e('Tools', 'tinsta') ?>
   </h1>
 
   <?php
@@ -83,12 +83,6 @@
               <label>
                 <input type="checkbox" name="tinsta_settings_only" value="on" checked="checked" />
                 <?php _e('Import Tinsta\'s settings only. <span class="description">All other variables created from custom theme or plugins will be ignored (usually, there should be none).</span>', 'tinsta')?>
-              </label>
-            </p>
-            <p>
-              <label>
-                <input type="checkbox" name="tinsta_settings_only" value="on" checked="checked" />
-                <?php _e('Import saves', 'tinsta')?>
               </label>
             </p>
             <p>

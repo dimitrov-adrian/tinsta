@@ -14,7 +14,7 @@ add_action( 'after_setup_theme', function () {
   // First, need to load language, because some of the default options uses translations.
   load_theme_textdomain('tinsta', get_template_directory() . '/languages');
 
-  register_nav_menus( [
+  register_nav_menus([
     'main' => __('Primary Site Menu', 'tinsta'),
   ]);
 
@@ -23,18 +23,20 @@ add_action( 'after_setup_theme', function () {
   //add_image_size('tinsta_cover_small', 320, 200, true);
   //add_image_size('tinsta_cover', 1280, 450, true);
 
-  add_theme_support( 'title-tag' );
-  add_theme_support( 'automatic-feed-links' );
-  add_theme_support( 'post-thumbnails' );
-  add_theme_support( 'custom-logo' );
-  add_theme_support( 'html5', [
+  add_theme_support('title-tag');
+  add_theme_support('automatic-feed-links');
+  add_theme_support('post-thumbnails');
+  add_theme_support('custom-logo');
+  add_theme_support('html5', [
     'comment-list',
     'comment-form',
     'search-form',
     'gallery',
     'caption',
   ]);
+});
 
+add_action('init', function () {
   // Because we need to ensure all used theme mods had default values, and the filters like:
   // "default_option_theme_mods_{$theme_slug}" and "option_theme_mods_{$theme_slug}" doesn't do what expected to do...
   // Also set forced theme mods from tinsta_force_options filter.

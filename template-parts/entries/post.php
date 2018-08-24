@@ -50,7 +50,7 @@
     </div>
 
   <?php else:?>
-    
+
     <?php if (get_the_excerpt() && ! post_password_required()): ?>
       <div class="entry-summary">
         <?php the_excerpt() ?>
@@ -58,11 +58,13 @@
     <?php endif ?>
 
     <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt())): ?>
-      <p>
-        <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
-          <?php _e('Read more', 'tinsta') ?>
-        </a>
-      </p>
+      <div class="entry-summary">
+        <p>
+          <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
+            <?php _e('Read more', 'tinsta') ?>
+          </a>
+        </p>
+      </div>
     <?php endif ?>
 
   <?php endif?>

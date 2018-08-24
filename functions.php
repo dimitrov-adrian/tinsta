@@ -7,11 +7,69 @@
  * if simple theme
  */
 
+/**
+ * Check for PHP version
+ */
+
+global $wp_version;
+$tinsta_supports_failcheck = [
+  'php' => version_compare(phpversion(), '5.4.0', '<'),
+  'wp' => version_compare($wp_version, '4.4.0', '<'),
+  'phar' => !extension_loaded('phar'),
+];
+
+if (count(array_filter($tinsta_supports_failcheck))) {
+
+  add_action('admin_notices', '_tinsta_check_notices_admin');
+  add_action('template_redirect', '_tinsta_check_notices_frontend');
+
+  function _tinsta_check_notices_admin() {
+    global $tinsta_supports_failcheck;
+    echo '<div class="error">';
+
+    if ($tinsta_supports_failcheck['php']) {
+      echo '<p>';
+      printf(
+        __('Tinsta theme requires PHP >= 5.4.0, but you have %s. Upgrade it or contact your hosting provider. Otherwise the theme will not work.',
+        'tinsta'
+        ),
+        phpversion());
+      echo '</p>';
+    }
+    if ($tinsta_supports_failcheck['wp']) {
+      global $wp_version;
+      echo '<p>';
+      printf(
+        __('Tinsta theme requires WordPress >= 4.4.0, but you have %s. Upgrade it or contact your hosting provider. Otherwise the theme will not work.',
+        'tinsta'
+        ),
+        $wp_version);
+      echo '</p>';
+    }
+    if ($tinsta_supports_failcheck['phar']) {
+      echo '<p>';
+      _e('Tinsta theme requires Phar support for PHP, but you don\'t have it enabled. Enable Phar for PHP or contact your hosting provider. Otherwise the theme will not work.',
+        'tinsta');
+      echo '</p>';
+    }
+
+    echo '</div>';
+  }
+
+  function _tinsta_check_notices_frontend() {
+    wp_die(__('The site is under maintenance. We are working to get it back as soon as possible.', 'tinsta'));
+  }
+
+  return;
+}
+
 
 // TINSTA_STYLESHEET_CACHE_DIR should be relative to WP_CONTENT_DIR and must starts with slash
 if ( ! defined( 'TINSTA_STYLESHEET_CACHE_DIR' ) ) {
   define( 'TINSTA_STYLESHEET_CACHE_DIR', '/cache' );
 }
+
+
 
 // Tinsta's core functions.
 require __DIR__ . '/includes/functions.php';
@@ -46,6 +104,7 @@ foreach ( (array) get_option('active_plugins', []) as $active_plugin ) {
     include $integration_include;
   }
 }
+
 include __DIR__ . '/includes/integrations/menu-widgets.php';
 
 

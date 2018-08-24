@@ -180,6 +180,41 @@
         }
       }
 
+      &.layout-catalog-item {
+        .entry-title {
+          margin-top: 0;
+        }
+        .entry-thumbnail-wrapper {
+          display: inline-block;
+          width: 40%;
+          vertical-align: top;
+        }
+        .entry-details {
+          display: inline-block;
+          width: 48%;
+          margin-left: 8%;
+          vertical-align: top;
+          .entry-details-meta  {
+            margin: 0;
+            li {
+              list-style: none;
+              margin-bottom: 1em;
+            }
+          }
+          .label {
+            font-weight: bold;
+            &:after {
+              content: ':';
+            }
+          }
+          .term {
+            &:not(:last-child):after {
+              content: ', ';
+            }
+          }
+        }
+      }
+
       @media (min-width: $region_root_breakpoint_tablet) {
         &.layout-left-thumbnail {
           .entry-header {

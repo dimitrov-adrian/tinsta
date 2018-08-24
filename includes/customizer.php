@@ -1002,6 +1002,7 @@ add_action('customize_register', function ($wp_customize) {
         'left-thumbnail'    => __('Left Thumbnail', 'tinsta'),
         'right-thumbnail'   => __('Right Thumbnail', 'tinsta'),
         'contextual-header' => __('Contextual Header', 'tinsta'),
+        'catalog-item'      => __('Catalog Item', 'tinsta'),
         'widgets-area'      => __('Widgets Area', 'tinsta'),
       ], $post_type->name),
     ]);
@@ -1100,12 +1101,12 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('effects_lazyload', [
     'type'        => 'checkbox',
-    'label'       => __('Lazy Loading', 'tinsta'),
+    'label'       => __('Image Lazy Loading', 'tinsta'),
     'section'     => 'tinsta_misc',
   ]);
   $wp_customize->add_control('misc_seo', [
     'type'        => 'checkbox',
-    'label'       => __('Enable SEO tags', 'tinsta'),
+    'label'       => __('SEO Helpers', 'tinsta'),
     'section'     => 'tinsta_misc',
   ]);
 
