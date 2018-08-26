@@ -245,3 +245,7 @@ $brightness-base: ( ( 50 *( $typography_brightness / 90) ) + 5 ) / 1.5;
 %disabled {
   filter: grayscale(100%);
 }
+
+.no-js .hide-if-nojs {
+  display: none;
+}

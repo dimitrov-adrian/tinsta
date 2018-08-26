@@ -2,13 +2,13 @@
 
   <header class="entry-header">
 
-    <?php if (post_type_supports(get_post_type(), 'thumbnail') && has_post_thumbnail()): ?>
-      <div class="entry-thumbnail-wrapper">
+    <div class="entry-thumbnail-wrapper">
+      <?php if (post_type_supports(get_post_type(), 'thumbnail') && has_post_thumbnail()): ?>
         <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
           <?php the_post_thumbnail('large') ?>
         </a>
-      </div>
-    <?php endif ?>
+      <?php endif ?>
+    </div>
 
     <div class="entry-details">
 
@@ -37,12 +37,9 @@
                 <span class="label"><?php echo $tax_object->label?></span>
                 <span class="term-wrapper">
                   <?php foreach ($terms as $term):?>
-                    <?php /*
-                    <a href="<?php echo get_term_link($term, $tax_object->name)?>" rel="nofollow">
+                    <a href="<?php echo get_term_link($term, $tax_object->name)?>" rel="nofollow" class="term">
                       <?php echo $term->name?>
                     </a>
-                    */ ?>
-                    <span class="term"><?php echo $term->name?></span>
                   <?php endforeach?>
                 </span>
               </li>
@@ -77,11 +74,20 @@
     ?>
   </div>
 
-  <footer class="entry-footer">
-    <?php if ( ! is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav') ):?>
-      <?php tinsta_pagination('prevnext') ?>
-    <?php endif ?>
-  </footer>
+  <?php
+
+    $footer = '';
+
+    if ( ! is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav') ) {
+      ob_start();
+      tinsta_pagination('prevnext');
+      $footer = ob_get_clean();
+    }
+
+    if ($footer) {
+      echo '<footer class="entry-footer">' . $footer . '</footer>';
+    }
+  ?>
 
 </article>
 

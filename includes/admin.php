@@ -7,28 +7,6 @@
 
 
 /**
- * Add theme exports AJAX endpoint
- * wp-admin/admin-ajax.php?action=tinsta-export-settings
- */
-add_action('wp_ajax_tinsta-export-settings', function () {
-  $filename = get_bloginfo('name') . '-' . date('YmdHi') . '.tinsta';
-  if ( ! headers_sent() ) {
-    header('Cache-Control: no-cache, must-revalidate', true);
-    header('Expires: Sat, 26 Jul 1997 05:00:00 GMT', true);
-    header('Content-Type: plain/text; charset=UTF-8', true);
-    header('Content-Disposition: attachment; filename="' . addslashes($filename) . '"', true);
-  }
-
-  $document = array_merge( get_theme_mods(), [
-    '$tinstaVersion' =>  wp_get_theme()->Version,
-  ]);
-
-  echo json_encode( $document, JSON_PRETTY_PRINT );
-  exit;
-});
-
-
-/**
  * Import .tinsta settings file (only local files)
  *
  * @param string $file
@@ -56,15 +34,14 @@ function tinsta_settings_import($file, $tinsta_settings_only = true)
 
     if (!json_last_error()) {
       foreach ($data as $key => $value) {
-
         // Import ONLY the settings, described in tinsta_get_options_defaults().
         if ($tinsta_settings_only && !isset($defaults[$key])) {
-          continue;
+          remove_theme_mod($key);
         }
-
-        set_theme_mod($key, $value);
-        $imported_settings_count++;
-
+        else {
+          set_theme_mod($key, $value);
+          $imported_settings_count++;
+        }
       }
     }
   }
@@ -103,6 +80,47 @@ function tinsta_insert_widget_in_sidebar($widget_id, $widget_data, $sidebar)
   update_option('widget_' . $widget_id, $widget_instances);
 }
 
+
+//function tinsta_create_restore_point()
+//{
+//  $name = 'tinsta/' . date('YmdHis') . '/' . substr(md5(random_bytes(16)), 0, 2);
+//  set_transient($name, get_theme_mods(), time() + 60*60*24*30);
+//  return $name;
+//}
+//
+//
+//function tinsta_restore_from_point($name)
+//{
+//  $tr = get_transient($name);
+//  delete_transient($name);
+//  foreach (tinsta_get_options_defaults() as $key => $val) {
+//    if (isset($tr[$key])) {
+//      set_theme_mod($key, $tr[$key]);
+//    }
+//  }
+//}
+
+
+/**
+ * Add theme exports AJAX endpoint
+ * wp-admin/admin-ajax.php?action=tinsta-export-settings
+ */
+add_action('wp_ajax_tinsta-export-settings', function () {
+  $filename = get_bloginfo('name') . '-' . date('YmdHi') . '.tinsta';
+  if ( ! headers_sent() ) {
+    header('Cache-Control: no-cache, must-revalidate', true);
+    header('Expires: Sat, 26 Jul 1997 05:00:00 GMT', true);
+    header('Content-Type: plain/text; charset=UTF-8', true);
+    header('Content-Disposition: attachment; filename="' . addslashes($filename) . '"', true);
+  }
+
+  $document = array_merge( get_theme_mods(), [
+    '$tinstaVersion' =>  wp_get_theme()->Version,
+  ]);
+
+  echo json_encode( $document, JSON_PRETTY_PRINT );
+  exit;
+});
 
 /**
  * Because add_theme_support( 'starter-content', []) doesn't works well,

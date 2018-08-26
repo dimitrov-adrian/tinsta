@@ -17,10 +17,13 @@ get_header($system_page_404_theming);
       <?php dynamic_sidebar('error-404') ?>
     <?php else: ?>
       <h1 class="base-title">
-        <?php _e('Oops! That page can&rsquo;t be found.', 'tinsta') ?>
+        <?php _e('Whoops!', 'tinsta')?>
       </h1>
       <p>
-        <?php _e('It looks like nothing was found at this location. Maybe try a search?', 'tinsta') ?>
+        <?php _e('(404 page not found)', 'tinsta')?>
+      </p>
+      <p>
+        <?php _e('The page you are trying to reach cannot be found. In the meantime feel free to search.', 'tinsta') ?>
       </p>
       <?php get_search_form() ?>
     <?php endif ?>
@@ -28,7 +31,7 @@ get_header($system_page_404_theming);
 
   <?php if ($system_page_404_theming == 'embed'): ?>
     <div class="site-info">
-      <a href="javascript:window.history.back();">
+      <a href="javascript:window.history.back();" class="hide-if-nojs">
         <?php _e('Back', 'tinsta')?>
       </a>
       <a href="<?php echo home_url('')?>">

@@ -51,7 +51,7 @@
   });
 
   // Search forms add focus class when focused element.
-  (function() {
+  (function () {
     document.querySelectorAll('.widget_search')
       .forEach(function (widget) {
         var field = widget.querySelectorAll('.search-field');
@@ -223,20 +223,20 @@
         var isMega = true;
         var isMegaFromWidgets = false;
 
-        // if (!item.parentNode.className.match('menu-item-type-tinsta-sidebar')) {
-        //   for (var i in item.children) {
-        //     if (
-        //       (
-        //         !item.children.item(i).className.match('menu-item-has-children')
-        //         && !item.children.item(i).className.match('menu-item-type-tinsta-sidebar')
-        //       )
-        //       && !item.children.item(i).className.match('widget')) {
-        //       isMega = false;
-        //     }
-        //   }
-        // } else {
-        //   isMegaFromWidgets = true;
-        // }
+        if (!item.parentNode.className.match('menu-item-type-tinsta-nav-menu-widget-area')) {
+          for (var i in item.children) {
+            if (
+              (
+                !item.children.item(i).className.match('menu-item-has-children')
+                && !item.children.item(i).className.match('menu-item-type-tinsta-sidebar')
+              )
+              && !item.children.item(i).className.match('widget')) {
+              isMega = false;
+            }
+          }
+        } else {
+          isMegaFromWidgets = true;
+        }
 
         if (isMega) {
           item.className += ' is-tinsta-mega';
@@ -315,7 +315,7 @@
     var topline = document.getElementsByClassName('site-topline-wrapper');
     var header = document.getElementsByClassName('site-header-wrapper');
     if (topline.length > 0 && header.length > 0) {
-      var setHeaderTop = function() {
+      var setHeaderTop = function () {
         if (window.getComputedStyle(topline[0]).position == 'sticky' && window.getComputedStyle(header[0]).position == 'sticky') {
           header[0].style.setProperty('top', topline[0].offsetHeight + 'px');
         } else {

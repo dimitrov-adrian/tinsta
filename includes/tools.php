@@ -9,14 +9,17 @@
     // @TODO move outside the template.
     if ( ! empty($_POST['tinsta-import'])) {
       if ( ! empty($_FILES['file']['tmp_name']) && empty($_FILES['file']['error'])) {
-        if ( tinsta_settings_import( $_FILES['file']['tmp_name'], !empty($_POST['tinsta_settings_only']) ) ) {
+        if ( $imported_count = tinsta_settings_import( $_FILES['file']['tmp_name'], !empty($_POST['tinsta_settings_only']) ) ) {
           ?>
           <div class="updated notice is-dismissible">
-            <p> <?php _e('Settings file is imported', 'tinsta')?></p>
+            <p>
+              <?php printf(__('%d settings are imported.', 'tinsta'), $imported_count)?>
+            </p>
           </div>
           <?php
         }
-      } else {
+      }
+      else {
         ?>
         <div class="error notice is-dismissible">
           <p> <?php _e('Upload error.', 'tinsta')?></p>
@@ -54,7 +57,7 @@
           <?php _e('Export', 'tinsta')?>
         </th>
         <td>
-          <form method="get" action="<?php echo admin_url('admin-ajax.php') ?>">
+          <form method="get" action="<?php echo admin_url('admin-ajax.php') ?>" target="_blank">
             <p class="description">
               <?php _e('Export .tinsta file with current settings.', 'tinsta') ?>
             </p>
@@ -81,12 +84,12 @@
             </p>
             <p>
               <label>
-                <input type="checkbox" name="tinsta_settings_only" value="on" checked="checked" />
+                <input type="checkbox" name="tinsta_settings_only" value="on" />
                 <?php _e('Import Tinsta\'s settings only. <span class="description">All other variables created from custom theme or plugins will be ignored (usually, there should be none).</span>', 'tinsta')?>
               </label>
             </p>
             <p>
-              <button type="submit" name="tinsta-import" class="button">
+              <button type="submit" name="tinsta-import" class="button" value="true">
                 <?php _e('Import', 'tinsta') ?>
               </button>
             </p>
@@ -104,7 +107,7 @@
               <?php _e('Reset all theme settings to default values.', 'tinsta') ?>
             </p>
             <p>
-              <button type="submit" name="tinsta-reset" value="1" class="button button-link-delete">
+              <button type="submit" name="tinsta-reset" value="true" class="button button-link-delete">
                 <?php _e('Reset', 'tinsta') ?>
               </button>
             </p>
@@ -122,7 +125,7 @@
               <?php _e('Invalidate currently generated stylesheets. Usually this is not required, and after every settings save they are invalidate automatically, but sometimes this button could helps.', 'tinsta') ?>
             </p>
             <p>
-              <button type="submit" name="tinsta-invalidate-stylesheets" value="1" class="button">
+              <button type="submit" name="tinsta-invalidate-stylesheets" value="true" class="button">
                 <?php _e('Invalidate', 'tinsta') ?>
               </button>
             </p>

@@ -50,13 +50,6 @@ body {
     font-family: $typography_font_family;
   }
 
-  @media (max-width: $region_root_breakpoint_tablet) {
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    text-rendering: optimizeSpeed;
-  }
-
   @if $typography_text_justify {
     text-align: justify;
   }
@@ -70,15 +63,38 @@ body {
     word-wrap: break-word;
   }
 
-  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-font-feature-settings: "liga" on;
+  font-feature-settings: 'liga';
 
   @if $typography_text_enhancements {
     text-rendering: optimizeLegibility;
     backface-visibility: hidden;
     font-kerning: normal;
-    -moz-osx-font-smoothing: grayscale;
+
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -moz-font-smoothing: grayscale;
+
+    @media
+      not screen and (-webkit-min-device-pixel-ratio: 2),
+      not screen and (   min--moz-device-pixel-ratio: 2),
+      not screen and (     -o-min-device-pixel-ratio: 2/1),
+      not screen and (        min-device-pixel-ratio: 2),
+      not screen and (                min-resolution: 192dpi),
+      not screen and (                min-resolution: 2dppx) {
+        text-rendering: geometricPrecision; // consider to leave or remove "geometricPrecision"
+        -webkit-font-smoothing: subpixel-antialiased;
+      }
+
+  } @else {
+    text-rendering: optimizeSpeed;
+  }
+
+  @media (max-width: $region_root_breakpoint_tablet) {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-rendering: optimizeSpeed;
   }
 
 }
@@ -145,21 +161,20 @@ body {
 }
 
 p {
-  // @TODO Should find different way to deal with floated images in <p> element.
-  // overflow: hidden;
   margin: 16px 0;
   padding: 0;
 }
 
 img {
 
-  // This is evil
-  //height: auto;
-  //max-width: 100%;
-  //width: auto;
+  // This is evil,
+  // should not uncomment or add because make a lot of troubles with google maps and such
+  // height: auto;
+  // max-width: 100%;
+  // width: auto;
 
-  // With mobiles with such resolution it's better to show images pixelated (IMHO)
-  @media (max-width: 480px) {
+  // With mobiles with such small resolution pixelated images looks better.
+  @media (max-width: 420px) {
     image-rendering: pixelated;
   }
 }
@@ -707,6 +722,8 @@ input::-moz-focus-inner {
  * Avatars
  */
 .avatar {
+  background-color: mix(colorInvert($region_root_color_foreground, $typography_brightness), $region_root_color_foreground, 100% - $typography_brightness);
+  background-color: rgba($region_root_color_foreground, $brightness-base / 100);
   @include roundness();
 }
 

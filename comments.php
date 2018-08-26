@@ -59,7 +59,7 @@ if ( ! get_option('show_avatars')) {
       <?php wp_list_comments([
         'reverse_top_level' => $comments_order == 'DESC',
         'reverse_children'  => $comments_order == 'DESC',
-        'component_avatar_size'       => 100,
+        'component_avatar_size' => get_theme_mod('component_avatar_size'),
         'short_ping'        => true,
         'callback'          => 'tinsta_comment_callback',
       ]) ?>

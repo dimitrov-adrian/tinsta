@@ -47,42 +47,47 @@
 add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
 
   if ($item->type == 'tinsta-nav-menu-frontpage') {
-    ob_start();
-    echo get_custom_logo();
-    $item_output = ob_get_clean();
+    return get_custom_logo();
   }
 
   if ($item->type == 'tinsta-nav-menu-current-user') {
-    ob_start();
-    echo '<a href="' . get_edit_profile_url() . '">';
-    echo get_avatar(wp_get_current_user()->ID);
-    echo wp_get_current_user()->display_name;
-    echo '</a>';
+    if (is_user_logged_in()) {
+      return '<a href="' . get_edit_profile_url() . '">' .
+              get_avatar(wp_get_current_user()->ID) .
+              wp_get_current_user()->display_name .
+              '</a>';
+    }
+    else {
+      return '<a href="' . wp_login_url() . '">' .
+        ( get_option( 'users_can_register' )
+          ? __('Login or Register', 'tinsta')
+          : __('Login', 'tinsta')
+        ) .
+        '</a>';
+    }
     $item_output = ob_get_clean();
   }
 
-  if ($depth < 2) {
-    if ($item->type == 'tinsta-nav-menu-search-box') {
-      ob_start();
-      get_search_form();
-
-      return ob_get_clean();
+  if ($item->type == 'tinsta-nav-menu-search-box') {
+    if ($depth < 2) {
+      return get_search_form(false);
     }
+    return null;
   }
 
-  if ($depth < 3) {
-    if ($item->type == 'tinsta-nav-menu-widget-area') {
+  if ($item->type == 'tinsta-nav-menu-widget-area') {
+    if ($depth < 3) {
       if (is_active_sidebar('tinsta-menu-' . $item->post_name)) {
         ob_start();
         dynamic_sidebar('tinsta-menu-' . $item->post_name);
         $sidebar_submenu = ob_get_clean();
         if (trim($sidebar_submenu)) {
           $item_output .= "<div class=\"sub-menu\">{$sidebar_submenu}</div>";
-
           return $item_output;
         }
       }
     }
+    return null;
   }
 
   return $item_output;
@@ -148,14 +153,16 @@ function tinsta_nav_menu_items()
     'url' => null,
   ];
 
-  $items[] = [
-    'id' => null,
-    'type' => 'tinsta-nav-menu-search-box',
-    'title' => __('Search Box', 'tinsta'),
-    'type_label' => __('Search Box', 'tinsta'),
-    'object' => null,
-    'url' => null,
-  ];
+  // Doesn't looks good when added as first level.
+  // @TODO fix design
+  //  $items[] = [
+  //    'id' => null,
+  //    'type' => 'tinsta-nav-menu-search-box',
+  //    'title' => __('Search Box', 'tinsta'),
+  //    'type_label' => __('Search Box', 'tinsta'),
+  //    'object' => null,
+  //    'url' => null,
+  //  ];
 
   $items[] = [
     'id' => NULL,

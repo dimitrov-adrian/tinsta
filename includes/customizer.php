@@ -186,7 +186,7 @@ add_action('customize_register', function ($wp_customize) {
       'type'      => 'theme_mod',
       'default'   => $value,
       'transport' => 'refresh',
-      'sanitize_callback' => function($value) {
+      'sanitize_callback' => function ($value) {
         return strval($value);
       },
       // @TODO add sanitization
@@ -354,7 +354,8 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('region_root_height_full', [
     'type'    => 'checkbox',
-    'label'   => __('Full-Height Page', 'tinsta'),
+    'label'   => __('Full-Height', 'tinsta'),
+    'description' => __('If page is shorten than a window height, this will apply JS fix to make it full height. Most noticeable if have footer or bottomline', 'tinsta'),
     'section' => 'tinsta_region_root',
   ]);
   $wp_customize->add_control('region_root_width', [
@@ -475,14 +476,18 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_section('tinsta_region_primary_menu', [
     'title' => __('Main Menu', 'tinsta'),
     'panel' => 'tinsta_regions',
-    'active_callback' => function() {
+    'active_callback' => function () {
       return has_nav_menu('main');
     }
   ]);
-  $wp_customize->add_control('region_primary_menu_movetop', [
-    'label'   => __('Move above Header', 'tinsta'),
+  $wp_customize->add_control('region_primary_menu_position', [
+    'label'   => __('Position', 'tinsta'),
     'section' => 'tinsta_region_primary_menu',
-    'type'    => 'checkbox',
+    'type'    => 'select',
+    'choices' => [
+      'before-header' => __('Before Header', 'tinsta'),
+      '' => __('After Header', 'tinsta'),
+    ],
     'active_callback' => function () {
       return is_active_sidebar('header');
     },
@@ -503,6 +508,7 @@ add_action('customize_register', function ($wp_customize) {
     'type'    => 'checkbox',
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'primary_menu');
+
 
   // Region: Main
   $wp_customize->add_section('tinsta_region_main', [
@@ -656,7 +662,7 @@ add_action('customize_register', function ($wp_customize) {
     'type'    => 'checkbox',
   ]);
   $wp_customize->add_control('component_site_agreement_style', [
-    'label'   => __('Style', 'tinsta'),
+    'label'   => __('Position', 'tinsta'),
     'section' => 'tinsta_component_site_agreement',
     'type'    => 'select',
     'choices' => [
@@ -777,29 +783,30 @@ add_action('customize_register', function ($wp_customize) {
   // ]);
 
   // Component: Avatars
+
   $wp_customize->add_section('tinsta_component_avatar', [
     'title' => __('Avatars', 'tinsta'),
     'panel' => 'tinsta_components',
   ]);
   $wp_customize->add_control('component_avatar_size', [
-    'label'       => __('Size', 'tinsta') . ' (px)',
+    'label' => __('Size', 'tinsta') . ' (px)',
     'section' => 'tinsta_component_avatar',
-    'type'        => 'number',
+    'type' => 'number',
     'input_attrs' => [
-      'min'   => 32,
-      'max'   => 128,
-      'step'  => 1,
+      'min' => 32,
+      'max' => 128,
+      'step' => 1,
       'style' => 'width:6em;',
     ],
   ]);
   $wp_customize->add_control('component_avatar_size_small', [
-    'label'       => __('Small size', 'tinsta') . ' (px)',
+    'label' => __('Small size', 'tinsta') . ' (px)',
     'section' => 'tinsta_component_avatar',
-    'type'        => 'number',
+    'type' => 'number',
     'input_attrs' => [
-      'min'   => 24,
-      'max'   => 96,
-      'step'  => 1,
+      'min' => 24,
+      'max' => 96,
+      'step' => 1,
       'style' => 'width:6em;',
     ],
   ]);
@@ -1055,7 +1062,7 @@ add_action('customize_register', function ($wp_customize) {
           'excerpt' => __('Excerpt', 'tinsta'),
           'full' => __('Full Text', 'tinsta'),
         ],
-        'active_callback' => function() use ($post_type_base_control_id) {
+        'active_callback' => function () use ($post_type_base_control_id) {
           return get_theme_mod("{$post_type_base_control_id}_layout_archive") != 'widgets-area';
         },
       ]);
@@ -1069,7 +1076,7 @@ add_action('customize_register', function ($wp_customize) {
           'step'  => 1,
           'style' => 'width:6em;',
         ],
-        'active_callback' => function() use ($post_type_base_control_id) {
+        'active_callback' => function () use ($post_type_base_control_id) {
           return
             get_theme_mod("{$post_type_base_control_id}_layout_archive") != 'widgets-area'
             && get_theme_mod("{$post_type_base_control_id}_archive_show") == 'excerpt';

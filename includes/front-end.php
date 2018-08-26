@@ -19,6 +19,9 @@ add_action( 'template_redirect', function () {
   }
 });
 
+add_filter('language_attributes', function ($attributes) {
+  return $attributes .= ' xmlns:og="http://ogp.me/ns#"';
+});
 
 /**
  * Add extra markup in header, SEO/MEO and other hacks to be good for Google.
@@ -51,7 +54,7 @@ add_action('wp_head', function () {
         echo '<meta content="' . esc_attr($thumbnail) . '" itemprop="thumbnailUrl" />';
       }
 
-      echo '<meta property="article:published_time" content="' . get_the_time('r') . '" />';
+      echo '<meta property="article:published_time" content="' . get_the_time('c') . '" />';
 
       foreach (wp_get_object_terms(get_the_ID(), get_taxonomies(['public' => true])) as $term) {
         $keywords[] = $term->name;
@@ -63,7 +66,6 @@ add_action('wp_head', function () {
 
     if ($keywords) {
       printf('<meta name="keywords" content="%s" />', esc_attr(implode(', ', $keywords)));
-      // <meta property="article:tag" content="{$keyword}" />
     }
 
     if (is_archive()) {
@@ -102,7 +104,7 @@ add_action('wp_head', function () {
 /**
  * Fix shortcodes in feeds
  */
-add_filter('the_content_rss', function($content = '') {
+add_filter('the_content_rss', function ($content = '') {
   $content = do_shortcode($content);
   return $content;
 });

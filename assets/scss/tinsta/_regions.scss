@@ -94,7 +94,7 @@ body {
   -js-display: flex;
   display: flex;
 
-  @if $region_primary_menu_movetop {
+  @if $region_primary_menu_position == 'before-header' {
     flex-flow: column-reverse;
   } @else {
     flex-flow: column;
@@ -246,6 +246,9 @@ body {
           // make more space to be suitable for touching.
           // padding: 1em;
         }
+        &.menu-item-type-tinsta-nav-menu-widget-area > .sub-menu {
+          padding: 0 1em;
+        }
         > .sub-menu {
           box-shadow: 0 5px 28px -12px rgba(0, 0, 0, .9);
           //border: 1px solid rgba($region_root_color_foreground, .2);
@@ -351,7 +354,7 @@ body {
   }
 
   @if $region_primary_menu_layout == 'boxed' and ( $region_header_layout != 'boxed' and $region_header_layout != 'highlighted' ) {
-    @if $region_primary_menu_movetop {
+    @if $region_primary_menu_position == 'before-header' {
       @include roundness('bottom');
     } @else {
       @include roundness('top');
@@ -361,10 +364,6 @@ body {
 
   .menu {
     @extend %wrapper;
-    @media (min-width: $region_root_breakpoint_tablet) {
-      display: table;
-      table-layout: auto;
-    }
     @if $region_primary_menu_aligncenter {
       text-align: center;
     }

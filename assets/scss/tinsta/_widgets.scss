@@ -253,10 +253,10 @@
     box-sizing: border-box;
     padding: .4em .6em .4em 2.8em;
     width: 100%;
-    background-color: rgba(0, 0, 0, .16) !important;
+    background-color: rgba($region_root_color_foreground, .16) !important;
     &:focus {
-      background-color: rgba(255, 255, 255, .08) !important;
-      color: initial;
+      background-color: rgba($region_root_color_background, .08) !important;
+      color: unset;
     }
   }
 

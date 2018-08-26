@@ -2,9 +2,11 @@
 
   <div class="comment-meta">
 
+    <?php if (!empty($show_avatars)):?>
     <div class="comment-author-avatar">
       <?php echo get_avatar(get_comment_author_email(), get_theme_mod('component_avatar_size')) ?>
     </div>
+    <?php endif?>
 
     <div class="comment-author">
       <?php comment_author() ?>

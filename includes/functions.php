@@ -219,6 +219,10 @@ function tinsta_render_posts_loop($display_mode, $post_type = '')
  */
 function tinsta_comment_callback($comment, $args, $depth)
 {
+  static $show_avatars = null;
+  if ($show_avatars === null) {
+    $show_avatars = get_option('show_avatars');
+  }
   if ($comment->comment_approved || current_user_can('moderate_comments')) {
     if ($comment->comment_type == 'pingback' || $comment->comment_type == 'trackback') {
       get_template_part('template-parts/comments/pingback');
@@ -318,9 +322,10 @@ function tinsta_get_options_defaults()
     /**
      * Typography
      */
-    'typography_font_size' => 14,
-    'typography_font_line_height' => 170,
-    'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    'typography_font_size' => 13,
+    'typography_font_line_height' => 140,
+    //'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
     'typography_font_family_headings' => '',
     'typography_font_google' => '',
     'typography_font_headings_google' => '',
@@ -370,7 +375,7 @@ function tinsta_get_options_defaults()
     'region_header_color_primary' => '#eeeeee',
     'region_header_color_secondary' => '#ffffff',
     'region_primary_menu_layout' => '',
-    'region_primary_menu_movetop' => false,
+    'region_primary_menu_position' => '',
     'region_primary_menu_aligncenter' => false,
     'region_primary_menu_color_background' => '#000000',
     'region_primary_menu_color_background_opacity' => 20,
@@ -577,7 +582,7 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
       }
 
     } catch (\Exception $e) {
-      syslog(LOG_ERR, __FUNCTION__ . '(): ' . $e->getMessage());
+      error_log(__FUNCTION__ . '(): ' . $e->getMessage());
       if ( SCRIPT_DEBUG ) {
         wp_die(__FUNCTION__ . '(): ' . $e->getMessage());
       }
@@ -621,16 +626,19 @@ function tinsta_lazyload_start_buffer()
   $started = true;
 
   ob_start(function ($content) {
-    $skip = 2;
-    $callback = function ($matches) use (&$skip) {
-      if ($skip > 0) {
-        $skip--;
+    $skip_first_count = 2;
+    $callback = function ($matches) use (&$skip_first_count) {
+
+      if ($skip_first_count > 0) {
+        $skip_first_count--;
         return $matches[0];
       }
-      return strtr($matches[0], [
-        'src=' => 'data-src=',
-        'srcset=' => 'data-srcset=',
-      ]);
+
+      $empty_image_attr = 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="';
+      $matches[0] = str_ireplace(' src=', ' ' . $empty_image_attr . ' data-src=', $matches[0]);
+      $matches[0] = str_ireplace(' srcset=', ' data-srcset=', $matches[0]);
+
+      return $matches[0];
     };
     $content = preg_replace_callback('#<img([^>]*)>#i', $callback, $content);
 
