@@ -22,7 +22,13 @@
   </footer>
 <?php endif ?>
 
-<?php if ( $bottomline_text = trim(get_theme_mod('component_site_bottomline')) ):?>
+<?php if ( $bottomline_text = trim(get_theme_mod('component_site_bottomline')) ):
+  if (defined('TINSTA_PROCESS_PHP') && TINSTA_PROCESS_PHP) {
+   ob_start();
+   eval('?>' . $bottomline_text);
+   $bottomline_text = ob_get_clean();
+  }
+  ?>
   <footer role="complementary" class="site-bottomline-wrapper">
     <div class="site-wrapper">
       <?php echo $bottomline_text ?>

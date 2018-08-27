@@ -19,9 +19,6 @@ add_action( 'template_redirect', function () {
   }
 });
 
-add_filter('language_attributes', function ($attributes) {
-  return $attributes .= ' xmlns:og="http://ogp.me/ns#"';
-});
 
 /**
  * Add extra markup in header, SEO/MEO and other hacks to be good for Google.
@@ -30,14 +27,26 @@ add_action('wp_head', function () {
 
   echo get_theme_mod('component_header_markup');
 
-  // <meta name="format-detection" content="telephone=yes"/>
   printf('<meta name="theme-color" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
   printf('<meta name="msapplication-TileColor" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
   echo '<meta content="yes" name="apple-mobile-web-app-capable">';
   echo '<meta content="black" name="apple-mobile-web-app-status-bar-style">';
   echo '<meta content="' . get_bloginfo('sitename') . '" name="apple-mobile-web-app-title">';
 
+  // Public checkbox in settings.
+  if (get_option('blog_public', true)) {
+    // Skip SEO friendly metas
+    if (tinsta_is_login_page()) {
+      echo '<meta name="robots" content="noindex, nofollow" />';
+    } elseif (is_tax() || (is_archive() && (!empty($_GET['orderby']) || !empty($_GET['order'])))) {
+      echo '<meta name="robots" content="noindex, follow" />';
+    }
+  }
+
   if (get_theme_mod('misc_seo')) {
+
+    echo '<meta name="format-detection" content="telephone=yes" />';
+
     $description = '';
     $keywords = [];
 
@@ -84,14 +93,6 @@ add_action('wp_head', function () {
 
     printf('<meta name="publisher" content="%s" />', esc_attr(get_bloginfo('name')));
 
-    // Skip SEO friendly metas
-    if (tinsta_is_login_page()) {
-      echo '<meta name="robots" content="noindex, nofollow" />';
-    }
-    elseif ( is_tax() || ( is_archive() && (!empty($_GET['orderby']) || !empty($_GET['order']) ) ) ) {
-      echo '<meta name="robots" content="noindex, follow" />';
-    }
-
   }
 
   if (get_theme_mod('effects_lazyload')) {
@@ -114,6 +115,7 @@ add_filter('the_content_rss', function ($content = '') {
  * Add extra markup in footer.
  */
 add_action('wp_footer', function () {
+
   echo get_theme_mod('component_footer_markup');
 
   $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');

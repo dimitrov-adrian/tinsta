@@ -225,6 +225,9 @@ add_action('widgets_init', function () {
   require __DIR__ . '/widgets/related-posts-widget.php';
   register_widget('Tinsta_RelatedPosts_Widget');
 
+  require __DIR__ . '/widgets/page-content-widget.php';
+  register_widget('Tinsta_PageContent_Widget');
+
 });
 
 

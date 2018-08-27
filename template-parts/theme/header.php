@@ -2,7 +2,13 @@
   <?php _e('Skip to content', 'tinsta') ?>
 </a>
 
-<?php if ( $topline_text = trim(get_theme_mod('component_site_topline')) ): ?>
+<?php if ( $topline_text = trim(get_theme_mod('component_site_topline')) ):
+  if (defined('TINSTA_PROCESS_PHP') && TINSTA_PROCESS_PHP) {
+    ob_start();
+    eval('?>' . $topline_text);
+    $topline_text = ob_get_clean();
+  }
+  ?>
   <header role="complementary" class="site-topline-wrapper">
     <div class="site-topline">
       <?php echo $topline_text ?>

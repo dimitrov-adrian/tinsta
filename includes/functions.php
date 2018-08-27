@@ -333,6 +333,12 @@ function tinsta_get_options_defaults()
     'typography_text_justify' => false,
     'typography_text_wordbreak' => false,
     'typography_form_spacing' => 30,
+// @TODO
+//    'typography_text_font_weight' => 'normal',
+//    'typography_text_font_weight' => 'normal',
+//    'typography_font_letterspacing' => 'normal',
+//    'typography_font_wordspacing' => 'normal',
+//    'typography_link_style' => 'underline', // @TODO
     'typography_roundness' => 0,
     'typography_brightness' => 50,
     'typography_bordering' => 1,
@@ -634,7 +640,7 @@ function tinsta_lazyload_start_buffer()
         return $matches[0];
       }
 
-      $empty_image_attr = 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="';
+      $empty_image_attr = 'src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=="';
       $matches[0] = str_ireplace(' src=', ' ' . $empty_image_attr . ' data-src=', $matches[0]);
       $matches[0] = str_ireplace(' srcset=', ' data-srcset=', $matches[0]);
 

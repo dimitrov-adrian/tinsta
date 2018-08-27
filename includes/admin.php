@@ -186,6 +186,7 @@ add_action('admin_menu', function () {
 add_filter('widget_update_callback', function ($instance, $new_instance, $widget, $object) {
 
   $instance = wp_parse_args((array)$new_instance, [
+    'tinsta_widget_size_float' => '',
     'tinsta_widget_size_enable' => '',
     'tinsta_widget_size' => '',
     'tinsta_boxed' => '',
@@ -221,6 +222,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
     'tinsta_boxed' => '',
     'tinsta_widget_size_enable' => '',
     'tinsta_widget_size' => 33,
+    'tinsta_widget_float' => '',
   ]);
 
   ob_start();
@@ -243,10 +245,10 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
   if (!in_array($sidebar, ['primary', 'secondary'])) {
     ?>
     <p>
-      <input name="<?php echo $object->get_field_name('tinsta_widget_size_enable') ?>"
-             type="checkbox"
-             value="on"
-        <?php checked($instance['tinsta_widget_size_enable'], 'on') ?> />
+<!--      <input name="--><?php //echo $object->get_field_name('tinsta_widget_size_enable') ?><!--"-->
+<!--             type="checkbox"-->
+<!--             value="on"-->
+<!--        --><?php //checked($instance['tinsta_widget_size_enable'], 'on') ?><!-- />-->
       <label for="<?php echo $object->get_field_id('tinsta_widget_size') ?>">
         <?php _e('Width', 'tinsta') ?>
       </label>
@@ -260,6 +262,20 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
              value="<?php echo esc_attr($instance['tinsta_widget_size']) ?>"
       /> %
     </p>
+    <p>
+      <label for="<?php echo $object->get_field_id('tinsta_widget_float') ?>">
+        <?php _e('Floating', 'tinsta') ?>
+      </label>
+      <select name="<?php echo $object->get_field_name('tinsta_widget_float') ?>"
+             id="<?php echo $object->get_field_id('tinsta_widget_float') ?>"
+             style="vertical-align: middle; width: 6em;"
+        >
+        <option value=""><?php _e('Default', 'tinsta')?></option>
+        <option value="left" <?php selected($instance['tinsta_widget_float'], 'left')?>><?php _e('Left', 'tinsta')?></option>
+        <option value="right" <?php selected($instance['tinsta_widget_float'], 'right')?>><?php _e('Right', 'tinsta')?></option>
+      </select>
+    </p>
+
     <?php
   }
 

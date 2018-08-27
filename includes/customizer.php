@@ -221,6 +221,19 @@ add_action('customize_register', function ($wp_customize) {
       'style' => 'width:6em;',
     ],
   ]);
+  $wp_customize->add_control('typography_font_family', [
+    'label'   => __('Font-Family', 'tinsta'),
+    'section' => 'tinsta_typography',
+    'type'    => 'textarea',
+  ]);
+  // Use select for google font names, but if there is some problem, fallback to text input.
+  $wp_customize->add_control('typography_font_google', [
+    'label'       => __('Google Font', 'tinsta'),
+    'section' => 'tinsta_typography',
+    'description' => sprintf(
+      __('Use font name from %s', 'tinsta'),
+      '<a target="_blank" href="https://fonts.google.com/" rel="noopener">google fonts</a>'),
+  ]);
   $wp_customize->add_control('typography_font_headings_style', [
     'label'   => __('Headings Style', 'tinsta'),
     'section' => 'tinsta_typography',
@@ -232,24 +245,10 @@ add_action('customize_register', function ($wp_customize) {
       'small-caps'     => __('Small Caps', 'tinsta'),
     ],
   ]);
-  $wp_customize->add_control('typography_font_family', [
-    'label'   => __('Fallback font-family', 'tinsta'),
-    'section' => 'tinsta_typography',
-    'type'    => 'textarea',
-  ]);
   $wp_customize->add_control('typography_font_family_headings', [
-    'label'   => sprintf(__('(Headings) %s', 'tinsta'), __('Fallback font-family', 'tinsta')),
+    'label'   => sprintf(__('(Headings) %s', 'tinsta'), __('Font-Family', 'tinsta')),
     'section' => 'tinsta_typography',
     'type'    => 'textarea',
-  ]);
-
-  // Use select for google font names, but if there is some problem, fallback to text input.
-  $wp_customize->add_control('typography_font_google', [
-    'label'       => __('Google Font', 'tinsta'),
-    'section' => 'tinsta_typography',
-    'description' => sprintf(
-      __('Use font name from %s', 'tinsta'),
-      '<a target="_blank" href="https://fonts.google.com/" rel="noopener">google fonts</a>'),
   ]);
   $wp_customize->add_control('typography_font_headings_google', [
     'label'       => sprintf(__('(Headings) %s', 'tinsta'), __('Google Font', 'tinsta')),
@@ -921,7 +920,7 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_system_page_login',
     'type'    => 'select',
     'choices' => [
-      ''      => __('Default', 'tinsta'),
+      ''      => 'WordPress',
       'brand' => __('Simple', 'tinsta'),
       'full'  => __('As a regular page', 'tinsta'),
     ],
