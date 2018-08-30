@@ -2,7 +2,7 @@
 
   <div class="comment-meta">
 
-    <?php if (!empty($show_avatars)):?>
+    <?php if (get_option('show_avatars')):?>
     <div class="comment-author-avatar">
       <?php echo get_avatar(get_comment_author_email(), get_theme_mod('component_avatar_size')) ?>
     </div>

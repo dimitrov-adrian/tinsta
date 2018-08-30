@@ -93,7 +93,7 @@ add_action('widgets_init', function () {
   ]);
 
   register_sidebar([
-    'name' => __('Front-page', 'tinsta'),
+    'name' => __('Front Page', 'tinsta'),
     'id' => 'frontpage',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -101,14 +101,16 @@ add_action('widgets_init', function () {
     'after_title' => '</div>',
   ]);
 
-  register_sidebar([
-    'name' => __('Error 404', 'tinsta'),
-    'id' => 'error-404',
-    'before_widget' => '<div id="%1$s" class="widget %2$s">',
-    'after_widget' => '</div>',
-    'before_title' => '<div class="widgettitle">',
-    'after_title' => '</div>',
-  ]);
+  if (get_theme_mod("system_page_404_display") == 'widgets' || $is_customizer_preview) {
+    register_sidebar([
+      'name' => __('Error 404', 'tinsta'),
+      'id' => 'error-404',
+      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<div class="widgettitle">',
+      'after_title' => '</div>',
+    ]);
+  }
 
   register_sidebar([
     'name' => __('Primary Sidebar', 'tinsta'),

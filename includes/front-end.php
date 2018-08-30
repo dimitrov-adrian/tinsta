@@ -27,6 +27,12 @@ add_action('wp_head', function () {
 
   echo get_theme_mod('component_header_markup');
 
+
+  // No need anymore.
+  //  if (get_theme_mod('typography_font_google') | get_theme_mod('typography_font_headings_google')) {
+  //    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com" />';
+  //  }
+
   printf('<meta name="theme-color" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
   printf('<meta name="msapplication-TileColor" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
   echo '<meta content="yes" name="apple-mobile-web-app-capable">';
@@ -43,7 +49,7 @@ add_action('wp_head', function () {
     }
   }
 
-  if (get_theme_mod('misc_seo')) {
+  if (get_theme_mod('component_seo_enable')) {
 
     echo '<meta name="format-detection" content="telephone=yes" />';
 
@@ -95,7 +101,7 @@ add_action('wp_head', function () {
 
   }
 
-  if (get_theme_mod('effects_lazyload')) {
+  if (get_theme_mod('component_effects_lazyload')) {
     tinsta_lazyload_start_buffer();
   }
 
@@ -173,12 +179,12 @@ add_action('wp_enqueue_scripts', function () {
   wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
 
   // Add nice scroll if when enabled.
-  if (get_theme_mod('effects_smooth_scroll')) {
+  if (get_theme_mod('component_effects_smooth_scroll')) {
     wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/scripts/smoothscroll.min.js', [], '1.4.6', true);
   }
 
   // Add nice scroll if when enabled.
-  if (get_theme_mod('effects_lazyload')) {
+  if (get_theme_mod('component_effects_lazyload')) {
     wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/scripts/lazyload.js', [], '1.0', true);
   }
 
@@ -200,7 +206,7 @@ add_action('wp_enqueue_scripts', function () {
 
   // Comment respond form reply script.
   if (is_singular()) {
-    if (have_comments() || comments_open()) {
+    if (have_comments() || comments_open() || intval(get_comments_number()) > 0) {
       // Enqueue stylesheets.
       wp_enqueue_style('tinsta-comments', tinsta_get_stylesheet('comments'), [], $theme_hash);
     }
@@ -225,8 +231,12 @@ add_action('wp_enqueue_scripts', function () {
  */
 add_filter('body_class', function ($classes, $class) {
 
-  if (get_theme_mod('effects')) {
-    $classes[] = 'effects';
+  if (get_theme_mod('component_effects_shadows')) {
+    $classes[] = 'effects-shadows';
+  }
+
+  if (get_theme_mod('component_effects_animations')) {
+    $classes[] = 'effects-animations';
   }
 
   // Add class of hfeed to non-singular pages.
@@ -451,3 +461,35 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
 }, 10, 4);
 
+
+/**
+ * Override post fetching
+ */
+add_action( 'pre_get_posts', function ($query) {
+
+  if ( is_admin() ) {
+    return;
+  }
+
+  if ( $query->is_main_query() ) {
+
+    if ( is_search() ) {
+      $post_type = get_theme_mod('system_page_search_search_force_post_type');
+      if ($post_type) {
+        $query->set('post_type', $post_type);
+      }
+    }
+
+    $post_type = $query->get('post_type');
+    if ( !$post_type && is_home() ) {
+      $post_type = 'post';
+    }
+    $per_page = get_theme_mod("post_type_{$post_type}_archive_per_page", 0);
+    if ($per_page) {
+      $query->set('posts_per_page', $per_page);
+    }
+
+  }
+
+
+});

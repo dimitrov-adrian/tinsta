@@ -1,9 +1,5 @@
 <?php
 
-if (!defined('TINSTA_EXPERIMENTS')) {
-  return false;
-}
-
 add_action('init', function () {
 
   register_post_type('tinsta-layouts', [
@@ -11,7 +7,7 @@ add_action('init', function () {
     'labels' => [
       'name' => __('Layouts', 'tinsta'),
       'singular_name' => __('Layout', 'tinsta'),
-      'menu_name' => __('Site layouts', 'tinsta'),
+      'menu_name' => __('Site Layouts', 'tinsta'),
       'parent_item_colon' => __('Parent layout', 'tinsta'),
       'all_items' => __('Layouts', 'tinsta'),
       'view_item' => __('View layout', 'tinsta'),

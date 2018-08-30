@@ -41,7 +41,7 @@ $brightness-base: ( ( 50 *( $typography_brightness / 90) ) + 5 ) / 1.5;
 }
 
 @mixin shadow() {
-  // box-shadow: effects_shadows
+  // box-shadow: component_effects_shadows
 }
 
 @mixin roundness($pos: '', $coef: 1) {

@@ -6,16 +6,13 @@
  */
 
 
-add_theme_support( 'customize-selective-refresh-widgets' );
-
-
 /**
  * Setup base region setting controls
  *
  * @param \WP_Customize_Manager
  * @param string $region_slug
  */
-function tinsta_customizer_setup_color_controls($wp_customize, $region_slug, $options = [])
+function tinsta_customizer_setup_color_controls($wp_customize, $region_slug)
 {
   $defaults = tinsta_get_options_defaults();
 
@@ -91,7 +88,7 @@ function tinsta_customizer_setup_background_controls($wp_customize, $region_slug
       'y' => "{$region_slug}_image_position_y",
     ],
     'active_callback' => function () use ($region_slug) {
-      return ! ! get_theme_mod($region_slug . '_image');
+      return get_theme_mod($region_slug . '_image') ? true : false;
     },
   ]));
   $wp_customize->add_control("{$region_slug}_image_size", [
@@ -104,7 +101,7 @@ function tinsta_customizer_setup_background_controls($wp_customize, $region_slug
       'cover'   => __('Fill Screen', 'tinsta'),
     ],
     'active_callback' => function () use ($region_slug) {
-      return ! ! get_theme_mod($region_slug . '_image');
+      return get_theme_mod($region_slug . '_image') ? true : false;
     },
   ]);
   $wp_customize->add_control("{$region_slug}_image_repeat", [
@@ -112,7 +109,7 @@ function tinsta_customizer_setup_background_controls($wp_customize, $region_slug
     'section' => $customizer_region_name,
     'type'            => 'checkbox',
     'active_callback' => function () use ($region_slug) {
-      return ! ! get_theme_mod($region_slug . '_image');
+      return get_theme_mod($region_slug . '_image') ? true : false;
     },
   ]);
   $wp_customize->add_control("{$region_slug}_image_attachment_scroll", [
@@ -120,7 +117,7 @@ function tinsta_customizer_setup_background_controls($wp_customize, $region_slug
     'section' => $customizer_region_name,
     'type'            => 'checkbox',
     'active_callback' => function () use ($region_slug) {
-      return ! ! get_theme_mod($region_slug . '_image');
+      return get_theme_mod($region_slug . '_image') ? true : false;
     },
   ]);
 
@@ -165,6 +162,8 @@ add_action('customize_register', function ($wp_customize) {
 
   /** @var $wp_customize \WP_Customize_Manager */
 
+  $public_post_types = get_post_types(['public' => true], 'objects');
+
   // Remove built-in color customizer.
   $wp_customize->remove_section('colors');
 
@@ -186,17 +185,30 @@ add_action('customize_register', function ($wp_customize) {
       'type'      => 'theme_mod',
       'default'   => $value,
       'transport' => 'refresh',
+
+      // Basic sanitization.
       'sanitize_callback' => function ($value) {
         return strval($value);
       },
-      // @TODO add sanitization
-      // @TODO add validation
+
+      // Basic validation. There is no universal formula to validate values,
+      // so until found some magic recipe or create more robust variable registering,
+      // we will have no such validation
+      'validation_callback' => function ($value) {
+        return is_scalar($value);
+      },
+
     ]);
   }
 
   // Typography
-  $wp_customize->add_section('tinsta_typography', [
+  $wp_customize->add_panel('tinsta_typography', [
     'title'    => __('Typography', 'tinsta'),
+    'priority' => 20,
+  ]);
+  $wp_customize->add_section('tinsta_typography', [
+    'title'    => __('Text', 'tinsta'),
+    'panel' => 'tinsta_typography',
     'priority' => 20,
   ]);
   $wp_customize->add_control('typography_font_size', [
@@ -221,12 +233,6 @@ add_action('customize_register', function ($wp_customize) {
       'style' => 'width:6em;',
     ],
   ]);
-  $wp_customize->add_control('typography_font_family', [
-    'label'   => __('Font-Family', 'tinsta'),
-    'section' => 'tinsta_typography',
-    'type'    => 'textarea',
-  ]);
-  // Use select for google font names, but if there is some problem, fallback to text input.
   $wp_customize->add_control('typography_font_google', [
     'label'       => __('Google Font', 'tinsta'),
     'section' => 'tinsta_typography',
@@ -234,28 +240,10 @@ add_action('customize_register', function ($wp_customize) {
       __('Use font name from %s', 'tinsta'),
       '<a target="_blank" href="https://fonts.google.com/" rel="noopener">google fonts</a>'),
   ]);
-  $wp_customize->add_control('typography_font_headings_style', [
-    'label'   => __('Headings Style', 'tinsta'),
-    'section' => 'tinsta_typography',
-    'type'    => 'select',
-    'choices' => [
-      ''               => __('Default', 'tinsta'),
-      'uppercase'      => __('Uppercase', 'tinsta'),
-      'all-small-caps' => __('All Small Caps', 'tinsta'),
-      'small-caps'     => __('Small Caps', 'tinsta'),
-    ],
-  ]);
-  $wp_customize->add_control('typography_font_family_headings', [
-    'label'   => sprintf(__('(Headings) %s', 'tinsta'), __('Font-Family', 'tinsta')),
+  $wp_customize->add_control('typography_font_family', [
+    'label'   => __('Font-Family', 'tinsta'),
     'section' => 'tinsta_typography',
     'type'    => 'textarea',
-  ]);
-  $wp_customize->add_control('typography_font_headings_google', [
-    'label'       => sprintf(__('(Headings) %s', 'tinsta'), __('Google Font', 'tinsta')),
-    'section' => 'tinsta_typography',
-    'description' => sprintf(
-      __('Use font name from %s', 'tinsta'),
-      '<a target="_blank" href="https://fonts.google.com/" rel="noopener">google fonts</a>'),
   ]);
 
   $wp_customize->add_control('typography_text_wordbreak', [
@@ -273,19 +261,65 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_typography',
     'type'    => 'checkbox',
   ]);
-  $wp_customize->add_control('typography_form_spacing', [
-    'label'       => __('Forms Field Spacing', 'tinsta') . ' (%)',
-    'section' => 'tinsta_typography',
-    'type'        => 'number',
-    'input_attrs' => [
-      'min'   => 0,
-      'max'   => 100,
-      'style' => 'width:6em;',
+
+
+  // Typography: Headings
+  $wp_customize->add_section('tinsta_typography_headings', [
+    'title'    => __('Headings', 'tinsta'),
+    'panel' => 'tinsta_typography',
+    'priority' => 20,
+  ]);
+  $wp_customize->add_control('typography_font_headings_style', [
+    //    'label'   => __('Headings Style', 'tinsta'),
+    'label' => __('Style', 'tinsta'),
+    'section' => 'tinsta_typography_headings',
+    'type'    => 'select',
+    'choices' => [
+      ''               => __('Default', 'tinsta'),
+      'uppercase'      => __('Uppercase', 'tinsta'),
+      'all-small-caps' => __('All Small Caps', 'tinsta'),
+      'small-caps'     => __('Small Caps', 'tinsta'),
     ],
+  ]);
+  $wp_customize->add_control('typography_font_headings_google', [
+    'label'       => __('Google Font', 'tinsta'),
+    'section' => 'tinsta_typography_headings',
+    'description' => sprintf(
+      __('Use font name from %s', 'tinsta'),
+      '<a target="_blank" href="https://fonts.google.com/" rel="noopener">google fonts</a>'),
+  ]);
+  $wp_customize->add_control('typography_font_family_headings', [
+    'label'   => __('Font-Family', 'tinsta'),
+    'section' => 'tinsta_typography_headings',
+    'description' => __('Leave blank to inherit global from text.', 'tinsta'),
+    'type'    => 'textarea',
+  ]);
+  // Actually, may be there is no point of such settings, as it come from typography.scss
+  //  for ($hn = 1; $hn <= 6; $hn++) {
+  //    $wp_customize->add_setting("typography_font_heading_size_h{$hn}");
+  //    $wp_customize->add_control("typography_font_heading_size_h{$hn}", [
+  //      'label'       => sprintf('H%d %s (px)', $hn, __('Size', 'tinsta')),
+  //      'section' => 'tinsta_typography_headings',
+  //      'type'        => 'number',
+  //      'input_attrs' => [
+  //        'min'   => 10,
+  //        'max'   => 20,
+  //        'step'  => 0.5,
+  //        'style' => 'width:6em;',
+  //      ],
+  //    ]);
+  //  }
+
+
+  // Typography: Other Elements
+  $wp_customize->add_section('tinsta_typography_elements', [
+    'title'    => __('Other Elements', 'tinsta'),
+    'panel' => 'tinsta_typography',
+    'priority' => 20,
   ]);
   $wp_customize->add_control('typography_form_button_style', [
     'label'   => __('Button Style', 'tinsta'),
-    'section' => 'tinsta_typography',
+    'section' => 'tinsta_typography_elements',
     'type'    => 'select',
     'choices' => [
       ''       => __('None', 'tinsta'),
@@ -295,7 +329,7 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('typography_font_button_text_style', [
     'label'   => __('Button Text Style', 'tinsta'),
-    'section' => 'tinsta_typography',
+    'section' => 'tinsta_typography_elements',
     'type'    => 'select',
     'choices' => [
       ''               => __('Default', 'tinsta'),
@@ -306,7 +340,7 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('typography_bordering', [
     'label'       => __('Bordering', 'tinsta') . ' (px)',
-    'section' => 'tinsta_typography',
+    'section' => 'tinsta_typography_elements',
     'type'        => 'number',
     'input_attrs' => [
       'min'   => 0,
@@ -317,7 +351,7 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_control('typography_brightness', [
     'type'        => 'number',
     'label'       => __('Brightness', 'tinsta') . ' (%)',
-    'section' => 'tinsta_typography',
+    'section' => 'tinsta_typography_elements',
     'input_attrs' => [
       'min'   => 0,
       'max'   => 100,
@@ -327,7 +361,7 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('typography_roundness', [
     'label'       => __('Roundness', 'tinsta'),
-    'section' => 'tinsta_typography',
+    'section' => 'tinsta_typography_elements',
     'type'        => 'number',
     'input_attrs' => [
       'min'   => 0,
@@ -336,6 +370,17 @@ add_action('customize_register', function ($wp_customize) {
       'style' => 'width:6em;',
     ],
   ]);
+  $wp_customize->add_control('typography_form_spacing', [
+    'label'       => __('Forms Field Spacing', 'tinsta') . ' (%)',
+    'section' => 'tinsta_typography_elements',
+    'type'        => 'number',
+    'input_attrs' => [
+      'min'   => 0,
+      'max'   => 100,
+      'style' => 'width:6em;',
+    ],
+  ]);
+
 
   /*
    * Regions:
@@ -353,7 +398,7 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('region_root_height_full', [
     'type'    => 'checkbox',
-    'label'   => __('Full-Height', 'tinsta'),
+    'label'   => __('Full Height', 'tinsta'),
     'description' => __('If page is shorten than a window height, this will apply JS fix to make it full height. Most noticeable if have footer or bottomline', 'tinsta'),
     'section' => 'tinsta_region_root',
   ]);
@@ -617,7 +662,7 @@ add_action('customize_register', function ($wp_customize) {
       'javascript:wp.customize.control(\'component_site_bottomline\').focus();'
     ),
     'active_callback' => function () {
-      return (bool) trim(get_theme_mod('component_site_topline'));
+      return (bool) trim(get_theme_mod('component_site_bottomline'));
     },
   ]);
   $wp_customize->add_control('region_bottomline_sticky', [
@@ -676,11 +721,6 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_component_site_agreement',
     'type'    => 'textarea',
   ]);
-  //  $wp_customize->add_control(new WP_Customize_Code_Editor_Control($wp_customize, 'component_site_agreement_text', [
-  //    'section' => 'tinsta_component_site_agreement',
-  //    'code_type' => 'text/html',
-  //    'label'   => __('Text', 'tinsta'),
-  //  ]));
   $wp_customize->add_control('component_site_agreement_agree_button', [
     'label'   => __('Button Text', 'tinsta'),
     'section' => 'tinsta_component_site_agreement',
@@ -769,20 +809,8 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_component_outdated_post',
     'description' => __('Use %time% token to show the time ago', 'tinsta'),
   ]);
-  // No checkboxes yet, in consideration if to add this options.
-  // $component_outdated_post_types = [];
-  // foreach (get_post_types(['public' => true], 'objects') as $post_type) {
-  //   $component_outdated_post_types[$post_type->name] = $post_type->label;
-  // }
-  // $wp_customize->add_control('component_outdated_post_types', [
-  //   'label'   => __('Post types', 'tinsta'),
-  //   'section' => 'component_outdated_post_types',
-  //   'type'    => 'checkbox',
-  //   'choices' => $component_outdated_post_types,
-  // ]);
 
   // Component: Avatars
-
   $wp_customize->add_section('tinsta_component_avatar', [
     'title' => __('Avatars', 'tinsta'),
     'panel' => 'tinsta_components',
@@ -799,7 +827,7 @@ add_action('customize_register', function ($wp_customize) {
     ],
   ]);
   $wp_customize->add_control('component_avatar_size_small', [
-    'label' => __('Small size', 'tinsta') . ' (px)',
+    'label' => __('Small Size', 'tinsta') . ' (px)',
     'section' => 'tinsta_component_avatar',
     'type' => 'number',
     'input_attrs' => [
@@ -816,7 +844,7 @@ add_action('customize_register', function ($wp_customize) {
     'panel' => 'tinsta_components',
   ]);
   $wp_customize->add_control('component_comments_style', [
-    'label'   => __('Layout', 'tinsta'),
+    'label'   => __('Style', 'tinsta'),
     'section' => 'tinsta_component_comments',
     'type'    => 'select',
     'choices' => [
@@ -864,37 +892,90 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control(new WP_Customize_Code_Editor_Control($wp_customize, 'component_social_networks_code', [
     'section' => 'tinsta_component_social_networks_code',
-    'description' => __('Appears in posts headers. Can be used to put AddThis or social networks like, follow, share or etc.', 'tinsta'),
+    'description' => __('Appears in posts headers. Can be used to put AddThis or social networks buttons (like, follow, share, etc&hellip;)', 'tinsta'),
     'code_type'   => 'text/html',
   ]));
 
   // Component: Meta HTML
   $wp_customize->add_section('tinsta_component_header_markup', [
-    'title'    => __('HTML <head>', 'tinsta'),
+    'title'    => sprintf(__('Custom %s HTML', 'tinsta'), '<head>'),
     'panel'    => 'tinsta_components',
     'priority' => 200,
   ]);
   $wp_customize->add_control(new WP_Customize_Code_Editor_Control($wp_customize, 'component_header_markup', [
     'section' => 'tinsta_component_header_markup',
-    'description' => __('Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics or etc.', 'tinsta'),
+    'description' => sprintf(__('Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics or etc. Insert just before %s tag.', 'tinsta'), esc_html('</head>')),
     'code_type'   => 'text/html',
   ]));
 
   // Component: Footer HTML
   $wp_customize->add_section('tinsta_component_footer_markup', [
-    'title'    => __('HTML <body>', 'tinsta'),
+    'title'    => sprintf(__('Custom %s HTML', 'tinsta'), '<body>'),
     'panel'    => 'tinsta_components',
     'priority' => 200,
   ]);
   $wp_customize->add_control(new WP_Customize_Code_Editor_Control($wp_customize, 'component_footer_markup', [
     'section' => 'tinsta_component_footer_markup',
-    'description' => __('Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics or etc.', 'tinsta'),
+    'description' => sprintf(__('Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics or etc. Insert just before %s tag.', 'tinsta'), esc_html('</body>')),
     'code_type'   => 'text/html',
   ]));
 
   // Component: Custom CSS
   $wp_customize->get_section('custom_css')->panel    = 'tinsta_components';
   $wp_customize->get_section('custom_css')->priority = 210;
+
+  // Component: Effects
+  $wp_customize->add_section('tinsta_component_effects', [
+    'title'    => __('Effects', 'tinsta'),
+    'panel'    => 'tinsta_components',
+    'priority' => 190,
+  ]);
+  $wp_customize->add_control('component_effects_lazyload', [
+    'section'     => 'tinsta_component_effects',
+    'type'        => 'checkbox',
+    'label'       => __('Image Lazy Loading', 'tinsta'),
+  ]);
+  $wp_customize->add_control('component_effects_smooth_scroll', [
+    'type'        => 'checkbox',
+    'label'       => __('Smooth Scroll', 'tinsta'),
+    'description' => __('Smooth scroll is nice effect, but may decrease the scrolling performance.', 'tinsta'),
+    'section' => 'tinsta_component_effects',
+  ]);
+  $wp_customize->add_control('component_effects_animations', [
+    'section'     => 'tinsta_component_effects',
+    'type'        => 'select',
+    'label'       => __('(TODO) Animations', 'tinsta'),
+    'description' => __('Enable animation effect for some elements.', 'tinsta'),
+    'choices' => [
+      0 => __('Disabled', 'tinsta'),
+      150 => __('Fast', 'tinsta'),
+      250 => __('Normal', 'tinsta'),
+      500 => __('Slow', 'tinsta'),
+    ],
+  ]);
+  $wp_customize->add_control('component_effects_shadows', [
+    'section'     => 'tinsta_component_effects',
+    'type'        => 'select',
+    'label'       => __('(TODO) Shadows', 'tinsta'),
+    'description' => __('Enable shadow effect for some elements.', 'tinsta'),
+    'choices' => [
+      0 => __('Disabled', 'tinsta'),
+      2 => __('Light', 'tinsta'),
+      10 => __('Big', 'tinsta'),
+    ],
+  ]);
+
+
+  // Component: SEO
+  $wp_customize->add_section('tinsta_component_seo', [
+    'title' => __('SEO', 'tinsta'),
+    'panel' => 'tinsta_components',
+  ]);
+  $wp_customize->add_control('component_seo_enable', [
+    'type'        => 'checkbox',
+    'label'       => __('Enable SEO Helpers', 'tinsta'),
+    'section'     => 'tinsta_component_seo',
+  ]);
 
 
   /**
@@ -906,13 +987,10 @@ add_action('customize_register', function ($wp_customize) {
 
   // System Page: Homepage settings
   $wp_customize->get_section('static_front_page')->panel = 'tinsta_system_pages';
-  //  $wp_customize->get_section('sidebar-widgets-frontpage')->active_callback = function () {
-  //    return (bool) get_theme_mod('system_page_404_widgets_area');
-  //  };
 
   // System Page: Login and Register
   $wp_customize->add_section('tinsta_system_page_login', [
-    'title' => __('Login and Register', 'tinsta'),
+    'title' => __('Login & Register', 'tinsta'),
     'panel' => 'tinsta_system_pages',
   ]);
   $wp_customize->add_control('system_page_login_theming', [
@@ -940,29 +1018,32 @@ add_action('customize_register', function ($wp_customize) {
       'full' => __('As a regular page', 'tinsta'),
     ],
   ]);
-  $wp_customize->add_control('system_page_404_widgets_area', [
-    'label'   => __('Enable Widgets managing', 'tinsta'),
+  $wp_customize->add_control('system_page_404_display', [
+    'label'   => __('Display', 'tinsta'),
     'section' => 'tinsta_system_page_404',
-    'type'    => 'checkbox',
+    'type'    => 'select',
+    'choices' => [
+      '' => __('Default', 'tinsta'),
+      'widgets' => __('Widgets Area', 'tinsta'),
+    ],
   ]);
-  //  $wp_customize->get_section('section-sidebar-widgets-error-404')->active_callback = function () {
-  //    return (bool) get_theme_mod('system_page_404_widgets_area');
-  //  };
 
   // System Page: Search
   $wp_customize->add_section('tinsta_system_page_search', [
     'title' => __('Search', 'tinsta'),
     'panel' => 'tinsta_system_pages',
   ]);
-  $wp_customize->add_control('system_page_search_hide_widgets', [
-    'label'   => __('Hide Search Widgets on search page', 'tinsta'),
+  $post_types = [
+    '' => '&mdash; ' . __('All', 'tinsta') . ' &mdash;',
+  ];
+  foreach ($public_post_types as $post_type) {
+    $post_types["{$post_type->name}"] = $post_type->label;
+  }
+  $wp_customize->add_control('system_page_search_search_force_post_type', [
+    'label'   => __('Force search to find only', 'tinsta'),
     'section' => 'tinsta_system_page_search',
-    'type'    => 'checkbox',
-  ]);
-  $wp_customize->add_control('system_page_search_search_field', [
-    'label'   => __('Show theme\'s search box in search page', 'tinsta'),
-    'section' => 'tinsta_system_page_search',
-    'type'    => 'checkbox',
+    'type'    => 'select',
+    'choices' => $post_types,
   ]);
 
   /**
@@ -973,11 +1054,11 @@ add_action('customize_register', function ($wp_customize) {
   ]);
 
   // Page Type: {post_type}
-  foreach (get_post_types(['public' => true], 'objects') as $post_type) {
+  foreach ($public_post_types as $post_type) {
 
     $support_archives = ! ($post_type->has_archive === 0 || $post_type->has_archive === false) || $post_type->name == 'post';
 
-    $region_name              = "tinsta_post_type_{$post_type->name}";
+    $region_name  = "tinsta_post_type_{$post_type->name}";
     $post_type_base_control_id = "post_type_{$post_type->name}";
     $singular_label = empty($post_type->labels->singular_name) ? $post_type->label : $post_type->labels->singular_name;
 
@@ -1067,7 +1148,7 @@ add_action('customize_register', function ($wp_customize) {
       ]);
 
       $wp_customize->add_control("{$post_type_base_control_id}_archive_show_excerpt_words", [
-        'label'       => __('Excerpt number of words', 'tinsta'),
+        'label'       => __('Number of words in excerpts', 'tinsta'),
         'section' => $region_name,
         'type'        => 'number',
         'input_attrs' => [
@@ -1082,44 +1163,25 @@ add_action('customize_register', function ($wp_customize) {
         },
       ]);
 
+      $wp_customize->add_control("{$post_type_base_control_id}_archive_per_page", [
+        'label'       => __('Per Page', 'tinsta'),
+        'section' => $region_name,
+        'type'        => 'number',
+        'input_attrs' => [
+          'min'   => 0,
+          'step'  => 1,
+          'style' => 'width:6em;',
+        ],
+      ]);
+
     }
 
   }
 
 
-  /**
-   * Tinsta theme misc
-   */
-  $wp_customize->add_section('tinsta_misc', [
-    'title' => __('Miscellaneous', 'tinsta'),
-  ]);
-  $wp_customize->add_control('effects_smooth_scroll', [
-    'type'        => 'checkbox',
-    'label'       => __('Smooth Scroll', 'tinsta'),
-    'description' => __('Smooth scroll is nice effect, but may decrease the scrolling performance.', 'tinsta'),
-    'section' => 'tinsta_misc',
-  ]);
-  $wp_customize->add_control('effects', [
-    'type'        => 'checkbox',
-    'label'       => __('Enable theme effects', 'tinsta'),
-    'section' => 'tinsta_misc',
-    'description' => __('Enable theme effects like shadows, animations and etc.', 'tinsta'),
-  ]);
-  $wp_customize->add_control('effects_lazyload', [
-    'type'        => 'checkbox',
-    'label'       => __('Image Lazy Loading', 'tinsta'),
-    'section'     => 'tinsta_misc',
-  ]);
-  $wp_customize->add_control('misc_seo', [
-    'type'        => 'checkbox',
-    'label'       => __('SEO Helpers', 'tinsta'),
-    'section'     => 'tinsta_misc',
-  ]);
-
-
   // Remove forced mods controls, it is a bit stupid to add and then to remove,
-  // but the cases mods are overriden are not supposed to be very often, also it will require,
-  // huge effort to wrap every control into if().
+  // but the cases mods are overriden are not supposed to be very often (only on child theme or specific plugin)
+  // also it will require huge effort to wrap every control into if().
   foreach ($forced_theme_mods as $mod => $value) {
     $wp_customize->remove_control($mod);
   }

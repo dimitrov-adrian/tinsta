@@ -42,9 +42,30 @@
 
 
 /**
+ * Show Tinsta's types instead of "Custom Link"
+ */
+add_filter('wp_setup_nav_menu_item', function ($item) {
+  if ($item->object === 'tinsta-nav-menu-object') {
+    $items = tinsta_nav_menu_items();
+    if (!empty($items[$item->type])) {
+      $item->type_label = $items[$item->type]['type_label'];
+    }
+    else {
+      $item->type_label = __('Dynamic Content', 'tinsta');
+    }
+  }
+  return $item;
+});
+
+
+/**
  * Alter the menus to support theme's customization.
  */
 add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
+
+  if ($item->object !== 'tinsta-nav-menu-object') {
+    return $item_output;
+  }
 
   if ($item->type == 'tinsta-nav-menu-frontpage') {
     return get_custom_logo();
@@ -52,20 +73,26 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
   if ($item->type == 'tinsta-nav-menu-current-user') {
     if (is_user_logged_in()) {
-      return '<a href="' . get_edit_profile_url() . '">' .
-              get_avatar(wp_get_current_user()->ID) .
-              wp_get_current_user()->display_name .
-              '</a>';
+      $title = $item->post_title;
+      if (!$title) {
+        $title = '$avatar $name';
+      }
+      $title = strtr($title, [
+        '$avatar' => get_avatar(wp_get_current_user()->ID),
+        '$name' => wp_get_current_user()->display_name,
+      ]);
+      return sprintf('<a href="%s">%s</a>',
+        get_edit_profile_url(),
+        $title);
     }
     else {
-      return '<a href="' . wp_login_url() . '">' .
+      return sprintf('<a href="%s">%s</a>',
+        wp_login_url(),
         ( get_option( 'users_can_register' )
           ? __('Login or Register', 'tinsta')
           : __('Login', 'tinsta')
-        ) .
-        '</a>';
+        ));
     }
-    $item_output = ob_get_clean();
   }
 
   if ($item->type == 'tinsta-nav-menu-search-box') {
@@ -129,48 +156,48 @@ add_action('widgets_init', function () {
 /**
  * Helper function that returns Tinsta's custom menu items.
  *
+ * The fake ID is required because customizer do not want to accept if they have no unique ID
+ *
  * @return array
  */
 function tinsta_nav_menu_items()
 {
   $items = [];
 
-  $items[] = [
-    'id' => null,
+  $items['tinsta-nav-menu-frontpage'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Front Page (with logo)', 'tinsta'),
     'type' => 'tinsta-nav-menu-frontpage',
-    'title' => __('Frontpage (with logo)', 'tinsta'),
-    'type_label' => __('Frontpage (with logo)', 'tinsta'),
-    'object' => null,
-    'url' => null,
+    'type_label' => __('Front Page (with logo)', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
   ];
 
-  $items[] = [
-    'id' => null,
+  $items['tinsta-nav-menu-widget-area'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Widgets Area', 'tinsta'),
     'type' => 'tinsta-nav-menu-widget-area',
-    'title' => __('Widget Area', 'tinsta'),
-    'type_label' => __('Widget Area', 'tinsta'),
-    'object' => null,
-    'url' => null,
+    'type_label' => __('Widgets Area', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
   ];
 
-  // Doesn't looks good when added as first level.
-  // @TODO fix design
-  //  $items[] = [
-  //    'id' => null,
-  //    'type' => 'tinsta-nav-menu-search-box',
-  //    'title' => __('Search Box', 'tinsta'),
-  //    'type_label' => __('Search Box', 'tinsta'),
-  //    'object' => null,
-  //    'url' => null,
-  //  ];
+  $items['tinsta-nav-menu-search-box'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Search Box', 'tinsta'),
+    'type' => 'tinsta-nav-menu-search-box',
+    'type_label' => __('Search Box', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+  ];
 
-  $items[] = [
-    'id' => NULL,
+  $items['tinsta-nav-menu-current-user'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Hey $name $avatar', 'tinsta'),
     'type' => 'tinsta-nav-menu-current-user',
-    'title' => __('Current User', 'tinsta'),
     'type_label' => __('Current User', 'tinsta'),
-    'object' => 'tinsta-nav-menu-current-user:anonymous',
-    'url' => NULL,
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
   ];
 
   return $items;
@@ -181,11 +208,8 @@ function tinsta_nav_menu_items()
  */
 add_action( 'admin_head-nav-menus.php', function() {
   add_meta_box('tinsta_nav_menu_items', __('Dynamic Content', 'tinsta'), function () {
-    //    // may be next is not required anymore
-    //    global $_nav_menu_placeholder, $nav_menu_selected_id;
-    //    $_nav_menu_placeholder = 0 > $_nav_menu_placeholder ? $_nav_menu_placeholder - 1 : -1;
     global $nav_menu_selected_id;
-  ?>
+    ?>
     <div id="tinsta-menu-items-div">
       <div class="tabs-panel tabs-panel-active">
         <ul class="categorychecklist form-no-clear" >
@@ -232,7 +256,7 @@ add_action( 'admin_head-nav-menus.php', function() {
       <?php _e('Works only when item is placed as first or second level.', 'tinsta')?>
     </p>
   </div>
-    <?php
+  <?php
   }, 'nav-menus', 'side', 'low');
 });
 
@@ -245,7 +269,7 @@ add_filter('customize_nav_menu_available_item_types', function($menu_types) {
     'title' => __('Dynamic Content', 'tinsta'),
     'type_label' => __('Dynamic Content', 'tinsta'),
     'type' => 'tinsta-menu-item',
-    'object' => 'tinsta-menu-item-object',
+    'object' => 'tinsta-nav-menu-object',
   ];
   return $menu_types;
 });
@@ -255,8 +279,8 @@ add_filter('customize_nav_menu_available_item_types', function($menu_types) {
  * Add Tinsta's custom menu item to customizer's metabox.
  */
 add_filter( 'customize_nav_menu_available_items', function( $items = array(), $type = '', $object = '', $page = 0 ) {
-  if ( 'tinsta-menu-item-object' !== $object ) {
+  if ( 'tinsta-nav-menu-object' !== $object ) {
     return $items;
   }
-  return array_merge( $items, tinsta_nav_menu_items() );
+  return array_merge( $items, array_values(tinsta_nav_menu_items()) );
 }, 10, 4);

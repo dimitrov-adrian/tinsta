@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+
   var lazyImages = [].slice.call(document.querySelectorAll('img[data-srcset],img[data-src],iframe[data-src],video[data-src]'));
 
   if ('IntersectionObserver' in window) {
@@ -18,9 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     lazyImages.forEach(function(lazyImage) {
+      lazyImage.className += ' lazy';
+      lazyImage.addEventListener('load', function () {
+        this.className += ' lazy-loaded';
+      });
       lazyImageObserver.observe(lazyImage);
     });
   } else {
+    // @TODO
     // Possibly fall back to a more compatible method here
   }
 });

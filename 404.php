@@ -13,7 +13,7 @@ get_header($system_page_404_theming);
 <div class="error-content-wrapper">
 
   <div class="content">
-    <?php if (is_active_sidebar('error-404')): ?>
+    <?php if ( get_theme_mod("system_page_404_display") == 'widgets' && is_active_sidebar('error-404') ): ?>
       <?php dynamic_sidebar('error-404') ?>
     <?php else: ?>
       <h1 class="base-title">

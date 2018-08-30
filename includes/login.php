@@ -66,8 +66,31 @@ add_action('login_init', function () {
 
       add_filter('login_body_class', 'get_body_class');
       add_filter('login_headerurl', '__return_null');
-      add_filter('login_headertitle', '__return_null');
+      add_filter('login_message', '__return_null');
 
+      add_filter('login_headertitle', function () {
+        $action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
+        if ($action === 'lostpassword') {
+          return __('Lost Password', 'tinsta');
+        }
+        elseif ($action === 'retrievepassword') {
+          return __('Retrieve Password', 'tinsta');
+        }
+        elseif ($action === 'resetpass' || $action === 'rp') {
+          return __('Reset password', 'tinsta');
+        }
+        elseif ($action === 'register') {
+          return __('Register new account', 'tinsta');
+        }
+        elseif ($action === 'login') {
+          return __('Login', 'tinsta');
+        }
+        else {
+          return null;
+        }
+      });
+
+      // Make compatible with theme head and footers.
       add_action('login_head', function () {
 
           // shake effect fall in troubles when login form is not the first form in the document.
@@ -78,10 +101,12 @@ add_action('login_init', function () {
           wp_head();
       });
 
+      // Apply theme's header.
       add_action('login_header', function () {
           locate_template('template-parts/theme/header.php', true);
       });
 
+      // Apply theme's footer.
       add_action('login_footer', function () {
           locate_template('template-parts/theme/footer.php', true);
       });

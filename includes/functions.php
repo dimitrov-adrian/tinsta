@@ -219,10 +219,6 @@ function tinsta_render_posts_loop($display_mode, $post_type = '')
  */
 function tinsta_comment_callback($comment, $args, $depth)
 {
-  static $show_avatars = null;
-  if ($show_avatars === null) {
-    $show_avatars = get_option('show_avatars');
-  }
   if ($comment->comment_approved || current_user_can('moderate_comments')) {
     if ($comment->comment_type == 'pingback' || $comment->comment_type == 'trackback') {
       get_template_part('template-parts/comments/pingback');
@@ -312,12 +308,11 @@ function tinsta_get_options_defaults()
 
     // Misc
     // @TODO re-arrange to other regions.
-    'effects' => false,
-    'effects_smooth_scroll' => false,
-    'effects_shadows' => 0,
-    'effects_animations' => 0,
-    'effects_lazyload' => false,
-    'misc_seo' => true,
+    'component_effects_animations' => 0,
+    'component_effects_shadows' => 0,
+    'component_effects_smooth_scroll' => false,
+    'component_effects_lazyload' => false,
+    'component_seo_enable' => true,
 
     /**
      * Typography
@@ -452,9 +447,8 @@ function tinsta_get_options_defaults()
     // Page Types
     'system_page_login_theming' => 'brand',
     'system_page_404_theming' => '',
-    'system_page_404_widgets_area' => false,
-    'system_page_search_hide_widgets' => false,
-    'system_page_search_search_field' => '',
+    'system_page_404_display' => '',
+    'system_page_search_search_force_post_type' => '',
 
   ];
 
@@ -468,6 +462,7 @@ function tinsta_get_options_defaults()
       $settings["post_type_{$post_type->name}_layout_archive"] = '';
       $settings["post_type_{$post_type->name}_archive_show"] = 'excerpt';
       $settings["post_type_{$post_type->name}_archive_show_excerpt_words"] = 30;
+      $settings["post_type_{$post_type->name}_archive_per_page"] = get_option('posts_per_page', 10);
     }
   }
 
@@ -641,6 +636,7 @@ function tinsta_lazyload_start_buffer()
       }
 
       $empty_image_attr = 'src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=="';
+      //$empty_image_attr = '';
       $matches[0] = str_ireplace(' src=', ' ' . $empty_image_attr . ' data-src=', $matches[0]);
       $matches[0] = str_ireplace(' srcset=', ' data-srcset=', $matches[0]);
 

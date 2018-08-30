@@ -1,3 +1,18 @@
+/**
+ * Lazy
+ */
+img.lazy {
+  //background-color: #ddd;
+ // object-position: -2000px -2000px;
+  opacity: 0;
+}
+img.lazy-loaded {
+  opacity: 1;
+  display: inline-block;
+  transition: all 150ms ease-in-out;
+}
+
+
 /*
  * Mobile menu and back button.
  */

@@ -203,6 +203,15 @@ function tinsta_compute_rule($rules)
 }
 
 add_filter('sidebars_widgets', function ($sidebars_widgets) {
+
+  foreach( $sidebars_widgets as $widget_area => $widget_list ) {
+    foreach( $widget_list as $pos => $widget_id ){
+      if ( $widget_id == 'calendar-35'){
+        unset( $sidebars_widgets[$widget_area][$pos] );
+      }
+    }
+  }
+
   return $sidebars_widgets;
 });
 

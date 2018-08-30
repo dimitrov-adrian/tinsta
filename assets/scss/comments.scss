@@ -136,7 +136,7 @@ $la-is-loaded: true;
       &.pingback,
       &.trackback {
         time {
-          background: muted($region_root_color_foreground);
+          background: muted($region_root_color_background);
           float: left;
           @extend %small;
           padding: .3em;
@@ -144,7 +144,7 @@ $la-is-loaded: true;
           width: 7.4em;
         }
         .comment-pingback-content {
-          margin-left: 7em;
+          margin-left: 7.2em;
           a {
             display: block;
           }
@@ -186,13 +186,13 @@ $la-is-loaded: true;
             margin-left: 20px;
           }
           .comment-content {
-            margin-right: $component_avatar_size + 20px;
             margin-left: 0;
+            margin-right: $component_avatar_size + 20px;
           }
         }
         .children .comment:nth-child(even) .comment-content {
-          margin-right: $component_avatar_size_small + 20px;
           margin-left: 0;
+          margin-right: $component_avatar_size_small + 20px;
         }
 
       }
@@ -207,6 +207,7 @@ $la-is-loaded: true;
       }
       .comment-content {
         margin-left: 0;
+        margin-right: 0;
       }
     }
     .children,
