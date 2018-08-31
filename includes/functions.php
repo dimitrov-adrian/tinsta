@@ -11,7 +11,6 @@ function tinsta_is_login_page()
   return !empty($GLOBALS['pagenow']) && in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php']);
 }
 
-
 /**
  * Build pagination links.
  *
@@ -96,7 +95,6 @@ function tinsta_pagination($type = '')
   }
 }
 
-
 /**
  * Render posts with wrapper from current request
  *
@@ -149,7 +147,6 @@ function tinsta_render_posts($post_type = '', $display_mode = '')
   }
 
 }
-
 
 /**
  * Render posts from current request (useful when serving posts with AJAX)
@@ -209,7 +206,6 @@ function tinsta_render_posts_loop($display_mode, $post_type = '')
 
 }
 
-
 /**
  * Comment renderer callback
  *
@@ -229,7 +225,6 @@ function tinsta_comment_callback($comment, $args, $depth)
   }
 }
 
-
 /**
  * Render social network's code
  *
@@ -242,7 +237,6 @@ function tinsta_the_social_code()
     echo "<div class=\"social-networks-code\">{$social_code}</div>";
   }
 }
-
 
 /**
  * Get post cover image from object (WP_Post or WP_Term).
@@ -292,7 +286,6 @@ function tinsta_get_category_cover_image($object = null, $size = '', $attr = [])
   return '';
 }
 
-
 /**
  * Default theme mod array
  *
@@ -328,12 +321,12 @@ function tinsta_get_options_defaults()
     'typography_text_justify' => false,
     'typography_text_wordbreak' => false,
     'typography_form_spacing' => 30,
-// @TODO
-//    'typography_text_font_weight' => 'normal',
-//    'typography_text_font_weight' => 'normal',
-//    'typography_font_letterspacing' => 'normal',
-//    'typography_font_wordspacing' => 'normal',
-//    'typography_link_style' => 'underline', // @TODO
+    // @TODO
+    //    'typography_text_font_weight' => 'normal',
+    //    'typography_text_font_weight' => 'normal',
+    //    'typography_font_letterspacing' => 'normal',
+    //    'typography_font_wordspacing' => 'normal',
+    //    'typography_link_style' => 'underline', // @TODO
     'typography_roundness' => 0,
     'typography_brightness' => 50,
     'typography_bordering' => 1,
@@ -378,6 +371,7 @@ function tinsta_get_options_defaults()
     'region_primary_menu_layout' => '',
     'region_primary_menu_position' => '',
     'region_primary_menu_aligncenter' => false,
+    'region_primary_menu_highlight_root' => 'background',
     'region_primary_menu_color_background' => '#000000',
     'region_primary_menu_color_background_opacity' => 20,
     'region_primary_menu_color_foreground' => '#ffffff',
@@ -427,6 +421,7 @@ function tinsta_get_options_defaults()
     'component_header_markup' => '',
     'component_footer_markup' => '',
     'component_social_networks_code' => '',
+    'component_breadcrumbs_title' => '',
     'component_breadcrumbs_include_home' => true,
     'component_outdated_post_time' => 0,
     'component_outdated_post_message' => __('This article is older than %time%, the content might not be relevant anymore.', 'tinsta'),
@@ -447,7 +442,7 @@ function tinsta_get_options_defaults()
     // Page Types
     'system_page_login_theming' => 'brand',
     'system_page_404_theming' => '',
-    'system_page_404_display' => '',
+    'system_page_404_content' => '',
     'system_page_search_search_force_post_type' => '',
 
   ];
@@ -469,7 +464,6 @@ function tinsta_get_options_defaults()
   $settings = apply_filters('tinsta_default_options', $settings);
   return $settings;
 }
-
 
 /**
  * Build|Rebuild stylesheet file from SCSS source and return as URI,
@@ -496,7 +490,6 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
     'preview' => false,
     'preview_is_updated' => false,
     'variables' => [
-      'tinsta_version' => wp_get_theme()->Version,
       'tinsta_theme_dir_url' => '"' . get_template_directory_uri() . '"',
       'stylesheet_directory_uri' => '"' . get_stylesheet_directory_uri() . '"',
     ],
@@ -506,7 +499,12 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
   $suffix = empty($args['preview']) ? '' : '.preview';
 
   // WP_CONTENT_DIR relative
-  $compiled_css_file = sprintf(TINSTA_STYLESHEET_CACHE_DIR . '/%d/%s-%s-%s%s.css', get_current_blog_id(), basename($scss_file), substr($source_file_hash, 0, 8), get_stylesheet(), $suffix);
+  $compiled_css_file = sprintf(TINSTA_STYLESHEET_CACHE_DIR . '/%d/%s-%s-%s%s.css',
+    get_current_blog_id(),
+    basename($scss_file),
+    substr($source_file_hash, 0, 8),
+    get_stylesheet(),
+    $suffix);
   $compiled_css_uri = content_url($compiled_css_file);
   $compiled_css_filepath = WP_CONTENT_DIR . $compiled_css_file;
 
@@ -593,7 +591,6 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
   return $compiled_css_uri;
 }
 
-
 /**
  * Get all colors from theme settings as palette
  *
@@ -616,34 +613,23 @@ function tinsta_get_color_palette()
 
 /**
  * Starts the lazyload buffer.
+ *
+ * @return bool
  */
 function tinsta_lazyload_start_buffer()
 {
-
-  static $started = false;
-  if ($started) {
-    return false;
-  }
-  $started = true;
-
-  ob_start(function ($content) {
-    $skip_first_count = 2;
-    $callback = function ($matches) use (&$skip_first_count) {
-
+  return ob_start(function ($content) {
+    $callback = function ($matches) {
+      static $skip_first_count = 2;
       if ($skip_first_count > 0) {
         $skip_first_count--;
         return $matches[0];
       }
-
-      $empty_image_attr = 'src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=="';
-      //$empty_image_attr = '';
-      $matches[0] = str_ireplace(' src=', ' ' . $empty_image_attr . ' data-src=', $matches[0]);
+      $matches[0] = str_ireplace(' src=', ' src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==" data-src=', $matches[0]);
       $matches[0] = str_ireplace(' srcset=', ' data-srcset=', $matches[0]);
-
       return $matches[0];
     };
     $content = preg_replace_callback('#<img([^>]*)>#i', $callback, $content);
-
     return $content;
   });
 }

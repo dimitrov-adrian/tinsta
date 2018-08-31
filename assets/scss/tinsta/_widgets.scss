@@ -285,7 +285,49 @@
  */
 .widget_nav_menu {
   max-width: 100%;
+  // Only when in header
+  .site-header & {
+    .menu {
+      @include horizontalMenu();
+    }
+  }
 }
+
+//// Header menu.
+//@media (min-width: $region_root_breakpoint_tablet) {
+//  .site-header {
+//    .depth-0 > .sub-menu {
+//      // This doesn't works if parent element isn't relative.
+//      //transform: translateX(-50%);
+//      //left: 50%;
+//      @include roundness('', 0.5);
+//      &:before {
+//        content: '';
+//        position: absolute;
+//        //left: 50%;
+//        top: -5px;
+//        margin-left: 2em;
+//        width: 0;
+//        height: 0;
+//        border-left: 5px solid transparent;
+//        border-right: 5px solid transparent;
+//        border-bottom: 5px solid $region_main_color_background;
+//      }
+//    }
+//  }
+//
+//  .is-tinsta-mega-submenus {
+//    > li > a {
+//      font-weight: bold;
+//    }
+//    > li > .sub-menu {
+//      margin-left: 0;
+//      min-width: 6em;
+//    }
+//  }
+//
+//}
+
 
 /**
  * User menu widget

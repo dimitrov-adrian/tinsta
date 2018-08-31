@@ -105,6 +105,11 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
     echo $args['before_widget'];
     ?>
     <div class="breadcrumbs">
+      <?php if (get_theme_mod('component_breadcrumbs_title')):?>
+      <span>
+        <?php echo get_theme_mod('component_breadcrumbs_title')?>
+      </span>
+      <?php endif?>
       <?php foreach ($trail as $trail_link => $trail_label): ?>
         <a href="<?php echo $trail_link ?>"
            class="trail <?php echo end($trail) == $trail_label ? 'active' : '' ?>"><?php echo $trail_label ?></a>

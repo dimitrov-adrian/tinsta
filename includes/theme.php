@@ -18,7 +18,6 @@ add_action( 'after_setup_theme', function () {
     'main' => __('Primary Site Menu', 'tinsta'),
   ]);
 
-
   //@TODO check for usages
   //add_image_size('tinsta_cover_small', 320, 200, true);
   //add_image_size('tinsta_cover', 1280, 450, true);
@@ -36,6 +35,9 @@ add_action( 'after_setup_theme', function () {
   ]);
 });
 
+/**
+ * Init hook
+ */
 add_action('init', function () {
   // Because we need to ensure all used theme mods had default values, and the filters like:
   // "default_option_theme_mods_{$theme_slug}" and "option_theme_mods_{$theme_slug}" doesn't do what expected to do...
@@ -62,7 +64,6 @@ add_action('init', function () {
   }
 
 });
-
 
 /**
  * Register widgets and sidebars.
@@ -101,7 +102,7 @@ add_action('widgets_init', function () {
     'after_title' => '</div>',
   ]);
 
-  if (get_theme_mod("system_page_404_display") == 'widgets' || $is_customizer_preview) {
+  if (get_theme_mod("system_page_404_content") == 'widgets' || $is_customizer_preview) {
     register_sidebar([
       'name' => __('Error 404', 'tinsta'),
       'id' => 'error-404',
@@ -200,7 +201,6 @@ add_action('widgets_init', function () {
 
 });
 
-
 /**
  * Register widgets
  */
@@ -231,7 +231,6 @@ add_action('widgets_init', function () {
   register_widget('Tinsta_PageContent_Widget');
 
 });
-
 
 /**
  * Prepare theme settings when building the stylesheets.
@@ -279,7 +278,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
       }
 
       // Do not escape units.
-      elseif (preg_match('#^([\d\.])(px|\%|em|pt|vv|rem|vw|vh)$#', trim($value), $matches)) {
+      elseif (preg_match('#^([\d\.])(px|pt|\%|em|rem||vv|vw|vh)$#', trim($value), $matches)) {
 
         // But if we have some like 0em, then convert to 0.
         if ($matches[0] === 0) {
@@ -310,19 +309,35 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
     }
   }
 
-  // Sanitize font-family css value.
-  foreach (['typography_font_family', 'typography_font_family_headings'] as $name) {
+  // Sanitize values that should be transformed to comma separated list
+  // Example:
+  //  "\nword1;word2, word3\nword4\n,;" => 'word1, word2, word3, word4'
+  // - typography_font_family
+  // - typography_font_family_headings
+  $list = [
+    'typography_font_family',
+    'typography_font_family_headings',
+  ];
+  foreach ($list as $name) {
     if (!empty($args['variables'][$name])) {
-      if (substr_count($args['variables'][$name], '"') %2) {
+
+      // Break if quotes opening quotes doesn't match closing.
+      if (substr_count($args['variables'][$name], '"') %2 || substr_count($args['variables'][$name], '\'') %2) {
         $args['variables'][$name] = $defaults[$name];
       }
-      if (substr_count($args['variables'][$name], '\'') %2) {
-        $args['variables'][$name] = $defaults[$name];
+
+      // Split also by \t \n , and ;
+      $args['variables'][$name] = preg_split('#[\t\n\,\;\,]#', $args['variables'][$name]);
+      foreach ($args['variables'][$name] as $index => $value) {
+        $value = trim($value);
+        if (strpos($value, ' ') !== false && ( $value{0} !== '"' && $value{0} !== '\'') ) {
+          $value = "'" . addslashes($value) . "'";
+        }
+        $args['variables'][$name][$index] = $value;
       }
-      $args['variables'][$name] = preg_split('#\n\,\;#', $args['variables'][$name]);
       $args['variables'][$name] = implode(', ', $args['variables'][$name]);
 
-      // Remove CSS comments
+      // Strip C styled comments.
       $args['variables'][$name] = preg_replace('#\/\*(.|\n)*?\*\/#', '', $args['variables'][$name]);
     }
 

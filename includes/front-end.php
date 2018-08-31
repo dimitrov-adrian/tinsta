@@ -9,7 +9,9 @@
 /**
  * Some internal calls that are in help of the Tinsta theme.
  */
-add_action( 'template_redirect', function () {
+add_action('template_redirect', function () {
+
+  // Handle requests like /?tinsta-resolve-user-avatar=<email|id>[&s=<size>]
   if (!empty($_GET['tinsta-resolve-user-avatar'])) {
     $avatar_url = get_avatar_url($_GET['tinsta-resolve-user-avatar'], [
       'size' => empty($_GET['s']) || !is_numeric($_GET['s']) ? null : $_GET['s'],
@@ -17,87 +19,97 @@ add_action( 'template_redirect', function () {
     wp_redirect($avatar_url);
     exit;
   }
-});
 
+});
 
 /**
  * Add extra markup in header, SEO/MEO and other hacks to be good for Google.
  */
 add_action('wp_head', function () {
 
-  echo get_theme_mod('component_header_markup');
-
+  $color = esc_attr(get_theme_mod('region_root_color_primary'));
+  $sitename = esc_attr(get_bloginfo('sitename'));
+  $sitedescription = esc_attr(substr(get_bloginfo('description'), 0, 160));
 
   // No need anymore.
   //  if (get_theme_mod('typography_font_google') | get_theme_mod('typography_font_headings_google')) {
   //    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com" />';
   //  }
 
-  printf('<meta name="theme-color" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
-  printf('<meta name="msapplication-TileColor" content="%s" />', esc_attr(get_theme_mod('region_root_color_primary')));
-  echo '<meta content="yes" name="apple-mobile-web-app-capable">';
-  echo '<meta content="black" name="apple-mobile-web-app-status-bar-style">';
-  echo '<meta content="' . get_bloginfo('sitename') . '" name="apple-mobile-web-app-title">';
+  echo get_theme_mod('component_header_markup');
 
-  // Public checkbox in settings.
-  if (get_option('blog_public', true)) {
-    // Skip SEO friendly metas
-    if (tinsta_is_login_page()) {
-      echo '<meta name="robots" content="noindex, nofollow" />';
-    } elseif (is_tax() || (is_archive() && (!empty($_GET['orderby']) || !empty($_GET['order'])))) {
-      echo '<meta name="robots" content="noindex, follow" />';
+  if (get_theme_mod('typography_text_enhancements')) {
+    echo '<meta name="ResourceLoaderDynamicStyles" content="on" />';
+  }
+
+  // rel=logo
+  $logo_id = get_theme_mod( 'custom_logo' );
+  if ($logo_id) {
+    $logo_url = wp_get_attachment_image_url($logo_id);
+    if ($logo_url) {
+      printf('<link rel="logo" href="%s" />', esc_attr($logo_url));
     }
   }
 
+  echo "<meta name=\"theme-color\" content=\"{$color}\" />";
+  echo "<meta name=\"msapplication-TileColor\" content=\"{$color}\" />";
+  echo "<meta name=\"apple-mobile-web-app-title\" content=\"{$sitename}\" />";
+  echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />";
+  echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\" />";
+
   if (get_theme_mod('component_seo_enable')) {
 
-    echo '<meta name="format-detection" content="telephone=yes" />';
+    // Public checkbox in settings.
+    if (get_option('blog_public', true)) {
+      // Skip SEO friendly metas
+      if (tinsta_is_login_page()) {
+        echo '<meta name="robots" content="noindex, nofollow" />';
+      }
+      elseif ( is_tax() || ( is_archive() && ( !empty($_GET['orderby']) || !empty($_GET['order'])) ) ) {
+        wp_no_robots();
+      }
+    }
 
     $description = '';
     $keywords = [];
 
     if (is_singular()) {
       the_post();
-
       printf('<meta name="author" content="%s" />', esc_attr(get_the_author()));
       if (pings_open()) {
         printf('<link rel="pingback" href="%s">', esc_attr(get_bloginfo('pingback_url')));
       }
-
       $thumbnail = get_the_post_thumbnail_url(get_the_ID());
       if ($thumbnail) {
         echo '<meta content="' . esc_attr($thumbnail) . '" itemprop="thumbnailUrl" />';
       }
-
       echo '<meta property="article:published_time" content="' . get_the_time('c') . '" />';
-
       foreach (wp_get_object_terms(get_the_ID(), get_taxonomies(['public' => true])) as $term) {
         $keywords[] = $term->name;
       }
-
       $description = get_the_excerpt();
-    }
-
-
-    if ($keywords) {
-      printf('<meta name="keywords" content="%s" />', esc_attr(implode(', ', $keywords)));
     }
 
     if (is_archive()) {
       $description = category_description();
     }
 
-    if (empty($description)) {
-      $description = get_bloginfo('description');
+    // Always set some description.
+    if (!trim($description)) {
+      $description = $sitedescription;
     }
-    $description = apply_filters('the_excerpt_rss', $description);
-    $description = strip_tags($description);
-    $description = substr($description, 0, 160);
-    $description = esc_attr($description);
+    else {
+      $description = strip_tags($description);
+      $description = substr($description, 0, 160);
+      $description = esc_attr($description);
+    }
 
-    printf('<meta name="description" content="%s" />', esc_attr($description));
-
-    printf('<meta name="publisher" content="%s" />', esc_attr(get_bloginfo('name')));
+    echo "<meta name=\"description\" content=\"{$description}\" />";
+    echo "<meta name=\"subject\" content=\"{$sitedescription}\" />";
+    echo "<meta name=\"publisher\" content=\"{$sitename}\" />";
+    if ($keywords) {
+      printf('<meta name="keywords" content="%s" />', esc_attr(implode(', ', $keywords)));
+    }
 
   }
 
@@ -107,7 +119,6 @@ add_action('wp_head', function () {
 
 });
 
-
 /**
  * Fix shortcodes in feeds
  */
@@ -115,7 +126,6 @@ add_filter('the_content_rss', function ($content = '') {
   $content = do_shortcode($content);
   return $content;
 });
-
 
 /**
  * Add extra markup in footer.
@@ -125,20 +135,38 @@ add_action('wp_footer', function () {
   echo get_theme_mod('component_footer_markup');
 
   $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
-  if (
-     ! ($privacy_policy_page_id && is_page($privacy_policy_page_id)) 
-     && get_theme_mod('component_site_agreement_enable')
-  ) {
+  if ( ! ($privacy_policy_page_id && is_page($privacy_policy_page_id)) && get_theme_mod('component_site_agreement_enable') ) {
     get_template_part('template-parts/components/agreement');
   }
 
 });
 
-
 /**
  * Enqueue scripts and styles.
  */
 add_action('wp_enqueue_scripts', function () {
+
+  // https://github.com/aFarkas/html5shiv
+  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/scripts/html5shiv.min.js', [], '3.7.3');
+  wp_script_add_data('html5shiv', 'conditional', 'lte IE 8');
+
+  // https://github.com/corysimmons/selectivizr2
+  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/scripts/selectivizr2.min.js', [], '1.0.9');
+  wp_script_add_data('selectivizr', 'conditional', 'lte IE 8');
+
+  // Seems that this make more mess than benefits, it cause 403 (Forbidden)
+  // https://github.com/LeaVerou/prefixfree
+  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/scripts/prefixfree.min.js', [], '1.0.7');
+  wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
+
+  // Rem polyfill
+  // https://github.com/nbouvrette/remPolyfill
+  wp_enqueue_script('remPolyfill', get_template_directory_uri() . '/assets/scripts/remPolyfill.js', [], '1.0.0');
+  wp_script_add_data('remPolyfill', 'conditional', 'lte IE 8');
+
+  // Respond.js v1.4.2: min/max-width media query polyfill
+  wp_enqueue_script('respondjs', get_template_directory_uri() . '/assets/scripts/respond.min.js', [], '1.4.2');
+  wp_script_add_data('respondjs', 'conditional', 'lte IE 8');
 
   // Tinsta theme hash.
   $theme_hash = substr(md5(is_customize_preview() ? microtime(1) : serialize(get_transient('tinsta_theme'))), 2, 4);
@@ -165,19 +193,6 @@ add_action('wp_enqueue_scripts', function () {
   $stylesheet = tinsta_get_stylesheet('default');
   wp_enqueue_style('tinsta-stylesheet', $stylesheet, [], $theme_hash);
 
-  // https://github.com/aFarkas/html5shiv
-  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/scripts/html5shiv.min.js', [], '3.7.3');
-  wp_script_add_data('html5shiv', 'conditional', 'lte IE 9');
-
-  // https://github.com/corysimmons/selectivizr2
-  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/scripts/selectivizr2.min.js', [], '1.0.9');
-  wp_script_add_data('selectivizr', 'conditional', 'lte IE 8');
-
-  // Seems that this make more mess than benefits, it cause 403 (Forbidden)
-  // https://github.com/LeaVerou/prefixfree
-  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/scripts/prefixfree.min.js', [], '1.0.7');
-  wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
-
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_smooth_scroll')) {
     wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/scripts/smoothscroll.min.js', [], '1.4.6', true);
@@ -194,10 +209,13 @@ add_action('wp_enqueue_scripts', function () {
     'siteUrl' => home_url(),
     'assetsDir' => get_template_directory_uri() . '/assets/',
     'fullHeight' => get_theme_mod('region_root_height_full'),
-    'menuLabel' => __('Menu', 'tinsta'),
-    'closeLabel' => __('Close', 'tinsta'),
-    'top' => __('Top', 'tinsta'),
     'scrolltop' => get_theme_mod('component_scrolltop'),
+    'strings' => [
+      //'editLabel' => __('Edit %s', 'tinsta'),
+      //'menuLabel' => __('Menu', 'tinsta'),
+      'close' => __('Close', 'tinsta'),
+      'top' => __('Top', 'tinsta'),
+    ],
     'breakpoints' => [
       'tablet' => get_theme_mod('region_root_breakpoint_tablet'),
       'mobile' => get_theme_mod('region_root_breakpoint_mobile'),
@@ -215,16 +233,16 @@ add_action('wp_enqueue_scripts', function () {
     }
   }
 
-  // Hack to use async.
-  add_filter('script_loader_tag', function ($tag, $handle, $src) {
-    if (in_array($handle, ['comment-reply', 'smoothscroll', 'tinsta'])) {
-      $tag = str_replace('src=', ' async src=', $tag);
-    }
-    return $tag;
-  }, 10, 3);
+  // Hack to use async. It cause troubles in some cases where jQuery is loaded afterthat,
+  // need better QA.
+  //  add_filter('script_loader_tag', function ($tag, $handle, $src) {
+  //    if (in_array($handle, ['comment-reply', 'smoothscroll', 'tinsta'])) {
+  //      $tag = str_replace('src=', ' async src=', $tag);
+  //    }
+  //    return $tag;
+  //  }, 10, 3);
 
 });
-
 
 /**
  * Alter body classes.
@@ -251,7 +269,6 @@ add_filter('body_class', function ($classes, $class) {
 
 }, 10, 2);
 
-
 /**
  * Alter post classes
  */
@@ -265,16 +282,14 @@ add_filter('post_class', function ($classes, $class, $post_id) {
 
   if ($post) {
 
-    if (!is_singular()) {
-      $layout = get_theme_mod("post_type_{$post->post_type}_layout_archive");
+    if (is_singular()) {
+      $layout = get_theme_mod("post_type_{$post->post_type}_layout");
       if ($layout) {
         $classes['layout'] = 'layout-' . $layout;
       }
-
     }
-
-    if (is_singular()) {
-      $layout = get_theme_mod("post_type_{$post->post_type}_layout");
+    else {
+      $layout = get_theme_mod("post_type_{$post->post_type}_layout_archive");
       if ($layout) {
         $classes['layout'] = 'layout-' . $layout;
       }
@@ -287,7 +302,6 @@ add_filter('post_class', function ($classes, $class, $post_id) {
   return $classes;
 
 }, 6, 3);
-
 
 /**
  * Wrap videos in embed HTML in media container to allow better aspect ratio with responsive.
@@ -303,16 +317,21 @@ add_filter('embed_oembed_html', function ($html, $url, $attr) {
 
 }, 10, 3);
 
-
 /**
  * Alter post contents
  *
- * @TODO this make troubles.
+ * @TODO this make troubles with excerpts.
  */
 add_filter('the_content', function ($content) {
 
   if (is_singular()) {
     $post = get_post();
+
+    if (is_user_logged_in() && !is_admin_bar_showing()) {
+      ob_start();
+      edit_post_link(null, '<p>', '</p> ');
+      $content = ob_get_clean() . $content;
+    }
 
     $component_outdated_post_time = get_theme_mod('component_outdated_post_time', 0);
     if ($component_outdated_post_time && (int)get_the_time('U') + ((int)$component_outdated_post_time * 60 * 60 * 24) < time()) {
@@ -330,33 +349,26 @@ add_filter('the_content', function ($content) {
       $content .= ob_get_clean();
     }
 
-    if (is_user_logged_in() && !is_admin_bar_showing()) {
-      ob_start();
-      edit_post_link(null, '<p>', '</p>');
-      $content = ob_get_clean() . $content;
-    }
   }
 
   return $content;
 
 }, 100, 2);
 
-
 /**
  * Filter the except length to X words.
  */
 add_filter( 'excerpt_length', function ( $length ) {
-  
+
   $post = get_post();
   $new_length = get_theme_mod("post_type_{$post->post_type}_archive_show_excerpt_words", $length);
-  
+
   if ($new_length) {
     return $new_length;
   }
-  
+
   return $length;
 });
-
 
 /**
  * Alter comment fields:
@@ -369,23 +381,24 @@ add_filter('comment_form_defaults', function ($defaults) {
   if (!empty($defaults['fields']['author'])) {
     $defaults['fields']['author'] = str_replace('<input ', '<input autocomplete="name" ', $defaults['fields']['author']);
   }
+
   if (!empty($defaults['fields']['url'])) {
     $defaults['fields']['url'] = str_replace('<input ', '<input autocomplete="on" ', $defaults['fields']['url']);
   }
+
   if (!empty($defaults['fields']['email'])) {
     $defaults['fields']['email'] = str_replace('<input ', '<input autocomplete="email" ', $defaults['fields']['email']);
   }
 
   // Append avatar to comment post form.
   $defaults['title_reply_after'] .= '
-    <div class="comment-form-avatar">'
-    . get_avatar(get_current_user_id(), get_theme_mod('component_avatar_size')) . '
+    <div class="comment-form-avatar">
+    ' . get_avatar(get_current_user_id(), get_theme_mod('component_avatar_size')) . '
     </div>';
 
   return $defaults;
 
 }, 1000);
-
 
 /**
  * Security reasons, Format comment text.
@@ -407,7 +420,6 @@ add_filter('comment_text', function ($comment_text, $comment, $args) {
 
 }, 10, 3);
 
-
 /**
  * Proccess widget's tinsta related settings
  */
@@ -421,8 +433,8 @@ add_filter('dynamic_sidebar_params', function ($params) {
 
       $settings = $settings[$params[1]['number']];
 
-      if (!empty($settings['tinsta_widget_size_enable']) && $settings['tinsta_widget_size_enable'] == 'on' && !empty($settings['tinsta_widget_size'])) {
-        $replacement = "style=\"width:{$settings['tinsta_widget_size']}%;\"";
+      if (!empty($settings['tinsta_widget_size'])) {
+        $replacement = 'style="width:' . round($settings['tinsta_widget_size'], 2) . '%;"';
         $params[0]['before_widget'] = str_replace('class="', " $replacement class=\"", $params[0]['before_widget']);
       }
 
@@ -436,22 +448,18 @@ add_filter('dynamic_sidebar_params', function ($params) {
   return $params;
 });
 
-
 /**
- * Add first level menu items, root-menu-item class.
+ * Add first level menu items, depth-0 class.
  */
 add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
-  if ($depth < 1) {
-    $classes[] = 'root-menu-item';
-  }
+  $classes[] = 'depth-' . $depth;
   return $classes;
 }, 10, 4);
-
 
 /**
  * Add description to menu items
  */
-add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
+add_filter('walker_nav_menu_start_el', function ($item_output, $item) {
 
   if (!empty($item->description)) {
     $item_output = str_replace('</a>', '<span class="description">' . $item->description . '</span></a>', $item_output);
@@ -459,13 +467,12 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
   return $item_output;
 
-}, 10, 4);
-
+}, 10, 2);
 
 /**
  * Override post fetching
  */
-add_action( 'pre_get_posts', function ($query) {
+add_action('pre_get_posts', function ($query) {
 
   if ( is_admin() ) {
     return;
@@ -490,6 +497,5 @@ add_action( 'pre_get_posts', function ($query) {
     }
 
   }
-
 
 });

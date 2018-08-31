@@ -40,7 +40,6 @@
 //
 //}, 10, 3);
 
-
 /**
  * Show Tinsta's types instead of "Custom Link"
  */
@@ -56,7 +55,6 @@ add_filter('wp_setup_nav_menu_item', function ($item) {
   }
   return $item;
 });
-
 
 /**
  * Alter the menus to support theme's customization.
@@ -75,11 +73,11 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
     if (is_user_logged_in()) {
       $title = $item->post_title;
       if (!$title) {
-        $title = '$avatar $name';
+        $title = '%avatar% %name%';
       }
       $title = strtr($title, [
-        '$avatar' => get_avatar(wp_get_current_user()->ID),
-        '$name' => wp_get_current_user()->display_name,
+        '%avatar%' => get_avatar(wp_get_current_user()->ID),
+        '%name%' => wp_get_current_user()->display_name,
       ]);
       return sprintf('<a href="%s">%s</a>',
         get_edit_profile_url(),
@@ -89,7 +87,7 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
       return sprintf('<a href="%s">%s</a>',
         wp_login_url(),
         ( get_option( 'users_can_register' )
-          ? __('Login or Register', 'tinsta')
+          ? __('Login & Register', 'tinsta')
           : __('Login', 'tinsta')
         ));
     }
@@ -104,23 +102,24 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
   if ($item->type == 'tinsta-nav-menu-widget-area') {
     if ($depth < 3) {
-      if (is_active_sidebar('tinsta-menu-' . $item->post_name)) {
+      if (is_customize_preview() || is_active_sidebar('tinsta-menu-' . $item->post_name)) {
         ob_start();
         dynamic_sidebar('tinsta-menu-' . $item->post_name);
-        $sidebar_submenu = ob_get_clean();
-        if (trim($sidebar_submenu)) {
-          $item_output .= "<div class=\"sub-menu\">{$sidebar_submenu}</div>";
-          return $item_output;
+        $widgets = ob_get_clean();
+        if (trim($widgets)) {
+          $item_output = '<a href="javascript:void(0);" >' . $item->post_title . '</a><div class="sub-menu">' . $widgets . '</div>';
+        }
+        else {
+          return NULL;
         }
       }
     }
-    return null;
+    //return null;
   }
 
   return $item_output;
 
 }, 10, 4);
-
 
 /**
  * Make tinsta-nav-menu-widget-area available as sidebar.
@@ -151,7 +150,6 @@ add_action('widgets_init', function () {
   }
 
 });
-
 
 /**
  * Helper function that returns Tinsta's custom menu items.
@@ -193,7 +191,7 @@ function tinsta_nav_menu_items()
 
   $items['tinsta-nav-menu-current-user'] = [
     'id' => md5( microtime(1) . wp_rand(0, 1000)),
-    'title' => __('Hey $name $avatar', 'tinsta'),
+    'title' => __('%avatar% Hey %name%', 'tinsta'),
     'type' => 'tinsta-nav-menu-current-user',
     'type_label' => __('Current User', 'tinsta'),
     'object' => 'tinsta-nav-menu-object',
@@ -260,7 +258,6 @@ add_action( 'admin_head-nav-menus.php', function() {
   }, 'nav-menus', 'side', 'low');
 });
 
-
 /**
  * Add metabox for Tinsta's items in the customizer.
  */
@@ -273,7 +270,6 @@ add_filter('customize_nav_menu_available_item_types', function($menu_types) {
   ];
   return $menu_types;
 });
-
 
 /**
  * Add Tinsta's custom menu item to customizer's metabox.

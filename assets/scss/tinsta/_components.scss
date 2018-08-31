@@ -13,6 +13,59 @@ img.lazy-loaded {
 }
 
 
+/**
+ * Error 404 page
+ */
+.error-content-wrapper {
+  margin: 2em auto;
+  max-width: $region_root_breakpoint_tablet;
+  min-width: $region_root_breakpoint_mobile;
+  width: 90%;
+  padding: 2em;
+  .site-info {
+    @extend %base-title;
+    text-align: right;
+  }
+}
+
+
+/**
+ * Login integration
+ */
+body.login {
+
+  #login_error {
+    @extend .message;
+    @extend .error;
+  }
+
+  //.message.register {
+  //  background: transparent;
+  //  border: none;
+  //  outline: none;
+  //  text-align: initial;
+  //  padding: 0;
+  //  margin: 0;
+  //  color: inherit;
+  //  @extend %big;
+  //}
+
+  [aria-describedby="login_error"] {
+    @extend .error;
+  }
+
+  #backtoblog {
+    display: none;
+  }
+
+}
+
+/**
+ * Horizontal menu
+ */
+// @TODO
+
+
 /*
  * Mobile menu and back button.
  */
@@ -33,7 +86,9 @@ img.lazy-loaded {
   &:before {
     @extend %la;
     content: $la-close;
-    line-height: 3em;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    line-height: 3rem;
   }
 }
 .mobile-menu {
@@ -42,28 +97,33 @@ img.lazy-loaded {
   top: 5em !important;
   left: 2em !important;
   right: 2em !important;
-  bottom: 2em !important;
   overflow: auto !important;
   width: calc(100% - 4em) !important;
   max-height: calc(100% - 3em - 4em) !important;
   z-index: $z-index-modal !important;
   transform: translate(0, 0) !important;
-  box-shadow: 0 0 0 300px rgba(0, 0, 0, .76) !important;
-  background: $region_main_color_background !important;
+  box-shadow: 0 0 0 $region_root_width+px rgba(0, 0, 0, .76) !important;
+  background: $region_root_color_background !important;
   padding: 1em !important;
   margin: 0 !important;
   @include roundness();
-  color: $region_root_color_foreground !important;
+  &,
+  a,
+  li > a {
+    color: $region_root_color_foreground !important;
+  }
   li > a {
     @include border($region_root_color_foreground, '-bottom', 1);
     padding: 1em;
-    color: inherit;
     text-align: unset;
+  }
+  .sub-menu {
+    display: block !important;
   }
 }
 
 /**
- * Generic menu styling
+ * Generic tinsta menu items styling
  */
 .menu-item-type-tinsta-nav-menu-frontpage {
   .custom-logo {

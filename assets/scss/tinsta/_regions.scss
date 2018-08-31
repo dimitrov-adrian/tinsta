@@ -64,9 +64,9 @@ body {
 
   .site-topline {
     @if $region_topline_color_background != $region_root_color_background {
-      padding: .6em 1em;
+      padding: .6rem 1rem;
     } @else {
-      padding: .6em 0;
+      padding: .6rem 0;
     }
     a {
       color: colorInvert($region_topline_color_background);
@@ -107,10 +107,13 @@ body {
       left: 0;
       right: 0;
       top: 0;
+      z-index: 100;
+
+      // Fix because wp-admin bar
       body.admin-bar & {
         top: 32px;
       }
-      z-index: 100;
+
     }
   }
 
@@ -140,8 +143,8 @@ body {
 
     @if $region_header_layout == 'highlighted' {
       background-color: rgba($region_header_color_foreground, .1);
-      padding-left: 1em;
-      padding-right: 1em;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
     @media (max-width: $region_root_breakpoint_mobile) {
@@ -152,7 +155,7 @@ body {
     }
 
     @if $region_header_layout == 'extended' {
-      padding: 1em;
+      padding: 1rem;
     }
 
   }
@@ -161,7 +164,7 @@ body {
     @extend %wrapper;
     @include roundness('top');
     .site-header {
-      padding: 1em;
+      padding: 1rem;
     }
   } @else if $region_header_layout != 'extended' {
     .site-header {
@@ -171,164 +174,12 @@ body {
 
   .widget {
     display: inline-block;
-    margin: 1em 0;
+    margin: 1rem 0;
     @media (max-width: $region_root_breakpoint_tablet) {
-      margin: 1em;
+      margin: 1rem;
     }
   }
 
-
-
-  // All menus in header should be inlined.
-  .site-primary-menu-wrapper {
-    @media (max-width: $region_root_breakpoint_tablet) {
-      &:before,
-      &:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        width: 1em;
-        background: #000;
-        bottom: 0;
-        display: block;
-        z-index: 10;
-      }
-      &:before {
-        left: 0;
-        background: linear-gradient(to left, transparent , rgba(0,0,0,.25));
-      }
-      &:after {
-        right: 0;
-        background: linear-gradient(to right, transparent , rgba(0,0,0,.25));
-      }
-    }
-  }
-  .menu {
-
-    margin-left: auto;
-    margin-right: auto;
-
-    position: relative;
-
-    @media (max-width: $region_root_breakpoint_tablet) {
-      @extend %noselect;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      padding-bottom: .6em;
-    }
-
-    .root-menu-item {
-
-      display: inline-block;
-      vertical-align: middle;
-
-      @media (max-width: $region_root_breakpoint_tablet) {
-        overflow-wrap: break-word;
-        white-space: nowrap;
-        word-wrap: unset;
-        display: inline-block;
-      }
-
-      > a {
-        padding: .6em 1em;
-        position: relative;
-        border: none;
-      }
-
-      > .sub-menu {
-        display: none;
-        white-space: normal;
-      }
-
-      @media (min-width: $region_root_breakpoint_tablet) {
-        > a {
-          // make more space to be suitable for touching.
-          // padding: 1em;
-        }
-        &.menu-item-type-tinsta-nav-menu-widget-area > .sub-menu {
-          padding: 0 1em;
-        }
-        > .sub-menu {
-          box-shadow: 0 5px 28px -12px rgba(0, 0, 0, .9);
-          //border: 1px solid rgba($region_root_color_foreground, .2);
-          border-top: none;
-          color: $region_root_color_foreground;
-          background-color: $region_main_color_background;
-          min-width: 12em;
-          position: absolute;
-          z-index: $z-index-modal;
-
-          @media (max-width: $region_root_breakpoint_tablet) {
-            width: 100%;
-          }
-
-          a {
-            color: $region_root_color_foreground;
-            padding: .6em;
-          }
-
-          .current-menu-item {
-            > a {
-              border: none;
-              font-weight: bold;
-            }
-          }
-
-          &.is-tinsta-mega {
-            width: auto;
-            float: none;
-            max-width: 100%;
-            > * {
-              display: table-cell;
-              vertical-align: top;
-              padding: 1em;
-            }
-          }
-        }
-        &:hover > .sub-menu {
-          display: block;
-        }
-      }
-
-    }
-
-  }
-
-  // Header menu.
-  @media (min-width: $region_root_breakpoint_tablet) {
-    .site-header {
-      .root-menu-item > .sub-menu {
-        // This doesn't works if parent element isn't relative.
-        //transform: translateX(-50%);
-        //left: 50%;
-        @include roundness('', 0.5);
-        &:before {
-          content: '';
-          position: absolute;
-          //left: 50%;
-          top: -5px;
-          margin-left: 2em;
-          width: 0;
-          height: 0;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-bottom: 5px solid $region_main_color_background;
-        }
-      }
-    }
-
-    .is-tinsta-mega-submenus {
-      > li > a {
-        font-weight: bold;
-      }
-      > li > .sub-menu {
-        margin-left: 0;
-        min-width: 6em;
-      }
-    }
-
-  }
 
 }
 
@@ -337,8 +188,31 @@ body {
  */
 .site-primary-menu-wrapper {
 
-  position: relative;
+  // All menus in header should be inlined.
+  //@media (max-width: $region_root_breakpoint_tablet -1) {
+  //  &:before,
+  //  &:after {
+  //    content: '';
+  //    position: absolute;
+  //    top: 0;
+  //    width: 1rem;
+  //    background: #000;
+  //    bottom: 0;
+  //    display: block;
+  //    z-index: 10;
+  //  }
+  //  &:before {
+  //    left: 0;
+  //    background: linear-gradient(to left, transparent , rgba(0,0,0,.25));
+  //  }
+  //  &:after {
+  //    right: 0;
+  //    background: linear-gradient(to right, transparent , rgba(0,0,0,.25));
+  //  }
+  //}
+
   @extend %clearfix;
+  position: relative;
 
   @include regionColors($region_primary_menu_color_foreground,
     $region_primary_menu_color_background,
@@ -359,7 +233,6 @@ body {
     } @else {
       @include roundness('top');
     }
-
   }
 
   .menu {
@@ -367,33 +240,55 @@ body {
     @if $region_primary_menu_aligncenter {
       text-align: center;
     }
-    .root-menu-item {
-      text-align: initial;
-      display: inline-block;
-      &:hover {
-        background-color: $region_main_color_background;
-        a {
-          color: $region_root_color_foreground;
-        }
-      }
-      @media (min-width: $region_root_breakpoint_tablet) {
-        display: table-cell;
-        > .sub-menu {
-          margin-left: auto;
-          @include roundness('bottom', 0.5);
-        }
-      }
-    }
+
+    @include horizontalMenu();
+
+    //.depth-0 {
+    //  text-align: initial;
+    //  display: inline-block;
+    //  > a {
+    //    padding: 1rem;
+    //  }
+    //  > .sub-menu {
+    //    display: none;
+    //    position: absolute;
+    //    background-color: $region_main_color_background;
+    //  }
+    //  @media (min-width: $region_root_breakpoint_tablet) {
+    //    &:hover {
+    //      background-color: $region_main_color_background;
+    //      a {
+    //        color: $region_root_color_foreground;
+    //      }
+    //      > .sub-menu {
+    //        display: block;
+    //      }
+    //    }
+    //  }
+  //      display: table-cell;
+  //      > .sub-menu {
+  //        margin-left: auto;
+  //        @include roundness('bottom', 0.5);
+  //        //.widget {
+  //        //  display: table-cell;
+  //        //}
+  //      }
+  //
+  //      &.menu-item-type-tinsta-nav-menu-widget-area:hover > .sub-menu {
+  //        display: flex;
+  //      }
+  //
+  //    }
+  //  }
   }
 }
-
 
 /**
  * The main container area
  */
 .site-container-wrapper {
 
-  overflow: hidden; /* HACK, this is temporary fix */
+  //overflow: hidden; /* HACK, this is temporary fix */
 
   @include regionColors($region_root_color_foreground, $region_main_color_background, $region_main_color_background_opacity);
 
@@ -426,17 +321,17 @@ body {
     @media (min-width: $region_root_breakpoint_tablet) {
       @if ($region_main_color_background_opacity < 100 or $region_main_color_background != $region_root_color_background) {
         @if not $has_different_primary_sidebar {
-          padding-left: 1em;
+          padding-left: 1rem;
         }
         @if not $has_different_secondary_sidebar {
-          padding-right: 1em;
+          padding-right: 1rem;
         }
       }
     }
 
     @if ( $region_main_margin ) {
-      margin-top: ( $region_main_margin / 5 ) + em;
-      margin-bottom: ( $region_main_margin / 5 ) + em;
+      margin-top: ( $region_main_margin / 5 ) + rem;
+      margin-bottom: ( $region_main_margin / 5 ) + rem;
     }
 
     vertical-align: top;
@@ -461,18 +356,18 @@ body {
       min-width: 0; // Fixes the enormous <pre>
 
       @if ( $has_different_primary_sidebar ) {
-        padding-left: 1em;
+        padding-left: 1rem;
       }
       @if ( $has_different_secondary_sidebar ) {
-        padding-right: 1em;
+        padding-right: 1rem;
       }
 
       @media (max-width: $region_root_breakpoint_tablet) {
         order: 1;
         width: auto !important;
         padding: 0;
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
       }
 
     }
@@ -490,12 +385,12 @@ body {
     .sidebar {
       flex-grow: 0;
       flex-shrink: 0;
-      padding-bottom: 2em;
-      padding-top: 2em;
+      padding-bottom: 2rem;
+      padding-top: 2rem;
 
       @media (max-width: $region_root_breakpoint_tablet) {
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
         width: auto !important;
       }
 
@@ -510,10 +405,10 @@ body {
         }
 
         @if ( $region_sidebar_primary_color_background != $region_main_color_background ) {
-          padding-right: 1em;
-          padding-left: 1em;
+          padding-right: 1rem;
+          padding-left: 1rem;
         } @else {
-          padding-right: 2em;
+          padding-right: 2rem;
           padding-left: 0;
         }
 
@@ -533,10 +428,10 @@ body {
         }
 
         @if ( $region_sidebar_secondary_color_background  != $region_main_color_background ) {
-          padding-right: 1em;
-          padding-left: 1em;
+          padding-right: 1rem;
+          padding-left: 1rem;
         } @else {
-          padding-left: 2em;
+          padding-left: 2rem;
           padding-right: 0;
         }
 
@@ -553,6 +448,9 @@ body {
   }
 }
 
+/**
+ * Widgets Area - Before container
+ */
 .site-container-before,
 .site-container-after {
   .widget {
@@ -560,12 +458,14 @@ body {
   }
 }
 
+/**
+ * Widgets Area - Before entries
+ */
 .sidebar-before-entries,
 .sidebar-after-entries {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
-
 
 /**
  * Footer
@@ -601,8 +501,8 @@ body {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
-    margin-bottom: 1em;
-    padding: 1em;
+    margin-bottom: 1rem;
+    padding: 1rem;
 
     @if $region_footer_layout == 'highlighted' {
       background-color: rgba($region_footer_color_foreground, .1);
@@ -623,7 +523,7 @@ body {
 
   .widgettitle {
     @include border($region_footer_color_foreground, '-bottom');
-    margin: 0 0 .8em 0;
+    margin: 0 0 .8rem 0;
     padding: .8em 0;
     text-align: center;
     font-weight: bold;
@@ -641,6 +541,7 @@ body {
 .site-bottomline-wrapper {
   @extend %clearfix;
   @extend %small;
+
   @if $region_bottomline_sticky {
     position: sticky;
     left: 0;
@@ -648,8 +549,10 @@ body {
     bottom: 0;
     z-index: 100;
   }
-  padding: 1em;
+
+  padding: 1rem;
   text-align: center;
+
   @include regionColors($region_bottomline_color_foreground,
     $region_bottomline_color_background,
     $region_bottomline_color_background_opacity);
@@ -660,7 +563,7 @@ body {
 
     @if ( not $region_bottomline_sticky ) {
       @include roundness('bottom');
-      margin-bottom: 1em;
+      margin-bottom: 1rem;
     }
   } @else {
     .site-bottomline {
@@ -680,48 +583,3 @@ body {
 
 }
 
-/**
- * Error 404 page
- */
-.error-content-wrapper {
-  margin: 2em auto;
-  max-width: $region_root_breakpoint_tablet;
-  min-width: $region_root_breakpoint_mobile;
-  width: 90%;
-  padding: 2em;
-  .site-info {
-    @extend %base-title;
-    text-align: right;
-  }
-}
-
-/**
- * Login integration
- */
-body.login {
-
-  #login_error {
-    @extend .message;
-    @extend .error;
-  }
-
-  //.message.register {
-  //  background: transparent;
-  //  border: none;
-  //  outline: none;
-  //  text-align: initial;
-  //  padding: 0;
-  //  margin: 0;
-  //  color: inherit;
-  //  @extend %big;
-  //}
-
-  [aria-describedby="login_error"] {
-    @extend .error;
-  }
-
-  #backtoblog {
-    display: none;
-  }
-
-}

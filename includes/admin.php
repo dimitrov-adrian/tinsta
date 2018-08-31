@@ -14,14 +14,10 @@
  *
  * @return int
  */
-function tinsta_settings_import($file, $tinsta_settings_only = true)
+function tinsta_settings_import($file, $tinsta_settings_only = false)
 {
-  $defaults = [];
-  if ($tinsta_settings_only) {
-    $defaults = tinsta_get_options_defaults();
-  }
-
   $imported_settings_count = 0;
+  $defaults = tinsta_get_options_defaults();
 
   require_once ABSPATH . '/wp-admin/includes/file.php';
   WP_Filesystem();
@@ -48,7 +44,6 @@ function tinsta_settings_import($file, $tinsta_settings_only = true)
 
   return $imported_settings_count;
 }
-
 
 /**
  * Insert a widget in a sidebar.
@@ -80,33 +75,19 @@ function tinsta_insert_widget_in_sidebar($widget_id, $widget_data, $sidebar)
   update_option('widget_' . $widget_id, $widget_instances);
 }
 
-
-//function tinsta_create_restore_point()
-//{
-//  $name = 'tinsta/' . date('YmdHis') . '/' . substr(md5(random_bytes(16)), 0, 2);
-//  set_transient($name, get_theme_mods(), time() + 60*60*24*30);
-//  return $name;
-//}
-//
-//
-//function tinsta_restore_from_point($name)
-//{
-//  $tr = get_transient($name);
-//  delete_transient($name);
-//  foreach (tinsta_get_options_defaults() as $key => $val) {
-//    if (isset($tr[$key])) {
-//      set_theme_mod($key, $tr[$key]);
-//    }
-//  }
-//}
-
-
 /**
  * Add theme exports AJAX endpoint
  * wp-admin/admin-ajax.php?action=tinsta-export-settings
  */
 add_action('wp_ajax_tinsta-export-settings', function () {
+
+  // Only users that can modify theme can download settings.
+  if (!current_user_can('edit_theme_options')) {
+    die('Cheatin&#8217; uh?');
+  }
+
   $filename = get_bloginfo('name') . '-' . date('YmdHi') . '.tinsta';
+
   if ( ! headers_sent() ) {
     header('Cache-Control: no-cache, must-revalidate', true);
     header('Expires: Sat, 26 Jul 1997 05:00:00 GMT', true);
@@ -114,9 +95,15 @@ add_action('wp_ajax_tinsta-export-settings', function () {
     header('Content-Disposition: attachment; filename="' . addslashes($filename) . '"', true);
   }
 
-  $document = array_merge( get_theme_mods(), [
-    '$tinstaVersion' =>  wp_get_theme()->Version,
-  ]);
+  if ( !empty($_GET['tinsta_settings_only']) || !empty($_POST['tinsta_settings_only']) ) {
+    $defaults = tinsta_get_options_defaults();
+    $document = array_replace($defaults, array_intersect_key(get_theme_mods(), tinsta_get_options_defaults()));
+  }
+  else {
+    $document = array_replace(tinsta_get_options_defaults(), get_theme_mods());
+  }
+
+  $document['$tinstaVersion'] = wp_get_theme()->Version;
 
   echo json_encode( $document, JSON_PRETTY_PRINT );
   exit;
@@ -151,7 +138,6 @@ if (get_option('fresh_site')) {
   });
 }
 
-
 /**
  * Admin Scripts and Styles
  */
@@ -167,7 +153,6 @@ add_action('admin_print_scripts', function () {
   ]);
 });
 
-
 /**
  * Add admin theme pages.
  */
@@ -179,7 +164,6 @@ add_action('admin_menu', function () {
 
 });
 
-
 /**
  * Hook to set tinsta related settings per widget.
  */
@@ -187,13 +171,11 @@ add_filter('widget_update_callback', function ($instance, $new_instance, $widget
 
   $instance = wp_parse_args((array)$new_instance, [
     'tinsta_widget_size_float' => '',
-    'tinsta_widget_size_enable' => '',
     'tinsta_widget_size' => '',
     'tinsta_boxed' => '',
   ]);
   return $instance;
 }, 10, 4);
-
 
 /**
  * Add tinsta related settings to widgets.
@@ -220,8 +202,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
 
   $instance = wp_parse_args((array)$instance, [
     'tinsta_boxed' => '',
-    'tinsta_widget_size_enable' => '',
-    'tinsta_widget_size' => 33,
+    'tinsta_widget_size' => '',
     'tinsta_widget_float' => '',
   ]);
 
@@ -243,44 +224,49 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
   }
 
   if (!in_array($sidebar, ['primary', 'secondary'])) {
+    $cols_num = 12;
+    $col_width = round(100 / $cols_num, 2);
     ?>
+
     <p>
-<!--      <input name="--><?php //echo $object->get_field_name('tinsta_widget_size_enable') ?><!--"-->
-<!--             type="checkbox"-->
-<!--             value="on"-->
-<!--        --><?php //checked($instance['tinsta_widget_size_enable'], 'on') ?><!-- />-->
       <label for="<?php echo $object->get_field_id('tinsta_widget_size') ?>">
         <?php _e('Width', 'tinsta') ?>
       </label>
-      <input name="<?php echo $object->get_field_name('tinsta_widget_size') ?>"
-             id="<?php echo $object->get_field_id('tinsta_widget_size') ?>"
-             style="vertical-align: middle; width: 4em;"
-             type="number"
-             min="10"
-             max="100"
-             step="1"
-             value="<?php echo esc_attr($instance['tinsta_widget_size']) ?>"
-      /> %
+      <select id="<?php echo $object->get_field_id('tinsta_widget_size') ?>"
+              name="<?php echo $object->get_field_name('tinsta_widget_size') ?>"
+              style="vertical-align: middle; width: 6em;">
+        <option value=""><?php _e('Auto', 'tinsta')?></option>
+        <?php for ($col_n = 1; $col_n < $cols_num; $col_n++):?>
+          <option value="<?php echo $col_width*$col_n?>" <?php selected($instance['tinsta_widget_size'], $col_width*$col_n)?> >
+            <?php echo $col_n?>
+          </option>
+        <?php endfor?>
+      </select>
+      /<?php echo $cols_num?>
     </p>
+
     <p>
       <label for="<?php echo $object->get_field_id('tinsta_widget_float') ?>">
         <?php _e('Floating', 'tinsta') ?>
       </label>
       <select name="<?php echo $object->get_field_name('tinsta_widget_float') ?>"
              id="<?php echo $object->get_field_id('tinsta_widget_float') ?>"
-             style="vertical-align: middle; width: 6em;"
-        >
-        <option value=""><?php _e('Default', 'tinsta')?></option>
-        <option value="left" <?php selected($instance['tinsta_widget_float'], 'left')?>><?php _e('Left', 'tinsta')?></option>
-        <option value="right" <?php selected($instance['tinsta_widget_float'], 'right')?>><?php _e('Right', 'tinsta')?></option>
+             style="vertical-align: middle; width: 6em;">
+        <option value="">
+          <?php _e('Auto', 'tinsta')?>
+        </option>
+        <option value="left" <?php selected($instance['tinsta_widget_float'], 'left')?>>
+          <?php _e('Left', 'tinsta')?>
+        </option>
+        <option value="right" <?php selected($instance['tinsta_widget_float'], 'right')?>>
+          <?php _e('Right', 'tinsta')?>
+        </option>
       </select>
     </p>
-
     <?php
   }
 
   $tinsta_fields = ob_get_clean();
-
   if ($tinsta_fields) {
     ?>
     <fieldset class="tinsta-widget-fieldset">

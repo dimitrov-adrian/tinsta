@@ -34,3 +34,23 @@
   padding-left: .6em;
   padding-right: .6em;
 }
+
+
+/* Specials - if supports */
+.customize-control option[value="uppercase"] {
+  text-transform: uppercase;
+}
+.customize-control option[value="all-small-caps"] {
+  font-variant: all-small-caps;
+}
+.customize-control option[value="small-caps"] {
+  font-variant: small-caps;
+}
+
+/* @TODO make interim logins transparent */
+/*#wp-auth-check-form,*/
+/*#wp-auth-check-wrap #wp-auth-check,*/
+/*#wp-auth-check-wrap #wp-auth-check-form iframe {*/
+  /*background: transparent;*/
+  /*box-shadow: none;*/
+/*}*/

@@ -2,16 +2,10 @@
   <?php _e('Skip to content', 'tinsta') ?>
 </a>
 
-<?php if ( $topline_text = trim(get_theme_mod('component_site_topline')) ):
-  if (defined('TINSTA_PROCESS_PHP') && TINSTA_PROCESS_PHP) {
-    ob_start();
-    eval('?>' . $topline_text);
-    $topline_text = ob_get_clean();
-  }
-  ?>
+<?php if ( $topline_text = trim(get_theme_mod('component_site_topline')) ): ?>
   <header role="complementary" class="site-topline-wrapper">
     <div class="site-topline">
-      <?php echo $topline_text ?>
+      <?php echo do_shortcode($topline_text)?>
     </div>
   </header>
 <?php endif ?>
@@ -23,7 +17,7 @@
     </div>
   <?php endif?>
   <?php wp_nav_menu([
-      'menu_class' => 'menu',
+      'menu_class' => 'menu site-primary-menu',
       'container_class' => 'site-primary-menu-wrapper',
       'theme_location' => 'main',
       'fallback_cb' => NULL

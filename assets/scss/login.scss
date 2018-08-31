@@ -3,6 +3,10 @@
 body {
   background: $region_main_color_background;
   color: $region_root_color_foreground;
+  /* @TODO make interim logins transparent */
+  //&.body.interim-login {
+  //  background: transparent;
+  //}
   #login {
     padding-top: 4%;
     form {

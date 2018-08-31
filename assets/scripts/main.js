@@ -1,6 +1,90 @@
 (function () {
 
   /**
+   * Because CSS.supports() may not be fully supported.
+   *
+   * @type bool
+   */
+  var cssSupports = null;
+  if (typeof(CSS) && typeof(CSS) === 'function') {
+    cssSupports = CSS.supports;
+  } else {
+    cssSupports = function (prop, value) {
+      var d = document.createElement('div');
+      d.style[prop] = value;
+      return d.style[prop] === value;
+    }
+  }
+
+  /**
+   * Legacy browsers supports.
+   */
+  (function () {
+
+    // Flex.
+    if (!cssSupports('display', 'flex')) {
+      ( function () {
+        var script = document.createElement('script');
+        script.setAttribute('src', tinsta.assetsDir + 'scripts/flexibility.min.js');
+        script.setAttribute('async', 'async');
+        document.body.appendChild(script);
+      }() );
+    }
+
+    // Sticky.
+    if (!cssSupports('position', 'sticky')) {
+      ( function () {
+        var script = document.createElement('script');
+        script.setAttribute('src', tinsta.assetsDir + 'scripts/sticky.min.js');
+        script.setAttribute('async', 'async');
+        document.body.appendChild(script);
+      }() );
+    }
+
+  }());
+
+  /**
+   * It's more convinion to use classList but it's not supported from some old browsers.
+   *
+   * @param element
+   * @param className
+   */
+  var elementRemoveClass = function (element, className) {
+    var classes = element.className.split(' ').filter(function (localClassName) {
+      return localClassName !== className;
+    });
+    element.className = classes.join(' ');
+  };
+
+  /**
+   * Add one time closing button.
+   */
+  var addCloseButton = function (callback, closeText) {
+    var button = document.createElement('div');
+    button.innerText = closeText || tinsta.strings.close;
+    button.className = 'mobile-back-button';
+    button.addEventListener('mouseup', function () {
+      button.parentNode.removeChild(button);
+      elementRemoveClass(document.body, 'no-scroll');
+      callback();
+    });
+    document.body.appendChild(button);
+    document.body.className += ' no-scroll';
+  };
+
+  /**
+   * Fixups and definitions.
+   */
+  ( function() {
+    // Removing no-js class.
+    document.documentElement.className += ' js';
+    elementRemoveClass(document.documentElement, 'no-js');
+    // Workaround for transition touch events.
+    // document.addEventListener('touchstart', function () {} );
+    // document.body.addEventListener('touchstart', function () {}, false);
+  }() );
+
+  /**
    * Makes "skip to content" link work correctly in IE9, Chrome, and Opera
    * for better accessibility.
    *
@@ -22,35 +106,9 @@
     }
   })();
 
-  // It's more convinion to use classList but it's not supported from some old browsers.
-  var elementRemoveClass = function (element, className) {
-    var classes = element.className.split(' ').filter(function (localClassName) {
-      return localClassName !== className;
-    });
-    element.className = classes.join(' ');
-  };
-
-  // Add one time closing button.
-  var addCloseButton = function (callback, closeText) {
-    var button = document.createElement('div');
-    button.innerText = closeText || tinsta.closeLabel;
-    button.className = 'mobile-back-button';
-    button.addEventListener('mouseup', function () {
-      button.parentNode.removeChild(button);
-      callback();
-    });
-    document.body.appendChild(button);
-  };
-
-  // Removing no-js class.
-  document.documentElement.className += ' js';
-  elementRemoveClass(document.documentElement, 'no-js');
-
-  // Workaround for transition touch events.
-  document.addEventListener('touchstart', function () {
-  });
-
-  // Search forms add focus class when focused element.
+  /**
+   * Search forms add focus class when focused element.
+   */
   (function () {
     document.querySelectorAll('.widget_search')
       .forEach(function (widget) {
@@ -74,7 +132,9 @@
       });
   }());
 
-  // Auto-grow of comments.
+  /**
+   * Auto-grow of comments.
+   */
   (function () {
     var commentTextArea = document.getElementById('comment');
     if (commentTextArea && commentTextArea.tagName === 'TEXTAREA') {
@@ -91,7 +151,9 @@
     }
   }());
 
-  // Avatar change based on inputed email.
+  /**
+   * Avatar change based on inputed email.
+   */
   (function () {
       var respondForm = document.querySelector('#respond');
       if (respondForm) {
@@ -119,7 +181,9 @@
       }
   }());
 
-  // Full Height.
+  /**
+   * Full Height.
+   */
   if (tinsta.fullHeight) {
     (function () {
       var fullHeightRecalc = function () {
@@ -145,7 +209,9 @@
     }());
   }
 
-  // Agree accepted.
+  /**
+   *  Agree accepted.
+   */
   (function () {
     if (!localStorage.getItem('agreeAccepted')) {
       var siteAgreementDialog = document.getElementById('site-enter-agreement');
@@ -165,13 +231,15 @@
     }
   }());
 
-  // Scrolltop.
+  /**
+   * Scrolltop.
+   */
   if (tinsta.scrolltop) {
-    (function () {
+    ( function () {
       var button = document.createElement('div');
       button.className = 'scrolltop-button';
-      button.innerText = tinsta.top;
-      button.setAttribute('title', tinsta.top);
+      button.innerText = tinsta.strings.top;
+      button.setAttribute('title', tinsta.strings.top);
       button.addEventListener('mouseup', function () {
         var scrollStep = -window.scrollY / (250 / 30);
         var scrollInterval = setInterval(function () {
@@ -194,56 +262,53 @@
       document.body.appendChild(button);
       window.addEventListener('scroll', check);
       setTimeout(check, 100);
-    }());
+    }() );
 
   }
 
-  // Init smoothscroll if available.
-  (function () {
-    if (typeof(jQuery) !== 'undefined' && typeof(jQuery.fn.niceScroll) !== 'undefined') {
-      jQuery(document).ready(function () {
-        jQuery('body').niceScroll();
-      });
+  /**
+   * Init smoothscroll if available.
+   */
+  window.addEventListener('load', function () {
+    if ( window.hasOwnProperty('jQuery') && window.jQuery.fn.hasOwnProperty('niceScroll') ) {
+      jQuery('body').niceScroll();
     }
-  }());
+  });
 
-  // Responsive menu.
+  /**
+   * Responsive menu.
+   */
   (function () {
 
-    var mainWrapper = document.getElementsByClassName('site-container')[0];
+    var mainWrapper = document.getElementsByClassName('site-container').item(0);
+    if (!mainWrapper) {
+      return false;
+    }
 
     var menuItemsSelectors = [
-      '.site-primary-menu-wrapper .root-menu-item.menu-item-type-tinsta-sidebar > .sub-menu',
-      '.site-primary-menu-wrapper .root-menu-item.menu-item-has-children > .sub-menu'
+      //'.site-header-wrapper .menu-item-type-tinsta-nav-menu-widget-area.depth-0 > .sub-menu',
+      '.site-header-wrapper  .menu-item-object-tinsta-nav-menu-object.depth-0 > .sub-menu',
+      '.site-header-wrapper .menu-item-has-children.depth-0 > .sub-menu'
     ];
 
     document.querySelectorAll(menuItemsSelectors.join(','))
       .forEach(function (item) {
 
-        var isMega = true;
-        var isMegaFromWidgets = false;
-
-        if (!item.parentNode.className.match('menu-item-type-tinsta-nav-menu-widget-area')) {
-          for (var i in item.children) {
-            if (
-              (
-                !item.children.item(i).className.match('menu-item-has-children')
-                && !item.children.item(i).className.match('menu-item-type-tinsta-sidebar')
-              )
-              && !item.children.item(i).className.match('widget')) {
-              isMega = false;
-            }
+        // Mega class.
+        var richItemsLen = 0;
+        for ( var i = 0; i < item.children.length; i++) {
+          if (item.children.item(i).className.match('menu-item-has-children')) {
+            richItemsLen++;
           }
-        } else {
-          isMegaFromWidgets = true;
+        }
+        if (item.children.length === richItemsLen || !!item.parentNode.className.match('menu-item-object-tinsta-nav-menu-object')) {
+          item.parentNode.className += ' is-mega';
         }
 
-        if (isMega) {
-          item.className += ' is-tinsta-mega';
-          if (!isMegaFromWidgets) {
-            item.className += ' is-tinsta-mega-submenus';
-          }
-          item.parentNode.addEventListener('mouseenter', function () {
+        // Consider replacing window.innerWidth with window.outerWidth
+        // innerWidth represent current width, and outerWidth represent the whole window
+        item.parentNode.addEventListener('mouseenter', function (event) {
+          if ( window.innerWidth >= parseInt(tinsta.breakpoints.tablet) ) {
             item.style.right = 'auto';
             item.style.left = 'auto';
             if (item.offsetWidth + item.offsetLeft > mainWrapper.offsetWidth) {
@@ -252,12 +317,14 @@
             if (item.offsetLeft < 10) {
               item.style.left = 0;
             }
-          });
-        }
+          }
+        });
 
+        // Mobile menu.
         item.parentNode.addEventListener('click', function (event) {
-          if (window.matchMedia('(max-width: ' + tinsta.breakpoints.tablet + ')').matches) {
+          if ( window.innerWidth < parseInt(tinsta.breakpoints.tablet) ) {
             event.preventDefault();
+            event.stopPropagation();
             item.className += ' mobile-menu';
             addCloseButton(function () {
               elementRemoveClass(item, 'mobile-menu');
@@ -270,53 +337,15 @@
   }());
 
 
-  // Legacy supports.
-  (function () {
-
-    /**
-     * Because CSS.supports() may not be fully supported.
-     *
-     * @type bool
-     */
-    var cssSupports = null;
-    if (typeof(CSS) && typeof(CSS) === 'function') {
-      cssSupports = CSS.supports;
-    } else {
-      cssSupports = function (prop, value) {
-        var d = document.createElement('div');
-        d.style[prop] = value;
-        return d.style[prop] === value;
-      }
-    }
-
-    // Flex.
-    if (!cssSupports('display', 'flex')) {
-      (function () {
-        var script = document.createElement('script');
-        script.setAttribute('src', tinsta.assetsDir + 'scripts/flexibility.min.js');
-        script.setAttribute('async', 'async');
-        document.body.appendChild(script);
-      }());
-    }
-
-    // Sticky.
-    if (!cssSupports('position', 'sticky')) {
-      (function () {
-        var script = document.createElement('script');
-        script.setAttribute('src', tinsta.assetsDir + 'scripts/sticky.min.js');
-        script.setAttribute('async', 'async');
-        document.body.appendChild(script);
-      }());
-    }
-
-  }());
-
+  /**
+   * Make topline, header sticky.
+   */
   ( function () {
     var topline = document.getElementsByClassName('site-topline-wrapper');
     var header = document.getElementsByClassName('site-header-wrapper');
     if (topline.length > 0 && header.length > 0) {
       var setHeaderTop = function () {
-        if (window.getComputedStyle(topline[0]).position == 'sticky' && window.getComputedStyle(header[0]).position == 'sticky') {
+        if (window.getComputedStyle(topline[0]).position === 'sticky' && window.getComputedStyle(header[0]).position === 'sticky') {
           header[0].style.setProperty('top', topline[0].offsetHeight + 'px');
         } else {
           header[0].style.setProperty('top', null);

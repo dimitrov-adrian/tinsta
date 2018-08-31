@@ -9,7 +9,7 @@
     // @TODO move outside the template.
     if ( ! empty($_POST['tinsta-import'])) {
       if ( ! empty($_FILES['file']['tmp_name']) && empty($_FILES['file']['error'])) {
-        if ( $imported_count = tinsta_settings_import( $_FILES['file']['tmp_name'], !empty($_POST['tinsta_settings_only']) ) ) {
+        if ( $imported_count = tinsta_settings_import( $_FILES['file']['tmp_name'] ) ) {
           ?>
           <div class="updated notice is-dismissible">
             <p>
@@ -61,6 +61,12 @@
             <p class="description">
               <?php _e('Export .tinsta file with current settings.', 'tinsta') ?>
             </p>
+            <p>
+              <label>
+                <input type="checkbox" name="tinsta_settings_only" value="on" checked="checked" />
+                <?php _e('Export Tinsta\'s settings only. <span class="description">All other variables created from custom theme or plugins will be ignored.</span>', 'tinsta')?>
+              </label>
+            </p>
             <button type="submit" name="action" value="tinsta-export-settings" class="button">
               <?php _e('Download', 'tinsta') ?>
             </button>
@@ -80,12 +86,6 @@
               <label>
                 <?php _e('File', 'tinsta')?>
                 <input type="file" name="file" accept=".tinsta" required="required" />
-              </label>
-            </p>
-            <p>
-              <label>
-                <input type="checkbox" name="tinsta_settings_only" value="on" />
-                <?php _e('Import Tinsta\'s settings only. <span class="description">All other variables created from custom theme or plugins will be ignored (usually, there should be none).</span>', 'tinsta')?>
               </label>
             </p>
             <p>

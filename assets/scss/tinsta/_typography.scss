@@ -28,6 +28,13 @@ html[dir="rtl"] body {
 ::-moz-placeholder { color: inherit }
 :-ms-input-placeholder { color: inherit }
 
+// because of rems.
+@if $typography_font_size {
+  html {
+    font-size: $typography_font_size + px;
+  }
+}
+
 /**
  * The body that should contain all base typography and color settings.
  */
@@ -119,7 +126,7 @@ body {
     font-weight: 700;
     height: auto;
     left: 5px;
-    padding: 1em;
+    padding: 1rem;
     text-decoration: none;
     top: 5px;
     width: auto;
@@ -230,43 +237,43 @@ h6,
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 2rem;
   //margin: 0.67em 0;
 }
 
 h2 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
   //margin: 0.83em 0;
 }
 
 h3 {
-  font-size: 1.17em;
+  font-size: 1.17rem;
   //margin: 1em 0;
 }
 
 h4 {
-  font-size: 1em;
+  font-size: 1rem;
   //margin: 1.33em 0;
 }
 
 h5 {
-  font-size: 0.83em;
+  font-size: 0.83rem;
   //margin: 1.67em 0;
 }
 
 h6 {
-  font-size: 0.75em;
+  font-size: 0.75rem;
   //margin: 2.33em 0;
 }
 
 details > summary {
   cursor: pointer;
-  @extend %noselect;
+  @extend %no-select;
 }
 
 ul,
 ol {
-  margin: 0 0 0 1.5em;
+  margin: 0 0 0 1.5rem;
   padding: 0;
 }
 
@@ -281,7 +288,7 @@ ol {
 li > ul,
 li > ol {
   margin-bottom: 0;
-  margin-left: 1.5em;
+  margin-left: 1.5rem;
 }
 
 dt {
@@ -289,7 +296,7 @@ dt {
 }
 
 dd {
-  margin: 0 1.5em 1.5em;
+  margin: 0 1.5rem 1.5rem;
 }
 
 dfn,
@@ -301,7 +308,7 @@ i {
 
 kbd {
   background-color: rgba($region_root_color_foreground, .8);
-  border-radius: .26em;
+  border-radius: .26rem;
   box-shadow: inset 1px -1px 1px rgba(#000, 0.25);
   color: $region_main_color_background;
   padding: 2px 4px;
@@ -309,7 +316,7 @@ kbd {
 
 .size-thumbnail,
 figure {
-  margin: 0 0 1.5em 0;
+  margin: 0 0 1.5rem 0;
   padding: 0;
   max-width: 100%;
   overflow: hidden;
@@ -320,7 +327,7 @@ figure {
   clear: left;
   display: inline;
   float: left;
-  margin-right: 1.5em;
+  margin-right: 1.5rem;
   margin-left: 0;
   padding-left: 0;
   text-align: left;
@@ -330,7 +337,7 @@ figure {
   clear: right;
   display: inline;
   float: right;
-  margin-left: 1.5em;
+  margin-left: 1.5rem;
   margin-right: 0;
   padding-right: 0;
   text-align: right;
@@ -338,7 +345,7 @@ figure {
 
 img.alignleft,
 img.alignright {
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
 }
 
 .aligncenter {
@@ -355,8 +362,8 @@ kbd,
 tt,
 var {
   font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
-  margin-left: .1em;
-  margin-right: .1em;
+  margin-left: .1rem;
+  margin-right: .1rem;
 }
 code {
   padding-left: .2em;
@@ -369,10 +376,10 @@ pre {
 }
 
 pre {
-  margin-bottom: 1.6em;
+  margin-bottom: 1.6rem;
   max-width: 100%;
   overflow: auto;
-  padding: 1.6em;
+  padding: 1.6rem;
 }
 
 blockquote {
@@ -385,15 +392,15 @@ blockquote {
   border-top: 4px solid $region_root_color_secondary;
   border-bottom: 4px solid $region_root_color_secondary;
   font-style: italic;
-  margin: 1em 1%;
+  margin: 1rem 1%;
   overflow: hidden;
-  padding: 0 .6em;
+  padding: 0 .6rem;
   position: relative;
 }
 
 blockquote,
 cite {
-  line-height: 1.72em;
+  line-height: 1.72rem;
 }
 
 q {
@@ -406,14 +413,14 @@ hr {
   @include border($region_root_color_foreground, '-bottom');
   border: none;
   clear: both;
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   zoom: 1;
 }
 
 table {
   border-spacing: 0;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
   table-layout: fixed; /* Prevents HTML tables from becoming too wide */
   width: 100%;
   border-width: 1px;
@@ -425,7 +432,7 @@ table {
   }
 
   td, th {
-    padding: .4em;
+    padding: .4rem;
   }
 
   thead tr:last-child > th,
@@ -523,7 +530,7 @@ ul.wp-block-gallery {
   margin: 0;
 }
 .gallery {
-  margin-bottom: 1.6em;
+  margin-bottom: 1.6rem;
 }
 
 .gallery-item {
@@ -552,12 +559,12 @@ fieldset {
   @include border($region_root_color_foreground);
   border-width: $typography_bordering + px;
   legend {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 label {
-  padding-bottom: .4em;
+  padding-bottom: .4rem;
 }
 .form-row-wide {
   input,
@@ -576,13 +583,13 @@ textarea {
 }
 input[type="radio"],
 input[type="checkbox"] {
-  @extend %noselect;
+  @extend %no-select;
   cursor: pointer;
   vertical-align: middle;
   padding: 0; /* Addresses excess padding in IE8/9 */
 }
 select {
-  @extend %noselect;
+  @extend %no-select;
   cursor: pointer;
   height: auto;
   -moz-appearance: none;
@@ -624,7 +631,7 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  @extend %noselect;
+  @extend %no-select;
   @include roundness();
   cursor: pointer;
   display: inline-block;
@@ -710,8 +717,8 @@ input::-moz-focus-inner {
     }
     .description {
       display: block;
-      line-height: .8em;
-      font-size: .8em;
+      line-height: .8rem;
+      font-size: .8rem;
       text-decoration: none;
     }
   }

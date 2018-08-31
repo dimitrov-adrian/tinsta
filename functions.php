@@ -16,6 +16,7 @@ $tinsta_supports_failcheck = [
   'php' => version_compare( phpversion(), '5.4.0', '<' ),
   'wp' => version_compare( $wp_version, '4.4.0', '<' ),
   'phar' => !extension_loaded('phar'),
+  // @TODO add check if wp-content is writeable
 ];
 
 if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
@@ -65,11 +66,24 @@ if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
 }
 
 /**
- * TINSTA_STYLESHEET_CACHE_DIR should be relative to WP_CONTENT_DIR and must starts with slash
- * Examples: "/cache" or "/cache/stylesheets"
+ * Path to static css files.
  */
-if ( ! defined( 'TINSTA_STYLESHEET_CACHE_DIR' ) ) {
-  define( 'TINSTA_STYLESHEET_CACHE_DIR', '/cache' );
+if ( ! defined('TINSTA_STYLESHEET_CACHE_DIR') ) {
+  define( 'TINSTA_STYLESHEET_CACHE_DIR', '/cache/tinsta/css' );
+}
+
+/**
+ * Third-Party integrations.
+ */
+if ( ! defined('TINSTA_INTEGRATIONS') ) {
+  define('TINSTA_INTEGRATIONS', true);
+}
+
+/**
+ * Experimental functions.
+ */
+if ( ! defined('TINSTA_EXPERIMENTAL') ) {
+  define('TINSTA_EXPERIMENTAL', false);
 }
 
 /**
@@ -80,7 +94,7 @@ require __DIR__ . '/includes/functions.php';
 /**
  * Base theme setup.
  */
-require_once __DIR__ . '/includes/theme.php';
+require __DIR__ . '/includes/theme.php';
 
 /**
  * Admin panel related setup.
@@ -113,17 +127,18 @@ if ( is_customize_preview() ) {
 /**
  * Setup integrations with other themes and plugins.
  */
-foreach ( (array) get_option('active_plugins', []) as $active_plugin ) {
-  $integration_include = __DIR__ . '/includes/integrations/' . dirname($active_plugin) . '.php';
-  if ( $active_plugin && file_exists ( $integration_include ) ) {
-    include $integration_include;
+if ( TINSTA_INTEGRATIONS ) {
+  foreach ( (array) get_option('active_plugins', []) as $active_plugin ) {
+    $integration_include = __DIR__ . '/includes/integrations/' . dirname($active_plugin) . '.php';
+    if ($active_plugin && file_exists($integration_include)) {
+      include $integration_include;
+    }
   }
 }
 
 /**
  * Include experiments.
  */
-if (defined('TINSTA_EXPERIMENTS') && TINSTA_EXPERIMENTS) {
-  include __DIR__ . '/includes/experiments/nav-menu-items.php';
-  include __DIR__ . '/includes/experiments/widget-logic.php';
+if ( TINSTA_EXPERIMENTAL ) {
+  include __DIR__ . '/includes/experimental/nav-menu-items.php';
 }
