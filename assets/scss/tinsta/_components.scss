@@ -1,17 +1,21 @@
 /**
  * Lazy
  */
-img.lazy {
-  //background-color: #ddd;
- // object-position: -2000px -2000px;
-  opacity: 0;
-}
-img.lazy-loaded {
-  opacity: 1;
-  display: inline-block;
-  transition: all 150ms ease-in-out;
-}
+img {
 
+  &.lazy {
+    //background-color: #ddd;
+    // object-position: -2000px -2000px;
+    opacity: 0;
+  }
+
+  &.lazy-loaded {
+    opacity: 1;
+    display: inline-block;
+    transition: all 150ms ease-in-out;
+  }
+
+}
 
 /**
  * Error 404 page
@@ -27,7 +31,6 @@ img.lazy-loaded {
     text-align: right;
   }
 }
-
 
 /**
  * Login integration
@@ -65,7 +68,6 @@ body.login {
  */
 // @TODO
 
-
 /*
  * Mobile menu and back button.
  */
@@ -91,6 +93,7 @@ body.login {
     line-height: 3rem;
   }
 }
+
 .mobile-menu {
   display: block !important;
   position: fixed !important;
@@ -135,6 +138,7 @@ body.login {
     vertical-align: middle;
   }
 }
+
 .menu-item-type-tinsta-nav-menu-current-user {
   .avatar {
     display: inline-block;
@@ -211,6 +215,7 @@ body.login {
     @extend .pagination-items;
   }
 }
+
 .pagination-items {
   display: inline-block;
   @if $component_pagination_style == 'bordered' {
@@ -218,6 +223,7 @@ body.login {
     @include roundness();
   }
 }
+
 .pagination-item {
   color: muted($region_root_color_foreground);
   display: inline-block;
@@ -273,6 +279,7 @@ body.login {
     @extend .breadcrumb-trail;
   }
 }
+
 .breadcrumb-trail {
   display: inline-block;
   max-width: 28%;
@@ -471,7 +478,7 @@ body.login {
  * Message boxes
  */
 .message {
-  background-color: #eeeeee;
+  background-color: #eee;
   border: 2px solid #e3e3e3;
   color: #777;
   margin: 2rem auto;
@@ -479,26 +486,31 @@ body.login {
   text-align: center;
   @include roundness();
 }
+
 .ok {
   background-color: #e6ffdb;
   border-color: #cfeac4;
   color: #104c10;
 }
+
 .error {
   background-color: #ffebe0;
   border-color: #ead2c6;
   color: #845f4c;
 }
+
 .info {
   background-color: #ebf6fb;
   border-color: #dbedee;
   color: #3d6380;
 }
+
 .warning {
   background-color: #fdfddc;
   border-color: #efe8cc;
   color: #79680a;
 }
+
 .notice {
   background-color: $region_main_color_background;
   border-bottom: none;

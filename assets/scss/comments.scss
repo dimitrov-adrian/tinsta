@@ -12,8 +12,8 @@ $la-is-loaded: true;
 
   // Experiment to apply region styles here
   // allows customize the colors, and set background image.
-  @if ( false ) {
-    background :rgb(48, 73, 118);
+  @if (false) {
+    background: rgb(48, 73, 118);
     padding: 2rem;
     @include roundness();
   } @else {
@@ -215,7 +215,6 @@ $la-is-loaded: true;
       margin-left: 20px;
     }
   }
-
 
   /**
    * Comment form

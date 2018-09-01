@@ -9,8 +9,9 @@
 @import "tinsta/_regions";
 @import "tinsta/_entries";
 
+// Integrations.
 @import "integrations/gutenberg-blocks.scss";
-//@import "3rd-party/misc";
-//@import "3rd-party/siteorigin";
-//@import "3rd-party/woocommerce";
-//@import "3rd-party/bbpress";
+//@import "integrations/misc";
+//@import "integrations/siteorigin";
+//@import "integrations/woocommerce";
+//@import "integrations/bbpress";

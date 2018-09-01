@@ -50,9 +50,7 @@ body {
     @include regionColors($region_topline_color_foreground,
       $region_topline_color_background,
       $region_topline_color_background_opacity);
-  }
-
-  @else {
+  } @else {
     @include regionColors($region_topline_color_foreground,
       $region_topline_color_background,
       $region_topline_color_background_opacity);
@@ -118,17 +116,17 @@ body {
   }
 
   @include regionColors($region_header_color_foreground,
-          $region_header_color_background,
-          $region_header_color_background_opacity,
-          $region_header_color_primary,
-          $region_header_color_secondary);
+    $region_header_color_background,
+    $region_header_color_background_opacity,
+    $region_header_color_primary,
+    $region_header_color_secondary);
 
   @include backgroundImage($region_header_image,
-          $region_header_image_size,
-          $region_header_image_attachment_scroll,
-          $region_header_image_repeat,
-          $region_header_image_position_x,
-          $region_header_image_position_y);
+    $region_header_image_size,
+    $region_header_image_attachment_scroll,
+    $region_header_image_repeat,
+    $region_header_image_position_x,
+    $region_header_image_position_y);
 
   .site-header {
     -js-display: flex;
@@ -173,13 +171,11 @@ body {
   }
 
   .widget {
-    display: inline-block;
     margin: 1rem 0;
     @media (max-width: $breakpoint_max_tablet) {
       margin: 1rem;
     }
   }
-
 
 }
 
@@ -189,7 +185,7 @@ body {
 .site-primary-menu-wrapper {
 
   // All menus in header should be inlined.
-  @media (max-width: $breakpoint_max_tablet ) {
+  @media (max-width: $breakpoint_max_tablet) {
     &:before,
     &:after {
       content: '';
@@ -203,11 +199,11 @@ body {
     }
     &:before {
       left: 0;
-      background: linear-gradient(to left, transparent , rgba(0,0,0,.25));
+      background: linear-gradient(to left, transparent, rgba(0, 0, 0, .25));
     }
     &:after {
       right: 0;
-      background: linear-gradient(to right, transparent , rgba(0,0,0,.25));
+      background: linear-gradient(to right, transparent, rgba(0, 0, 0, .25));
     }
   }
 
@@ -220,8 +216,7 @@ body {
 
   @if $region_primary_menu_layout == 'boxed' {
     @extend %wrapper;
-  }
-  @else {
+  } @else {
     .menu {
       @extend %wrapper;
     }
@@ -273,8 +268,8 @@ body {
 
   .site-container {
 
-    $has_different_primary_sidebar: ( $region_sidebar_primary_color_background != $region_main_color_background );
-    $has_different_secondary_sidebar: ( $region_sidebar_secondary_color_background != $region_main_color_background );
+    $has_different_primary_sidebar: ($region_sidebar_primary_color_background != $region_main_color_background);
+    $has_different_secondary_sidebar: ($region_sidebar_secondary_color_background != $region_main_color_background);
 
     margin-left: auto;
     margin-right: auto;
@@ -290,7 +285,7 @@ body {
       }
     }
 
-    @if ( $region_main_margin ) {
+    @if ($region_main_margin) {
       margin-top: ( $region_main_margin / 5 ) + rem;
       margin-bottom: ( $region_main_margin / 5 ) + rem;
     }
@@ -316,10 +311,10 @@ body {
       order: 1;
       min-width: 0; // Fixes the enormous <pre>
 
-      @if ( $has_different_primary_sidebar ) {
+      @if ($has_different_primary_sidebar) {
         padding-left: 1rem;
       }
-      @if ( $has_different_secondary_sidebar ) {
+      @if ($has_different_secondary_sidebar) {
         padding-right: 1rem;
       }
 
@@ -365,7 +360,7 @@ body {
           width: $region_sidebar_primary_width + px;
         }
 
-        @if ( $region_sidebar_primary_color_background != $region_main_color_background ) {
+        @if ($region_sidebar_primary_color_background != $region_main_color_background) {
           padding-right: 1rem;
           padding-left: 1rem;
         } @else {
@@ -388,7 +383,7 @@ body {
           width: $region_sidebar_secondary_width + px;
         }
 
-        @if ( $region_sidebar_secondary_color_background  != $region_main_color_background ) {
+        @if ($region_sidebar_secondary_color_background  != $region_main_color_background) {
           padding-right: 1rem;
           padding-left: 1rem;
         } @else {
@@ -490,10 +485,6 @@ body {
     font-weight: bold;
   }
 
-  .widget {
-    display: inline-block;
-  }
-
 }
 
 /**
@@ -518,11 +509,10 @@ body {
     $region_bottomline_color_background,
     $region_bottomline_color_background_opacity);
 
-
   @if $region_bottomline_layout == 'boxed' {
     @extend %wrapper;
 
-    @if ( not $region_bottomline_sticky ) {
+    @if (not $region_bottomline_sticky) {
       @include roundness('bottom');
       margin-bottom: 1rem;
     }

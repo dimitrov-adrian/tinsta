@@ -1,20 +1,3 @@
-html {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: $region_root_color_secondary;
-
-  -webkit-touch-callout:none;                /* prevent callout to copy image, etc when tap to hold */
-  -webkit-text-size-adjust:none;             /* prevent webkit from resizing text to fit */
-  -webkit-tap-highlight-color:rgba(0,0,0,0); /* prevent tap highlight color / shadow */
-}
-
-html[dir="rtl"],
-html[dir="rtl"] body {
-  direction: rtl;
-  unicode-bidi: embed;
-}
-
-// @TODO a11y focus outline
-
 *,
 *:before,
 *:after {
@@ -24,15 +7,38 @@ html[dir="rtl"] body {
 }
 
 // Seems that placeholders can't be chained.
-::-webkit-input-placeholder { color: inherit }
-::-moz-placeholder { color: inherit }
-:-ms-input-placeholder { color: inherit }
+::-webkit-input-placeholder {
+  color: inherit
+}
 
-// because of rems.
-@if $typography_font_size {
-  html {
+::-moz-placeholder {
+  color: inherit
+}
+
+:-ms-input-placeholder {
+  color: inherit
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: $region_root_color_secondary;
+
+  -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+  -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* prevent tap highlight color / shadow */
+
+  // because of rems.
+  @if $typography_font_size {
     font-size: $typography_font_size + px;
   }
+
+  // RTL
+  &[dir="rtl"],
+  &[dir="rtl"] body {
+    direction: rtl;
+    unicode-bidi: embed;
+  }
+
 }
 
 /**
@@ -40,12 +46,10 @@ html[dir="rtl"] body {
  */
 body {
 
-  @if $typography_font_size {
-    font-size: $typography_font_size + px;
-  }
+  font-size: inherit;;
 
   @if $typography_font_line_height {
-    line-height: ( $typography_font_line_height / 100 ) ;
+    line-height: ($typography_font_line_height / 100);
   }
 
   font-weight: normal;
@@ -82,16 +86,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
     -moz-font-smoothing: grayscale;
 
-    @media
-      not screen and (-webkit-min-device-pixel-ratio: 2),
-      not screen and (   min--moz-device-pixel-ratio: 2),
-      not screen and (     -o-min-device-pixel-ratio: 2/1),
-      not screen and (        min-device-pixel-ratio: 2),
-      not screen and (                min-resolution: 192dpi),
-      not screen and (                min-resolution: 2dppx) {
-        text-rendering: geometricPrecision; // consider to leave or remove "geometricPrecision"
-        -webkit-font-smoothing: subpixel-antialiased;
-      }
+    @media not screen and (-webkit-min-device-pixel-ratio: 2),
+    not screen and (min--moz-device-pixel-ratio: 2),
+    not screen and (-o-min-device-pixel-ratio: 2/1),
+    not screen and (min-device-pixel-ratio: 2),
+    not screen and (min-resolution: 192dpi),
+    not screen and (min-resolution: 2dppx) {
+      text-rendering: geometricPrecision; // consider to leave or remove "geometricPrecision"
+      -webkit-font-smoothing: subpixel-antialiased;
+    }
 
   } @else {
     text-rendering: optimizeSpeed;
@@ -186,7 +189,8 @@ img {
   }
 }
 
-img, video {
+img,
+video {
   max-width: 100%
 }
 
@@ -216,7 +220,7 @@ h4,
 h5,
 h6,
 .base-title,
-%base-title{
+%base-title {
 
   @if $typography_font_headings_google {
     font-family: $typography_font_headings_google;
@@ -242,28 +246,30 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   //margin: 0.83rem 0;
 }
 
 h3 {
-  font-size: 1.17rem;
+  font-size: 1.4rem;
   //margin: 1rem 0;
 }
 
 h4 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   //margin: 1.33rem 0;
 }
 
 h5 {
-  font-size: 0.83rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
   //margin: 1.67rem 0;
 }
 
 h6 {
-  font-size: 0.75rem;
+  font-size: 1rem;
   //margin: 2.33rem 0;
+  text-transform: uppercase;
 }
 
 details > summary {
@@ -365,11 +371,13 @@ var {
   margin-left: .1rem;
   margin-right: .1rem;
 }
+
 code {
   padding-left: .2rem;
   padding-right: .2rem;
   display: inline-block;
 }
+
 code,
 pre {
   background-color: rgba($region_root_color_foreground, .08);
@@ -394,13 +402,13 @@ blockquote {
   font-style: italic;
   margin: 1rem 1%;
   overflow: hidden;
-  padding: 0 .6rem;
   position: relative;
 }
 
 blockquote,
 cite {
   line-height: 1.72rem;
+  padding: 1.4rem;
 }
 
 q {
@@ -505,21 +513,21 @@ img.wp-smiley {
   text-align: center;
 
   &.alignnone {
-      margin: 5px 20px 20px 0;
+    margin: 5px 20px 20px 0;
   }
   &.alignleft {
-      margin: 5px 20px 20px 0;
+    margin: 5px 20px 20px 0;
   }
   &.alignright {
-      margin: 5px 0 20px 20px;
+    margin: 5px 0 20px 20px;
   }
   img {
-      border: 0 none;
-      height: auto;
-      margin: 0;
-      max-width: 98.5%;
-      padding: 0;
-      width: auto;
+    border: 0 none;
+    height: auto;
+    margin: 0;
+    max-width: 98.5%;
+    padding: 0;
+    width: auto;
   }
 }
 
@@ -529,6 +537,7 @@ img.wp-smiley {
 ul.wp-block-gallery {
   margin: 0;
 }
+
 .gallery {
   margin-bottom: 1.6rem;
 }
@@ -563,9 +572,11 @@ fieldset {
     padding-right: 1rem;
   }
 }
+
 label {
   padding-bottom: .4rem;
 }
+
 .form-row-wide {
   input,
   select,
@@ -573,6 +584,7 @@ label {
     width: 100%;
   }
 }
+
 button,
 input,
 select,
@@ -581,6 +593,7 @@ textarea {
   color: inherit;
   line-height: inherit;
 }
+
 input[type="radio"],
 input[type="checkbox"] {
   @extend %no-select;
@@ -588,6 +601,7 @@ input[type="checkbox"] {
   vertical-align: middle;
   padding: 0; /* Addresses excess padding in IE8/9 */
 }
+
 select {
   @extend %no-select;
   cursor: pointer;
@@ -595,6 +609,7 @@ select {
   -moz-appearance: none;
   -webkit-appearance: none;
 }
+
 input,
 textarea,
 select,
@@ -612,10 +627,12 @@ select,
   }
 
 }
+
 .select2-container .select2-selection--single > .select2-chosen,
 .select2-container .select2-choice > .select2-chosen {
   padding: (( $typography_form_spacing *(1/100) ) + em) (( $typography_form_spacing *(2/100) ) + em);
 }
+
 textarea {
   overflow: auto; /* Removes default vertical scrollbar in IE6/7/8/9 */
   resize: vertical;
@@ -645,12 +662,14 @@ input[type="submit"] {
     @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_secondary);
   }
 }
+
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   /* Corrects inner padding and border displayed oddly in FF3/4 www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
   border: 0;
   padding: 0;
 }
+
 [placeholder]:focus::-webkit-input-placeholder {
   opacity: 0;
 }
@@ -677,6 +696,7 @@ input::-moz-focus-inner {
     width: 100%;
   }
 }
+
 .mejs-container,
 .twitter-tweet {
   margin-left: auto;
@@ -695,6 +715,7 @@ input::-moz-focus-inner {
   padding: 0;
   list-style: none;
 }
+
 .menu {
   // .menu-item {
   //   // Break the submenu widths
@@ -724,7 +745,6 @@ input::-moz-focus-inner {
   }
 }
 
-
 /**
  * Avatars
  */
@@ -734,7 +754,7 @@ input::-moz-focus-inner {
   @include roundness();
 }
 
-//
+// Tablet screen formatters.
 @media (max-width: $breakpoint_max_tablet) {
   .hentry .caption,
   .hentry .alignleft,
@@ -753,6 +773,7 @@ input::-moz-focus-inner {
     clear: both;
   }
 }
+
 .hentry {
   img {
     max-width: 100%;

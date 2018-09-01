@@ -7,23 +7,14 @@
   height: calc( 100vh - 260px );
 }
 
-/* Fix the bottom border in customizer settings */
-#customize-theme-controls .control-region:last-of-type.open {
-  border-bottom: none;
-}
-
 /* Hide next fields because are not relevant */
-.menu-item-tinsta-sidebar .field-link-target,
-.menu-item-tinsta-sidebar .field-xfn,
-.menu-item-tinsta-sidebar .field-description,
-.menu-item-tinsta-current-logged-user .field-link-target,
-.menu-item-tinsta-current-logged-user .field-xfn,
-.menu-item-tinsta-current-logged-user .field-description
-{
+.menu-item-tinsta-nav-menu-object .field-link-target,
+.menu-item-tinsta-nav-menu-object .field-xfn,
+.menu-item-tinsta-nav-menu-object .field-description {
   display: none !important;
 }
 
-  /* Tinsta Widget Addons */
+/* Tinsta Widget Addons */
 .tinsta-widget-fieldset {
   border: 1px solid #ddd;
   margin-bottom: 1em;
@@ -34,23 +25,3 @@
   padding-left: .6em;
   padding-right: .6em;
 }
-
-
-/* Specials - if supports */
-.customize-control option[value="uppercase"] {
-  text-transform: uppercase;
-}
-.customize-control option[value="all-small-caps"] {
-  font-variant: all-small-caps;
-}
-.customize-control option[value="small-caps"] {
-  font-variant: small-caps;
-}
-
-/* @TODO make interim logins transparent */
-/*#wp-auth-check-form,*/
-/*#wp-auth-check-wrap #wp-auth-check,*/
-/*#wp-auth-check-wrap #wp-auth-check-form iframe {*/
-  /*background: transparent;*/
-  /*box-shadow: none;*/
-/*}*/

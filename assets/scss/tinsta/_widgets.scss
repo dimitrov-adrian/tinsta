@@ -52,18 +52,18 @@
   &.colored {
     background-color: $region_root_color_secondary;
     background-image: linear-gradient(-4deg, darken($region_root_color_secondary, 10%) 28%, transparent 28%),
-                      linear-gradient(-8deg, $region_root_color_secondary 84%, transparent 84%),
-                      linear-gradient(-8deg, lighten($region_root_color_secondary, 6%) 84%, transparent 84%),
-                      linear-gradient(-8deg, lighten($region_root_color_secondary, 12%) 100%, transparent 100%);
-                      color: $region_main_color_background;
+    linear-gradient(-8deg, $region_root_color_secondary 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($region_root_color_secondary, 6%) 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($region_root_color_secondary, 12%) 100%, transparent 100%);
+    color: $region_main_color_background;
   }
 
   &.colored-inverted {
     background-color: $region_header_color_foreground;
     background-image: linear-gradient(-4deg, darken($region_header_color_foreground, 10%) 28%, transparent 28%),
-                      linear-gradient(-8deg, $region_header_color_foreground 84%, transparent 84%),
-                      linear-gradient(-8deg, lighten($region_header_color_foreground, 6%) 84%, transparent 84%),
-                      linear-gradient(-8deg, lighten($region_header_color_foreground, 12%) 100%, transparent 100%);
+    linear-gradient(-8deg, $region_header_color_foreground 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($region_header_color_foreground, 6%) 84%, transparent 84%),
+    linear-gradient(-8deg, lighten($region_header_color_foreground, 12%) 100%, transparent 100%);
     color: $region_header_color_background;
   }
 
@@ -101,7 +101,7 @@
 .widget_media_image {
   img {
     display: block;
-    @media ( max-width: $breakpoint_max_tablet ) {
+    @media (max-width: $breakpoint_max_tablet) {
       margin-left: auto;
       margin-right: auto;
     }
@@ -135,6 +135,7 @@
     width: 100%;
   }
 }
+
 .widget_nav_menu {
   a {
     padding: .4rem 0;
@@ -295,7 +296,6 @@
     }
   }
 }
-
 
 /**
  * User menu widget

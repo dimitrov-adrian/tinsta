@@ -5,9 +5,9 @@ $z-index-low: 0;
 $brightness-base: ( ( 50 *( $typography_brightness / 90) ) + 5 ) / 1.5;
 
 $breakpoint_min_mobile: $region_root_breakpoint_mobile;
-$breakpoint_max_mobile: ( $region_root_breakpoint_mobile - 1px );
+$breakpoint_max_mobile: ($region_root_breakpoint_mobile - 1px);
 $breakpoint_min_tablet: $region_root_breakpoint_tablet;
-$breakpoint_max_tablet: ( $region_root_breakpoint_tablet - 1px );
+$breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 /**
  * Produce readable inverted color based on color. black -> white, white -> black and etc.
@@ -46,8 +46,8 @@ $breakpoint_max_tablet: ( $region_root_breakpoint_tablet - 1px );
 }
 
 @mixin shadow() {
-  @if ( $component_effects_shadows ) {
-    box-shadow: 0 0 12px rgba(0,0,0,.12);
+  @if ($component_effects_shadows) {
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
   }
 }
 

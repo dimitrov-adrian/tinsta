@@ -10,8 +10,8 @@
 
 .site-entries {
 
-  margin-top: 1rem;//@TODO
-  margin-bottom: 1rem;//@TODO this adds extra space at bottom which is an issue.
+  margin-top: 1rem; //@TODO
+  margin-bottom: 1rem; //@TODO this adds extra space at bottom which is an issue.
 
   // Shared.
   .hentry {
@@ -174,7 +174,6 @@
         @include border($region_root_color_foreground, '-top', 1);
       }
 
-
       &.layout-contextual-header {
         .entry-header {
           @extend .context-header;
@@ -195,7 +194,7 @@
           width: 48%;
           margin-left: 8%;
           vertical-align: top;
-          .entry-details-meta  {
+          .entry-details-meta {
             margin: 0;
             li {
               list-style: none;

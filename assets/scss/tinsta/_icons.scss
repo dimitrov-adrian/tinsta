@@ -2,12 +2,13 @@
 // from https://icons8.com/line-awesome
 /* Thanks to http://fontawesome.io @fontawesome and @davegandy */
 
-
 /**
  * Load the LineAwesome font, if already not loaded.
  */
 $la-is-loaded: false !default;
 @if not $la-is-loaded {
+  $la-is-loaded: true;
+
   @font-face {
     font-family: "LineAwesome";
     src: url($tinsta_theme_dir_url + "/assets/fonts/line-awesome.eot?v=1.1.");
@@ -19,54 +20,45 @@ $la-is-loaded: false !default;
     font-weight: normal;
     font-style: normal;
   }
+
   @media screen and (-webkit-min-device-pixel-ratio: 0) {
     @font-face {
       font-family: "FontAwesome";
       src: url($tinsta_theme_dir_url + "/assets/fonts/line-awesome.svg?v=1.1.#fa") format("svg");
     }
   }
-  $la-is-loaded: true;
+
   .la {
     @extend %la;
   }
+
 }
 
 %la {
-  //// Orig
-  //display: inline-block;
-  ////font: normal normal normal 14px/1 "LineAwesome";
-  //font-weight: normal;
-  //font-family: "LineAwesome";
-  //font-size: inherit;
-  //text-decoration: inherit;
-  //text-rendering: optimizeLegibility;
-  //text-transform: none;
-  //-moz-osx-font-smoothing: grayscale;
-  //-webkit-font-smoothing: antialiased;
-  //font-smoothing: antialiased;
-  //font-feature-settings: 'liga';
-  //vertical-align: baseline;
-  //text-align: center;
-
   font-feature-settings: 'liga';
-  //margin-top: -.32rem;
-  //margin-top: -.08rem;
-  //width: 1.2rem;
-  //line-height: 1rem;
   text-align: center;
-  display: inline-block;
-  font-family: "LineAwesome";
+  font-style: normal !important;
+  font-weight: 400 !important;
+
+  font-family: "LineAwesome", normal;
   text-rendering: optimizeLegibility;
   text-transform: none;
+
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
+
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   font-smoothing: antialiased;
-  // font-size: 1.12rem;
+
   backface-visibility: hidden;
   font-kerning: normal;
+
+  speak: none;
+
+  content: "\f000";
+
 }
 
 // Cheetsheet: https://icons8.com/line-awesome/cheatsheet

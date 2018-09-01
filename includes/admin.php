@@ -144,7 +144,7 @@ if (get_option('fresh_site')) {
 add_action('admin_print_scripts', function () {
   // Build/rebuild only when in editing post.
   if (get_current_screen() == 'edit') {
-    add_editor_style(tinsta_get_stylesheet('typography'));
+    add_editor_style(tinsta_get_stylesheet('editor'));
   }
   wp_enqueue_style('tinsta-admin', get_template_directory_uri() . '/assets/css/admin.css');
   wp_enqueue_script('tinsta-admin', get_template_directory_uri() . '/assets/js/admin.js', ['jquery']);
@@ -193,9 +193,9 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
     }
   }
 
-  if (!$sidebar) {
-    return [$object, $return, $instance];
-  }
+  //  if (!$sidebar) {
+  //    return [$object, $return, $instance];
+  //  }
 
   // New fields are added.
   $return = null;
