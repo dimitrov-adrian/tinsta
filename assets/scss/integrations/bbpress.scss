@@ -7,7 +7,7 @@ body.bbpress {
 
   
   span.bbp-admin-links a {
-    font-size: .9em;
+    font-size: .9rem;
     color: mix($region_root_color_foreground, $region_main_color_background, 50%);
     &:hover {
       color: $region_root_color_secondary;
@@ -23,7 +23,7 @@ body.bbpress {
   #bbpress-forums ul.bbp-forums,
   #bbpress-forums ul.bbp-replies,
   #bbpress-forums ul.bbp-search-results {
-    font-size: 1em;
+    font-size: 1rem;
   }
 
 
@@ -84,17 +84,17 @@ body.bbpress {
 
   #bbpress-forums .bbp-forum-info .bbp-forum-content,
   #bbpress-forums p.bbp-topic-meta {
-    font-size: .9em;
+    font-size: .9rem;
   }
 
   #bbpress-forums > #subscription-toggle .subscription-toggle {
-    font-size: .9em;
+    font-size: .9rem;
     @extend .button;
-    padding: 0 .2em;
-    line-height: 1.2em;
+    padding: 0 .2rem;
+    line-height: 1.2rem;
     vertical-align: middle;
     float: right;
-    margin-top: .8em;
+    margin-top: .8rem;
   }
 
   #bbpress-forums p.bbp-topic-meta img.avatar,
@@ -126,10 +126,10 @@ body.bbpress {
     background: rgba($region_root_color_foreground, .1);
     margin: 0;
     display: inline-block;
-    padding: 0 .4em;
+    padding: 0 .4rem;
     border: 1px solid rgba($region_root_color_foreground, .1);
     border-top: none;
-    font-size: .9em;
+    font-size: .9rem;
   }
 
   #bbpress-forums div.bbp-topic-tags {

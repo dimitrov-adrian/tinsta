@@ -107,7 +107,13 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
         dynamic_sidebar('tinsta-menu-' . $item->post_name);
         $widgets = ob_get_clean();
         if (trim($widgets)) {
-          $item_output = '<a href="javascript:void(0);" >' . $item->post_title . '</a><div class="sub-menu">' . $widgets . '</div>';
+          $item_output = '
+            <a href="javascript:void(0);" >' . $item->post_title . '</a>
+            <div class="sub-menu">
+              <div class="sub-menu-inner">
+                ' . $widgets . '
+              </div>
+            </div>';
         }
         else {
           return NULL;

@@ -14,16 +14,16 @@ $la-is-loaded: true;
   // allows customize the colors, and set background image.
   @if ( false ) {
     background :rgb(48, 73, 118);
-    padding: 2em;
+    padding: 2rem;
     @include roundness();
   } @else {
-    margin: 2em 0;
+    margin: 2rem 0;
   }
 
   .comments-heading {
     display: block;
     font-weight: bold;
-    margin: 2em;
+    margin: 2rem;
     text-align: center;
   }
 
@@ -33,8 +33,8 @@ $la-is-loaded: true;
   }
 
   .comments-toolbar {
-    margin-bottom: 1em;
-    padding-bottom: 1em;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
     text-align: right;
   }
 
@@ -43,13 +43,13 @@ $la-is-loaded: true;
 
     @media (min-width: 421px) {
       .children {
-        margin-left: 1em;
+        margin-left: 1rem;
       }
     }
 
     .comment {
 
-      margin-bottom: 2em;
+      margin-bottom: 2rem;
       clear: both;
       overflow: hidden;
 
@@ -59,7 +59,7 @@ $la-is-loaded: true;
           float: left;
           margin-right: 20px;
           @if ($component_comments_style == 'chat') {
-            margin-top: 2.50em; // the default comment-meta height
+            margin-top: 2.50rem; // the default comment-meta height
           }
         }
         @media (max-width: 420px) {
@@ -82,16 +82,16 @@ $la-is-loaded: true;
         }
         .comment-time {
           color: muted($region_root_color_foreground);
-          margin-left: 1em;
+          margin-left: 1rem;
         }
         .comment-edit-link,
         .comment-reply-link,
         .safe-comments-report-link {
           float: right;
-          margin-left: 1em;
+          margin-left: 1rem;
           @extend %small;
           &:not(:last-child) {
-            padding-left: 1em;
+            padding-left: 1rem;
           }
         }
         .comment-reply-link {
@@ -117,7 +117,7 @@ $la-is-loaded: true;
         @media (min-width: 421px) {
           margin-left: $component_avatar_size + 20px;
         }
-        margin-top: .8em;
+        margin-top: .8rem;
         @if ($component_comments_style == 'chat') {
           @include roundness();
           background-color: opa(muted($region_main_color_background, $region_root_color_foreground));
@@ -139,12 +139,12 @@ $la-is-loaded: true;
           background: muted($region_root_color_background);
           float: left;
           @extend %small;
-          padding: .3em;
+          padding: .3rem;
           text-align: center;
-          width: 7.4em;
+          width: 7.4rem;
         }
         .comment-pingback-content {
-          margin-left: 7.2em;
+          margin-left: 7.2rem;
           a {
             display: block;
           }
@@ -156,11 +156,11 @@ $la-is-loaded: true;
     @media (min-width: 421px) {
       .children {
         margin-left: $component_avatar_size + 20px;
-        @media (max-width: $region_root_breakpoint_tablet) {
+        @media (max-width: $breakpoint_max_tablet) {
           margin-left: ( $component_avatar_size - $component_avatar_size_small ) + px;
         }
         .comment {
-          margin-bottom: 1em;
+          margin-bottom: 1rem;
         }
         .comment-author-avatar {
           width: $component_avatar_size_small + px;
@@ -170,7 +170,7 @@ $la-is-loaded: true;
         }
         .children {
           margin-left: $component_avatar_size_small + 20px;
-          @media (max-width: $region_root_breakpoint_tablet) {
+          @media (max-width: $breakpoint_max_tablet) {
             margin-left: 0;
           }
         }
@@ -223,17 +223,17 @@ $la-is-loaded: true;
   .comment-respond {
 
     @extend %clearfix;
-    margin: 1em 0;
+    margin: 1rem 0;
     position: relative;
 
     .comment-notes {
       @extend %small;
-      margin: .6em 0;
+      margin: .6rem 0;
     }
 
     .form-allowed-tags {
       @extend %small;
-      margin: .6em 0;
+      margin: .6rem 0;
     }
 
     #cancel-comment-reply-link {
@@ -250,14 +250,14 @@ $la-is-loaded: true;
     .comment-form-avatar {
       float: left;
       width: $component_avatar_size + px;
-      @media (max-width: $region_root_breakpoint_tablet) {
+      @media (max-width: $breakpoint_max_tablet) {
         width: 64px;
       }
       img {
         display: block;
         height: auto;
       }
-      @media (max-width: $region_root_breakpoint_mobile) {
+      @media (max-width: $breakpoint_max_mobile) {
         float: right;
         width: 42px;
         margin-top: -52px;
@@ -269,17 +269,17 @@ $la-is-loaded: true;
 
     .comment-form {
       margin-left: $component_avatar_size + 10px;
-      @media (max-width: $region_root_breakpoint_tablet) {
+      @media (max-width: $breakpoint_max_tablet) {
         margin-left: 74px;
       }
-      @media (max-width: $region_root_breakpoint_mobile) {
+      @media (max-width: $breakpoint_max_mobile) {
         margin-left: 0;
         clear: both;
-        padding-top: 1em;
+        padding-top: 1rem;
       }
       //position: relative;
       overflow: hidden;
-      padding-bottom: 3em;
+      padding-bottom: 3rem;
 
       .logged-in-as,
       .comment-notes {
@@ -290,7 +290,7 @@ $la-is-loaded: true;
       p {
         label {
           display: inline-block;
-          width: 12em;
+          width: 12rem;
         }
       }
 
@@ -300,8 +300,8 @@ $la-is-loaded: true;
       }
 
       input[type="checkbox"] {
-        margin-right: .4em;
-        margin-top: -.2em;
+        margin-right: .4rem;
+        margin-top: -.2rem;
       }
 
       .comment-form-comment {
@@ -313,7 +313,7 @@ $la-is-loaded: true;
           height: $component_avatar_size + px;
           max-height: unset;
           min-height: $component_avatar_size + px;
-          @media (max-width: $region_root_breakpoint_tablet) {
+          @media (max-width: $breakpoint_max_tablet) {
             height: 64px;
             min-height: 64px;
           }
@@ -326,7 +326,7 @@ $la-is-loaded: true;
 
   .comments-list .comment-respond {
     @include border($region_root_color_foreground, '', 1);
-    padding: 1em;
+    padding: 1rem;
     &:before {
       border: 10px solid transparent;
       @include border($region_root_color_foreground, '-bottom', 10);

@@ -17,11 +17,11 @@ img.lazy-loaded {
  * Error 404 page
  */
 .error-content-wrapper {
-  margin: 2em auto;
-  max-width: $region_root_breakpoint_tablet;
-  min-width: $region_root_breakpoint_mobile;
+  margin: 2rem auto;
+  max-width: $breakpoint_max_tablet;
+  min-width: $breakpoint_min_tablet;
   width: 90%;
-  padding: 2em;
+  padding: 2rem;
   .site-info {
     @extend %base-title;
     text-align: right;
@@ -76,8 +76,8 @@ body.login {
   top: 0;
   right: 0;
   left: 0;
-  height: 3em;
-  line-height: 3em;
+  height: 3rem;
+  line-height: 3rem;
   background: $region_main_color_background;
   color: $region_root_color_foreground;
   font-weight: bold;
@@ -94,17 +94,17 @@ body.login {
 .mobile-menu {
   display: block !important;
   position: fixed !important;
-  top: 5em !important;
-  left: 2em !important;
-  right: 2em !important;
+  top: 5rem !important;
+  left: 2rem !important;
+  right: 2rem !important;
   overflow: auto !important;
-  width: calc(100% - 4em) !important;
-  max-height: calc(100% - 3em - 4em) !important;
+  width: calc(100% - 4rem) !important;
+  max-height: calc(100% - 3rem - 4rem) !important;
   z-index: $z-index-modal !important;
   transform: translate(0, 0) !important;
   box-shadow: 0 0 0 $region_root_width+px rgba(0, 0, 0, .76) !important;
   background: $region_root_color_background !important;
-  padding: 1em !important;
+  padding: 1rem !important;
   margin: 0 !important;
   @include roundness();
   &,
@@ -114,7 +114,7 @@ body.login {
   }
   li > a {
     @include border($region_root_color_foreground, '-bottom', 1);
-    padding: 1em;
+    padding: 1rem;
     text-align: unset;
   }
   .sub-menu {
@@ -128,8 +128,8 @@ body.login {
 .menu-item-type-tinsta-nav-menu-frontpage {
   .custom-logo {
     display: inline-block;
-    max-height: 1.6em;
-    max-width: 5em;
+    max-height: 1.6rem;
+    max-width: 5rem;
     height: auto;
     width: auto;
     vertical-align: middle;
@@ -138,9 +138,9 @@ body.login {
 .menu-item-type-tinsta-nav-menu-current-user {
   .avatar {
     display: inline-block;
-    height: 1.6em;
-    width: 1.6em;
-    margin-right: 1em;
+    height: 1.6rem;
+    width: 1.6rem;
+    margin-right: 1rem;
     vertical-align: bottom;
   }
 }
@@ -155,22 +155,22 @@ body.login {
     display: none;
     position: fixed;
     @if $component_scrolltop == 'bottom-right' {
-      bottom: 1.4em;
-      right: 2.4em;
+      bottom: 1.4rem;
+      right: 2.4rem;
     } @else if $component_scrolltop == 'bottom-left' {
-      bottom: 1.4em;
-      left: 2.4em;
+      bottom: 1.4rem;
+      left: 2.4rem;
     } @else if $component_scrolltop == 'top-right' {
-      top: 1.4em;
-      right: 2.4em;
+      top: 1.4rem;
+      right: 2.4rem;
     } @else if $component_scrolltop == 'top-left' {
-      top: 1.4em;
-      left: 2.4em;
+      top: 1.4rem;
+      left: 2.4rem;
     }
-    width: 2.4em;
-    height: 2.4em;
+    width: 2.4rem;
+    height: 2.4rem;
     overflow: hidden;
-    padding: .4em;
+    padding: .4rem;
     text-indent: 100px;
     background: $region_root_color_primary;
     color: $region_main_color_background;
@@ -182,8 +182,8 @@ body.login {
       top: 0;
       right: 0;
       width: 100%;
-      font-size: 1.6em;
-      line-height: 1.5em;
+      font-size: 1.6rem;
+      line-height: 1.5rem;
       text-align: center;
       text-indent: 0;
     }
@@ -198,7 +198,7 @@ body.login {
   clear: both;
   overflow: hidden;
   text-align: center;
-  margin: 2em auto;
+  margin: 2rem auto;
   max-width: 86%;
   @if $component_pagination_style == 'bold' {
     font-weight: bold;
@@ -222,7 +222,7 @@ body.login {
   color: muted($region_root_color_foreground);
   display: inline-block;
   position: relative;
-  padding: .4em .8em;
+  padding: .4rem .8rem;
   text-decoration: none;
   @if $component_pagination_style == 'bordered' {
     &:not(:last-child) {
@@ -247,18 +247,18 @@ body.login {
   &.next {
     text-transform: uppercase;
   }
-  @media (max-width: $region_root_breakpoint_mobile) {
+  @media (max-width: $breakpoint_max_mobile) {
     border-right: none !important;
   }
   &.prev:not(:last-child):before {
     @extend %la;
     content: $la-angle-left;
-    margin-top: -.24em; /* Magic number because the LineAwesome font */
+    margin-top: -.24rem; /* Magic number because the LineAwesome font */
   }
   &.next:not(:first-child):after {
     @extend %la;
     content: $la-angle-right;
-    margin-top: -.24em; /* Magic number because the LineAwesome font */
+    margin-top: -.24rem; /* Magic number because the LineAwesome font */
   }
 }
 
@@ -266,8 +266,8 @@ body.login {
  * Breadcrumbs Home > Path > To > Current Page
  */
 .breadcrumbs {
-  margin-top: 2em;
-  line-height: 2.4em;
+  margin-top: 2rem;
+  line-height: 2.4rem;
   color: inherit;
   .trail {
     @extend .breadcrumb-trail;
@@ -289,9 +289,9 @@ body.login {
     @extend %la;
     content: $la-angle-right;
     display: inline-block;
-    width: 1em;
-    margin: 0 .1em 0 .4em;
-    line-height: 1em;
+    width: 1rem;
+    margin: 0 .1rem 0 .4rem;
+    line-height: 1rem;
   }
   &:last-child {
     color: inherit;
@@ -316,6 +316,7 @@ body.login {
   z-index: $z-index-modal - 1;
   .dialog-inner {
     @include roundness();
+    @include shadow();
     position: absolute;
     top: 50%;
     left: 50%;
@@ -326,16 +327,16 @@ body.login {
     background-color: $region_main_color_background;
     color: $region_root_color_foreground;
     overflow: auto;
-    padding: 1em;
+    padding: 1rem;
     .content {
       max-height: 340px;
       overflow: auto;
     }
     .buttons {
-      margin-top: .8em;
+      margin-top: .8rem;
       text-align: center;
       button {
-        margin-right: 1em;
+        margin-right: 1rem;
       }
     }
   }
@@ -353,15 +354,15 @@ body.login {
   padding: 0;
   position: relative;
   width: 100%;
-  //margin-top: 2em;
-  //margin-bottom: 2em;
+  //margin-top: 2rem;
+  //margin-bottom: 2rem;
 
-  @media (min-width: $region_root_breakpoint_mobile) {
+  @media (min-width: $breakpoint_min_tablet) {
     background-color: $region_root_color_foreground;
     color: $region_main_color_background;
 
     &.extended {
-      margin-bottom: -3.08em;
+      margin-bottom: -3.08rem;
       margin-left: -10%;
       width: 120%;
     }
@@ -379,7 +380,7 @@ body.login {
     position: relative;
     z-index: 0;
 
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       opacity: .5;
     }
 
@@ -389,10 +390,10 @@ body.login {
   .breadcrumbs {
     left: 10px;
     position: absolute;
-    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
+    text-shadow: 0 0.1rem 2rem rgba(0, 0, 0, .2);
     top: 10px;
     width: 40%;
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       position: static;
       width: auto;
       margin-left: 10px;
@@ -418,13 +419,13 @@ body.login {
   .secondary {
     color: inherit;
     font-weight: bold;
-    padding: 1em 0.6em 1em 0;
+    padding: 1rem 0.6rem 1rem 0;
     position: absolute;
     right: 10px;
-    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
+    text-shadow: 0 0.1rem 2rem rgba(0, 0, 0, .2);
     top: 10px;
-    @media (max-width: $region_root_breakpoint_tablet) {
-      padding: .4em;
+    @media (max-width: $breakpoint_max_tablet) {
+      padding: .4rem;
       background-color: $region_main_color_background;
     }
   }
@@ -440,26 +441,26 @@ body.login {
     hyphens: manual;
     font-weight: bold;
     left: 50%;
-    line-height: 1.2em;
+    line-height: 1.2rem;
     padding: 0;
 
     text-align: center;
-    text-shadow: 0 0.1em 2em rgba(0, 0, 0, .2);
+    text-shadow: 0 0.1rem 2rem rgba(0, 0, 0, .2);
     width: 84%;
     margin: 0 auto;
     z-index: 10;
 
-    @media (min-width: $region_root_breakpoint_tablet) {
-      font-size: 3em;
+    @media (min-width: $breakpoint_max_tablet) {
+      font-size: 3rem;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       width: 90%;
-      font-size: 2.5em;
-      margin-bottom: 1em;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
 
   }
@@ -473,8 +474,8 @@ body.login {
   background-color: #eeeeee;
   border: 2px solid #e3e3e3;
   color: #777;
-  margin: 2em auto;
-  padding: 1.6em;
+  margin: 2rem auto;
+  padding: 1.6rem;
   text-align: center;
   @include roundness();
 }
@@ -504,8 +505,8 @@ body.login {
   border-right: none;
   border-top: none;
   border-left-width: 2px;
-  margin: 2em auto;
-  padding: 1.6em;
+  margin: 2rem auto;
+  padding: 1.6rem;
   text-align: inherit;
   border-radius: 0;
 }
@@ -513,23 +514,45 @@ body.login {
 /**
  * Agreement
  */
-#site-enter-agreement .dialog-inner {
-  @if $component_site_agreement_style == 'top'  {
-    top: 1em;
-    bottom: unset;
-    transform: translate(-50%, 0);
-  } @else if $component_site_agreement_style == 'bottom'  {
-    top: unset;
-    bottom: 1em;
-    transform: translate(-50%, 0);
-  } @else if $component_site_agreement_style == 'bottomfull'  {
-    max-width: unset;
-    min-width: unset;
-    width: 100%;
-    top: unset;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: unset;
+#site-enter-agreement {
+  @if $component_site_agreement_style == 'top' {
+    .dialog-inner {
+      top: 1rem;
+      bottom: unset;
+      transform: translate(-50%, 0);
+    }
+  } @else if $component_site_agreement_style == 'bottom' {
+    .dialog-inner {
+      top: unset;
+      bottom: 1rem;
+      transform: translate(-50%, 0);
+    }
+  } @else if $component_site_agreement_style == 'bottomfull' {
+    background: none;
+    .dialog-inner {
+      @include border($region_root_color_foreground, '-top');
+      max-width: unset;
+      min-width: unset;
+      width: 100%;
+      top: unset;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: unset;
+    }
+  } @else if $component_site_agreement_style == 'topfull' {
+    background: none;
+    .dialog-inner {
+      @include border($region_root_color_foreground, '-bottom');
+      max-width: unset;
+      min-width: unset;
+      width: 100%;
+      top: 0;
+      bottom: unset;
+      left: 0;
+      right: 0;
+      transform: unset;
+    }
   }
+
 }

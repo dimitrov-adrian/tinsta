@@ -25,7 +25,7 @@
     if (!cssSupports('display', 'flex')) {
       ( function () {
         var script = document.createElement('script');
-        script.setAttribute('src', tinsta.assetsDir + 'scripts/flexibility.min.js');
+        script.setAttribute('src', tinsta.assetsDir + 'js/flexibility.min.js');
         script.setAttribute('async', 'async');
         document.body.appendChild(script);
       }() );
@@ -35,7 +35,7 @@
     if (!cssSupports('position', 'sticky')) {
       ( function () {
         var script = document.createElement('script');
-        script.setAttribute('src', tinsta.assetsDir + 'scripts/sticky.min.js');
+        script.setAttribute('src', tinsta.assetsDir + 'js/sticky.min.js');
         script.setAttribute('async', 'async');
         document.body.appendChild(script);
       }() );
@@ -213,7 +213,16 @@
    *  Agree accepted.
    */
   (function () {
-    if (!localStorage.getItem('agreeAccepted')) {
+    var shouldShowAgreeDialog = !localStorage.getItem('agreeAccepted');
+    if (window.hasOwnProperty('tinstaCustomized')) {
+      shouldShowAgreeDialog = ( window.tinstaCustomized.hasOwnProperty('component_site_agreement_enable') && window.tinstaCustomized.component_site_agreement_enable )
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_style')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_text')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_agree_button')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_url')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_title');
+    }
+    if (shouldShowAgreeDialog) {
       var siteAgreementDialog = document.getElementById('site-enter-agreement');
       if (!siteAgreementDialog) {
         return;

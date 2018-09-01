@@ -11,17 +11,17 @@
     @extend %base-title;
 
     margin: 0;
-    padding-bottom: .6em;
+    padding-bottom: .6rem;
 
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       border: none !important;
       text-align: center;
-      padding: .6em;
-      margin: .6em 0;
+      padding: .6rem;
+      margin: .6rem 0;
     }
   }
 
-  margin-bottom: 2em;
+  margin-bottom: 2rem;
 
   > ul {
     margin: 0;
@@ -33,7 +33,7 @@
     }
   }
 
-  @media (max-width: $region_root_breakpoint_mobile) {
+  @media (max-width: $breakpoint_max_mobile) {
     float: none;
     max-width: none;
     width: auto !important;
@@ -78,20 +78,20 @@
       @extend %base-title;
       color: inherit;
       font-variant: small-caps;
-      font-size: 2.8em;
-      letter-spacing: -.04em;
-      line-height: 1em;
-      padding: .1em 0;
+      font-size: 2.8rem;
+      letter-spacing: -.04rem;
+      line-height: 1rem;
+      padding: .1rem 0;
       text-decoration: none;
     }
   }
   .logo-site-description {
     @extend %small;
-    padding: 0 .6em;
+    padding: 0 .6rem;
     opacity: $typography_brightness / 100;
   }
-  @media (max-width: $region_root_breakpoint_tablet) {
-    margin: 1em;
+  @media (max-width: $breakpoint_max_tablet) {
+    margin: 1rem;
   }
 }
 
@@ -101,6 +101,10 @@
 .widget_media_image {
   img {
     display: block;
+    @media ( max-width: $breakpoint_max_tablet ) {
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }
 
@@ -117,7 +121,7 @@
     }
     a {
       display: inline-block;
-      padding: .4em 0;
+      padding: .4rem 0;
     }
   }
 }
@@ -131,10 +135,9 @@
     width: 100%;
   }
 }
-
 .widget_nav_menu {
   a {
-    padding: .4em 0;
+    padding: .4rem 0;
   }
 }
 
@@ -144,7 +147,7 @@
 .widget_recent_entries,
 .widget_recent_comments {
   li {
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
   }
 }
 
@@ -157,7 +160,7 @@
     a {
       display: inline-block;
       vertical-align: middle;
-      line-height: 1em;
+      line-height: 1rem;
     }
   }
 }
@@ -197,7 +200,7 @@
     font-variant: all-small-caps;
   }
   .rssSummary {
-    padding: 1em 0;
+    padding: 1rem 0;
   }
   cite {
     display: block;
@@ -237,12 +240,12 @@
       position: absolute;
       color: inherit;
       top: 50%;
-      margin-top: -.7em;
-      left: .5em;
-      height: 1.4em;
-      width: 1em;
-      line-height: 1.4em;
-      font-size: 1.4em;
+      margin-top: -.7rem;
+      left: .5rem;
+      height: 1.4rem;
+      width: 1rem;
+      line-height: 1.4rem;
+      font-size: 1.4rem;
       vertical-align: middle;
       text-align: center;
     }
@@ -251,7 +254,7 @@
     @include roundness();
     border: none !important;
     box-sizing: border-box;
-    padding: .4em .6em .4em 2.8em;
+    padding: .4rem .6rem .4rem 2.8rem;
     width: 100%;
     background-color: rgba($region_root_color_foreground, .5) !important;
     &:focus {
@@ -273,7 +276,7 @@
   .login-password {
     label {
       font-weight: bold;
-      min-width: 14em;
+      min-width: 14rem;
       max-width: 100%;
       display: inline-block;
     }
@@ -288,45 +291,10 @@
   // Only when in header
   .site-header & {
     .menu {
-      @include horizontalMenu();
+      @include horizontalMenu($region_header_color_foreground, $region_header_color_background);
     }
   }
 }
-
-//// Header menu.
-//@media (min-width: $region_root_breakpoint_tablet) {
-//  .site-header {
-//    .depth-0 > .sub-menu {
-//      // This doesn't works if parent element isn't relative.
-//      //transform: translateX(-50%);
-//      //left: 50%;
-//      @include roundness('', 0.5);
-//      &:before {
-//        content: '';
-//        position: absolute;
-//        //left: 50%;
-//        top: -5px;
-//        margin-left: 2em;
-//        width: 0;
-//        height: 0;
-//        border-left: 5px solid transparent;
-//        border-right: 5px solid transparent;
-//        border-bottom: 5px solid $region_main_color_background;
-//      }
-//    }
-//  }
-//
-//  .is-tinsta-mega-submenus {
-//    > li > a {
-//      font-weight: bold;
-//    }
-//    > li > .sub-menu {
-//      margin-left: 0;
-//      min-width: 6em;
-//    }
-//  }
-//
-//}
 
 
 /**
@@ -340,9 +308,9 @@
       &:before {
         @extend %la;
         content: $la-user;
-        margin-right: .6em;
+        margin-right: .6rem;
       }
-      margin-left: .4em;
+      margin-left: .4rem;
     }
     &.style-icon,
     &.style-avatar {
@@ -352,7 +320,7 @@
       display: inline-block;
       max-width: 48px;
       max-height: 48px;
-      margin-right: 1em;
+      margin-right: 1rem;
       vertical-align: middle;
     }
   }

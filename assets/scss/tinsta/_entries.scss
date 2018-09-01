@@ -1,6 +1,6 @@
 .entries-no-result {
   @extend %bigger;
-  margin: 3em 0;
+  margin: 3rem 0;
   text-align: center;
 }
 
@@ -10,8 +10,8 @@
 
 .site-entries {
 
-  margin-top: 1em;//@TODO
-  margin-bottom: 1em;//@TODO this adds extra space at bottom which is an issue.
+  margin-top: 1rem;//@TODO
+  margin-bottom: 1rem;//@TODO this adds extra space at bottom which is an issue.
 
   // Shared.
   .hentry {
@@ -32,9 +32,9 @@
       clear: both;
       width: 100%;
       text-align: center;
-      margin-top: 2em;
-      margin-bottom: 2em;
-      padding: 2em 0 1em 0;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      padding: 2rem 0 1rem 0;
       @extend %clearfix;
       @include border($region_root_color_foreground, '-top', 1);
       @include roundness();
@@ -68,7 +68,7 @@
     .entry-meta {
       color: muted($region_root_color_foreground);
       > * {
-        margin-right: 1em;
+        margin-right: 1rem;
         display: inline-block;
       }
     }
@@ -147,16 +147,16 @@
     .hentry.default {
 
       .entry-thumbnail-wrapper {
-        margin-bottom: 2em;
+        margin-bottom: 2rem;
       }
 
       .entry-header {
-        margin: 2em 0 1em 0;
+        margin: 2rem 0 1rem 0;
       }
 
       .entry-meta {
-        margin: 1em 0;
-        padding-bottom: 1em;
+        margin: 1rem 0;
+        padding-bottom: 1rem;
         @include border($region_root_color_foreground, '-bottom', 1);
       }
 
@@ -165,12 +165,12 @@
       }
 
       .entry-content:not(:last-child) {
-        margin-bottom: 2em;
+        margin-bottom: 2rem;
       }
 
       .entry-footer {
-        padding: 1em 0;
-        margin-top: 2em;
+        padding: 1rem 0;
+        margin-top: 2rem;
         @include border($region_root_color_foreground, '-top', 1);
       }
 
@@ -216,12 +216,12 @@
         }
       }
 
-      @media (min-width: $region_root_breakpoint_tablet) {
+      @media (min-width: $breakpoint_min_tablet) {
         &.layout-left-thumbnail {
           .entry-header {
             @extend %clearfix;
           }
-          margin-top: 2em;
+          margin-top: 2rem;
           .entry-thumbnail-wrapper {
             float: left;
             width: 40%;
@@ -235,7 +235,7 @@
           .entry-header {
             @extend %clearfix;
           }
-          margin-top: 2em;
+          margin-top: 2rem;
           .entry-thumbnail-wrapper {
             float: right;
             width: 40%;
@@ -253,15 +253,15 @@
   &.site-entries-archive {
 
     .hentry.default {
-      margin-top: 2em;
-      margin-bottom: 2em;
-      padding-bottom: 1em;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
       @include border($region_root_color_foreground, '-bottom', 1);
 
       &.sticky {
         @include border(muted($region_root_color_primary));
         background-color: opa(muted($region_root_color_primary));
-        padding: .6em 1em;
+        padding: .6rem 1rem;
       }
 
       .entry-meta {
@@ -271,7 +271,7 @@
       // Layout.
       &.layout-boxes {
 
-        @media (min-width: $region_root_breakpoint_tablet+1) {
+        @media (min-width: $breakpoint_min_tablet) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -279,7 +279,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $region_root_breakpoint_tablet) {
+        @media (max-width: $breakpoint_max_tablet) {
           width: 48%;
           &:not(:nth-child(2n+2)) {
             margin-right: 2%;
@@ -295,7 +295,7 @@
         }
         .entry-header,
         .entry-summary {
-          margin: 1em;
+          margin: 1rem;
         }
 
         //body.effects & {
@@ -312,7 +312,7 @@
 
         text-align: center;
 
-        @media (min-width: $region_root_breakpoint_tablet+1) {
+        @media (min-width: $breakpoint_min_tablet) {
           width: 23.12%;
           &:not(:nth-child(4n+4)) {
             margin-right: 2%;
@@ -320,7 +320,7 @@
           display: inline-block;
         }
 
-        @media (max-width: $region_root_breakpoint_tablet) {
+        @media (max-width: $breakpoint_max_tablet) {
           width: 31.5%;
           &:not(:nth-child(3n+3)) {
             margin-right: 2%;
@@ -330,15 +330,15 @@
 
         vertical-align: top;
         @include border($region_root_color_foreground);
-        min-height: 10em;
+        min-height: 10rem;
 
         .entry-thumbnail-wrapper img {
           width: 100%;
         }
         .entry-header {
-          margin: 1em;
+          margin: 1rem;
           .entry-title {
-            font-size: 1.2em;
+            font-size: 1.2rem;
           }
         }
         .entry-meta,
@@ -388,17 +388,17 @@
 
       // Layout.
       &.layout-timeline {
-        margin-left: 10em;
+        margin-left: 10rem;
         margin-top: 0;
         margin-bottom: 0;
         &:first-child {
-          margin-top: 2em;
+          margin-top: 2rem;
         }
         &:last-child {
-          margin-bottom: 2em;
+          margin-bottom: 2rem;
         }
         position: relative;
-        padding: 1em;
+        padding: 1rem;
         @include border($region_root_color_foreground, '-left', 1);
         border-top: none;
         border-right: none;
@@ -410,13 +410,13 @@
           position: absolute;
           transform: translateX(-100%);
           left: 0;
-          padding: 0 1em;
+          padding: 0 1rem;
         }
         .entry-meta-time {
-          top: 1em;
-          line-height: 1.2em;
-          width: 10em;
-          padding: .2em 1em;
+          top: 1rem;
+          line-height: 1.2rem;
+          width: 10rem;
+          padding: .2rem 1rem;
           text-align: right;
         }
         .entry-thumbnail-wrapper {
@@ -424,7 +424,7 @@
         }
         .entry-meta-author {
           @include border($region_root_color_foreground, '-bottom', 1);
-          top: 1em;
+          top: 1rem;
           right: 0;
           left: auto;
           transform: translate(0, 0);

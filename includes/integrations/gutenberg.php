@@ -1,38 +1,41 @@
 <?php
 
-/**
- * Gutenberg compatibility.
- *
- * @package    Compatibility
- * @subpackage Gutenberg
- * @category   Core
- * @author     GoDaddy
- * @since      1.8.5
- */
-
-/**
- * Enable Gutenberg features.
- *
- * @since 1.8.5
- */
 add_action( 'after_setup_theme', function () {
 
+  // Adding support for core block visual styles.
   add_theme_support( 'wp-block-styles' );
+
+  // Add support for full and wide align images.
   add_theme_support( 'align-wide' );
 
-});
+  // Add support for custom color scheme.
+  add_theme_support( 'editor-color-palette', [
+    [
+      'name' => __('Background Color', 'tinsta'),
+      'slug' => 'region_root_color_background',
+      'color' => get_theme_mod('region_root_color_background'),
+    ],
+    [
+      'name' => __('Foreground Color', 'tinsta'),
+      'slug' => 'region_root_color_foreground',
+      'color' => get_theme_mod('region_root_color_foreground'),
+    ],
+    [
+      'name' => __('Primary Color', 'tinsta'),
+      'slug' => 'region_root_color_primary',
+      'color' => get_theme_mod('region_root_color_primary'),
+    ],
+    [
+      'name' => __('Secondary Color', 'tinsta'),
+      'slug' => 'region_root_color_secondary',
+      'color' => get_theme_mod('region_root_color_secondary'),
+    ],
 
-/**
- * Enqueue styles for Gutenberg editor.
- *
- * @since 1.8.5
- */
-add_action( 'enqueue_block_editor_assets', function () {
+    'region_root_color_background' => '#ffffff',
+    'region_root_color_foreground' => '#222222',
+    'region_root_color_primary' => '#4285f4',
+    'region_root_color_secondary' => '#e55a19',
 
-  global $post;
-
-  $suffix = SCRIPT_DEBUG ? '' : '.min';
-
-  wp_enqueue_style( 'primer-gutenberg-editor', get_template_directory_uri() . "/assets/css/admin/gutenberg-editor{$suffix}.css", true, defined( 'PRIMER_CHILD_VERSION' ) ? PRIMER_CHILD_VERSION : PRIMER_VERSION, 'all' );
+  ]);
 
 });

@@ -335,8 +335,8 @@ function tinsta_get_options_defaults()
     'typography_text_enhancements' => false,
 
     // Regions
-    'region_root_breakpoint_tablet' => '920px',
-    'region_root_breakpoint_mobile' => '568px',
+    'region_root_breakpoint_tablet' => '960px',
+    'region_root_breakpoint_mobile' => '768px',
     'region_root_height_full' => true,
     'region_root_width' => 980,
     'region_root_color_background' => '#ffffff',

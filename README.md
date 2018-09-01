@@ -8,8 +8,8 @@
 
 ![](https://raw.githubusercontent.com/dimitrov-adrian/tinsta/master/screenshot.png)
 
-Tinsta (as from Tiny Standard) is free OpenSource WordPress theme, that aims to provide very standard web site layout with a lot of 
-customization options.
+Tinsta (as from Tiny Standard) is free open source WordPress theme, that aims to provide 
+very standard web site layout with a lot of customization options.
 
 ##
 ### Requirements
@@ -20,7 +20,8 @@ customization options.
 ### wp-config.php constants
 
 ##### Setup directory to store cache css files
-`TINSTA_STYLESHEET_CACHE_DIR` constant should be relative to `WP_CONTENT_DIR` and **must** starts with slash
+`TINSTA_STYLESHEET_CACHE_DIR` constant should be relative to `WP_CONTENT_DIR` and **must** 
+starts with slash.
 ```php
 define('TINSTA_STYLESHEET_CACHE_DIR', '/cache/tinsta/css');
 ```
@@ -68,9 +69,10 @@ Anyway, the theme can integrate with some of these plugins very well,
 so you can pick the plugin you are familiar with it and do the job.
 
 ##### Why no per post type or page sidebars (widget areas), how can manage different widgets in same sidebars
-Adding variants to sidebar per post_type or type family will be very limited way to managing widgets. Using plugin that provide widget logic is more flexible way to do the goal.
-There is plenty of good solutions for this, so right now there is no reason to reinvent the wheel.
-Check some of the **Widget Logic** recommentations, and pick by your choice.
+Adding variants to sidebar per post_type or type family will be very limited way to managing widgets.
+Using plugin that provide widget logic is more flexible way to do the goal. There is plenty of good 
+solutions for this, so right now there is no reason to reinvent the wheel. Check some of the 
+**Widget Logic** recommentations, and pick by your choice.
 
 
 ### Want to extend. Plugins recommendation list.
@@ -134,7 +136,8 @@ Chrome's **Disable cache** option in dev panel)
 
 ## 
 ### License & Terms 
-Tinsta theme is available under the terms of the [GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. 
+Tinsta theme is available under the terms of the
+[GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. 
 
 The theme come bundled with following third-party resources:
 

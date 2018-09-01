@@ -147,7 +147,7 @@ add_action('admin_print_scripts', function () {
     add_editor_style(tinsta_get_stylesheet('typography'));
   }
   wp_enqueue_style('tinsta-admin', get_template_directory_uri() . '/assets/css/admin.css');
-  wp_enqueue_script('tinsta-admin', get_template_directory_uri() . '/assets/scripts/admin.js', ['jquery']);
+  wp_enqueue_script('tinsta-admin', get_template_directory_uri() . '/assets/js/admin.js', ['jquery']);
   wp_localize_script('tinsta-admin', 'tinsta', [
     'palette' => array_values(tinsta_get_color_palette()),
   ]);

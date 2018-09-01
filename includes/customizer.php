@@ -7,6 +7,15 @@
 
 
 /**
+ * Enqueue scripts and styles.
+ */
+add_action('wp_enqueue_scripts', function () {
+  if ( is_customize_preview() && !empty($_POST['customized']) ) {
+    wp_localize_script('tinsta', 'tinstaCustomized', json_decode(wp_unslash($_POST['customized']), true));
+  }
+});
+
+/**
  * Setup base region setting controls
  *
  * @param \WP_Customize_Manager
@@ -414,7 +423,7 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_region_root',
     'type'        => 'number',
     'input_attrs' => [
-      'min'   => 400,
+      'min'   => 720,
       'max'   => 1440,
       'step'  => 1,
       'style' => 'width:6em;',
@@ -422,24 +431,28 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   $wp_customize->add_control('region_root_breakpoint_tablet', [
     'label'   => __('Tablet Breakpoint', 'tinsta'),
+    'description' => __('Upper boundary to switch tablet view.', 'tinsta'),
     'section' => 'tinsta_region_root',
     'type'    => 'select',
     'choices' => [
+      '1100px' => '1100px',
+      '1024px' => '1024px',
       '960px' => '960px',
       '920px' => '920px',
       '800px' => '800px',
-      '720px' => '720px',
     ],
   ]);
   $wp_customize->add_control('region_root_breakpoint_mobile', [
     'label'   => __('Mobile Breakpoint', 'tinsta'),
+    'description' => __('Upper boundary to switch mobile view.', 'tinsta'),
     'section' => 'tinsta_region_root',
     'type'    => 'select',
     'choices' => [
+      '768px' => '768px',
+      '720px' => '720px',
       '640px' => '640px',
       '568px' => '568px',
       '480px' => '480px',
-      '320px' => '320px',
     ],
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'root');
@@ -725,14 +738,15 @@ add_action('customize_register', function ($wp_customize) {
     'type'    => 'checkbox',
   ]);
   $wp_customize->add_control('component_site_agreement_style', [
-    'label'   => __('Position', 'tinsta'),
+    'label'   => __('Style', 'tinsta'),
     'section' => 'tinsta_component_site_agreement',
     'type'    => 'select',
     'choices' => [
       'center' => __('Center', 'tinsta'),
-      'top' => __('Top', 'tinsta'),
-      'bottom' => __('Bottom', 'tinsta'),
-      'bottomfull' => __('Bottom - Full Width', 'tinsta'),
+      'top' => __('Top, Modal', 'tinsta'),
+      'topfull' => __('Top, Full Width', 'tinsta'),
+      'bottom' => __('Bottom, Modal', 'tinsta'),
+      'bottomfull' => __('Bottom, Full Width', 'tinsta'),
     ],
   ]);
   $wp_customize->add_control('component_site_agreement_text', [

@@ -20,6 +20,27 @@ add_action('template_redirect', function () {
     exit;
   }
 
+  // Simple ajax search.
+  if (!empty($_GET['tinsta-ajax-search'])) {
+    $posts = get_posts([
+      's' => $_GET['tinsta-ajax-search'],
+      'posts_per_page' => 10,
+    ]);
+    if ($posts) {
+      echo '<ul>';
+      foreach ($posts as $post) {
+        echo '<li><a href="';
+        the_permalink($post);
+        echo '">' . $post->post_title . '</a></li>';
+      }
+      echo '</ul>';
+    }
+    else {
+      header('HTTP/1.0 404 Not Found');
+    }
+    exit;
+  }
+
 });
 
 /**
@@ -147,25 +168,25 @@ add_action('wp_footer', function () {
 add_action('wp_enqueue_scripts', function () {
 
   // https://github.com/aFarkas/html5shiv
-  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/scripts/html5shiv.min.js', [], '3.7.3');
+  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/js/html5shiv.min.js', [], '3.7.3');
   wp_script_add_data('html5shiv', 'conditional', 'lte IE 8');
 
   // https://github.com/corysimmons/selectivizr2
-  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/scripts/selectivizr2.min.js', [], '1.0.9');
+  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/js/selectivizr2.min.js', [], '1.0.9');
   wp_script_add_data('selectivizr', 'conditional', 'lte IE 8');
 
   // Seems that this make more mess than benefits, it cause 403 (Forbidden)
   // https://github.com/LeaVerou/prefixfree
-  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/scripts/prefixfree.min.js', [], '1.0.7');
+  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/js/prefixfree.min.js', [], '1.0.7');
   wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
 
   // Rem polyfill
   // https://github.com/nbouvrette/remPolyfill
-  wp_enqueue_script('remPolyfill', get_template_directory_uri() . '/assets/scripts/remPolyfill.js', [], '1.0.0');
+  wp_enqueue_script('remPolyfill', get_template_directory_uri() . '/assets/js/remPolyfill.js', [], '1.0.0');
   wp_script_add_data('remPolyfill', 'conditional', 'lte IE 8');
 
   // Respond.js v1.4.2: min/max-width media query polyfill
-  wp_enqueue_script('respondjs', get_template_directory_uri() . '/assets/scripts/respond.min.js', [], '1.4.2');
+  wp_enqueue_script('respondjs', get_template_directory_uri() . '/assets/js/respond.min.js', [], '1.4.2');
   wp_script_add_data('respondjs', 'conditional', 'lte IE 8');
 
   // Tinsta theme hash.
@@ -195,16 +216,16 @@ add_action('wp_enqueue_scripts', function () {
 
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_smooth_scroll')) {
-    wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/scripts/smoothscroll.min.js', [], '1.4.6', true);
+    wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/js/smoothscroll.min.js', [], '1.4.6', true);
   }
 
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_lazyload')) {
-    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/scripts/lazyload.js', [], '1.0', true);
+    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/js/lazyload.js', [], '1.0', true);
   }
 
   // Theme's script.
-  wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/scripts/main.js', [], wp_get_theme()->get('Version'), true);
+  wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/js/main.js', [], wp_get_theme()->get('Version'), true);
   wp_localize_script('tinsta', 'tinsta', [
     'siteUrl' => home_url(),
     'assetsDir' => get_template_directory_uri() . '/assets/',
@@ -222,7 +243,7 @@ add_action('wp_enqueue_scripts', function () {
     ],
   ]);
 
-  // Comment respond form reply script.
+    // Comment respond form reply script.
   if (is_singular()) {
     if (have_comments() || comments_open() || intval(get_comments_number()) > 0) {
       // Enqueue stylesheets.
@@ -487,15 +508,30 @@ add_action('pre_get_posts', function ($query) {
       }
     }
 
-    $post_type = $query->get('post_type');
-    if ( !$post_type && is_home() ) {
-      $post_type = 'post';
-    }
-    $per_page = get_theme_mod("post_type_{$post_type}_archive_per_page", 0);
-    if ($per_page) {
-      $query->set('posts_per_page', $per_page);
+    if ( !is_search() ) {
+
+      $post_type = $query->get('post_type');
+      if (!$post_type && is_home()) {
+        $post_type = 'post';
+      }
+      $per_page = get_theme_mod("post_type_{$post_type}_archive_per_page", 0);
+      if ($per_page) {
+        $query->set('posts_per_page', $per_page);
+      }
+
     }
 
   }
 
+});
+
+/**
+ * Modifies tag cloud widget arguments to display all tags in the same font size
+ * and use list format for better accessibility.
+ */
+add_filter('widget_tag_cloud_args', function ( $args ) {
+  $args['largest']  = 2;
+  $args['smallest'] = 0.5;
+  $args['unit']     = 'rem';
+  return $args;
 });

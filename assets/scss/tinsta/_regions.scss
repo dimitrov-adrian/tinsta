@@ -27,7 +27,7 @@ body {
   @extend %small;
 
   @if $region_topline_sticky {
-    @media (min-width: $region_root_breakpoint_tablet) {
+    @media (min-width: $breakpoint_min_tablet) {
       position: sticky;
       left: 0;
       right: 0;
@@ -77,7 +77,7 @@ body {
     }
   }
 
-  @media (max-width: $region_root_breakpoint_tablet) {
+  @media (max-width: $breakpoint_max_tablet) {
     text-align: center;
   }
 
@@ -102,7 +102,7 @@ body {
 
   // Sticky header tweaks.
   @if $region_header_sticky {
-    @media (min-width: $region_root_breakpoint_tablet) {
+    @media (min-width: $breakpoint_min_tablet) {
       position: sticky;
       left: 0;
       right: 0;
@@ -147,7 +147,7 @@ body {
       padding-right: 1rem;
     }
 
-    @media (max-width: $region_root_breakpoint_mobile) {
+    @media (max-width: $breakpoint_max_mobile) {
       flex-flow: column;
       // Reset user defined (from Customizer) padding from top and bottom.
       padding-top: 0;
@@ -175,7 +175,7 @@ body {
   .widget {
     display: inline-block;
     margin: 1rem 0;
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       margin: 1rem;
     }
   }
@@ -189,27 +189,27 @@ body {
 .site-primary-menu-wrapper {
 
   // All menus in header should be inlined.
-  //@media (max-width: $region_root_breakpoint_tablet -1) {
-  //  &:before,
-  //  &:after {
-  //    content: '';
-  //    position: absolute;
-  //    top: 0;
-  //    width: 1rem;
-  //    background: #000;
-  //    bottom: 0;
-  //    display: block;
-  //    z-index: 10;
-  //  }
-  //  &:before {
-  //    left: 0;
-  //    background: linear-gradient(to left, transparent , rgba(0,0,0,.25));
-  //  }
-  //  &:after {
-  //    right: 0;
-  //    background: linear-gradient(to right, transparent , rgba(0,0,0,.25));
-  //  }
-  //}
+  @media (max-width: $breakpoint_max_tablet ) {
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 1rem;
+      background: #000;
+      bottom: 0;
+      display: block;
+      z-index: 10;
+    }
+    &:before {
+      left: 0;
+      background: linear-gradient(to left, transparent , rgba(0,0,0,.25));
+    }
+    &:after {
+      right: 0;
+      background: linear-gradient(to right, transparent , rgba(0,0,0,.25));
+    }
+  }
 
   @extend %clearfix;
   position: relative;
@@ -240,46 +240,7 @@ body {
     @if $region_primary_menu_aligncenter {
       text-align: center;
     }
-
-    @include horizontalMenu();
-
-    //.depth-0 {
-    //  text-align: initial;
-    //  display: inline-block;
-    //  > a {
-    //    padding: 1rem;
-    //  }
-    //  > .sub-menu {
-    //    display: none;
-    //    position: absolute;
-    //    background-color: $region_main_color_background;
-    //  }
-    //  @media (min-width: $region_root_breakpoint_tablet) {
-    //    &:hover {
-    //      background-color: $region_main_color_background;
-    //      a {
-    //        color: $region_root_color_foreground;
-    //      }
-    //      > .sub-menu {
-    //        display: block;
-    //      }
-    //    }
-    //  }
-  //      display: table-cell;
-  //      > .sub-menu {
-  //        margin-left: auto;
-  //        @include roundness('bottom', 0.5);
-  //        //.widget {
-  //        //  display: table-cell;
-  //        //}
-  //      }
-  //
-  //      &.menu-item-type-tinsta-nav-menu-widget-area:hover > .sub-menu {
-  //        display: flex;
-  //      }
-  //
-  //    }
-  //  }
+    @include horizontalMenu($region_primary_menu_color_foreground, $region_primary_menu_color_background);
   }
 }
 
@@ -318,7 +279,7 @@ body {
     margin-left: auto;
     margin-right: auto;
 
-    @media (min-width: $region_root_breakpoint_tablet) {
+    @media (min-width: $breakpoint_min_tablet) {
       @if ($region_main_color_background_opacity < 100 or $region_main_color_background != $region_root_color_background) {
         @if not $has_different_primary_sidebar {
           padding-left: 1rem;
@@ -341,7 +302,7 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
 
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       width: 96%;
       margin-left: 2%;
       margin-right: 2%;
@@ -362,7 +323,7 @@ body {
         padding-right: 1rem;
       }
 
-      @media (max-width: $region_root_breakpoint_tablet) {
+      @media (max-width: $breakpoint_max_tablet) {
         order: 1;
         width: auto !important;
         padding: 0;
@@ -388,7 +349,7 @@ body {
       padding-bottom: 2rem;
       padding-top: 2rem;
 
-      @media (max-width: $region_root_breakpoint_tablet) {
+      @media (max-width: $breakpoint_max_tablet) {
         margin-top: 1rem;
         margin-bottom: 1rem;
         width: auto !important;
@@ -396,7 +357,7 @@ body {
 
       &.sidebar-primary {
         order: 0;
-        @media (max-width: $region_root_breakpoint_tablet) {
+        @media (max-width: $breakpoint_max_tablet) {
           order: 2;
         }
 
@@ -508,11 +469,11 @@ body {
       background-color: rgba($region_footer_color_foreground, .1);
     }
 
-    @media (max-width: $region_root_breakpoint_tablet) {
+    @media (max-width: $breakpoint_max_tablet) {
       margin-bottom: 0;
     }
 
-    @media (max-width: $region_root_breakpoint_mobile) {
+    @media (max-width: $breakpoint_max_mobile) {
       flex-flow: column;
       display: block;
       width: 100%;
@@ -524,7 +485,7 @@ body {
   .widgettitle {
     @include border($region_footer_color_foreground, '-bottom');
     margin: 0 0 .8rem 0;
-    padding: .8em 0;
+    padding: .8rem 0;
     text-align: center;
     font-weight: bold;
   }
