@@ -24,7 +24,7 @@
 
 <?php if ( $bottomline_text = trim(get_theme_mod('component_site_bottomline')) ): ?>
   <footer role="complementary" class="site-bottomline-wrapper">
-    <div class="site-wrapper">
+    <div class="site-bottomline">
       <?php echo do_shortcode($bottomline_text)?>
     </div>
   </footer>

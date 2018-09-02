@@ -27,8 +27,6 @@ class Tinsta_PageContent_Widget extends WP_Widget
           'selected'         => $instance['page_id'],
           'name'             => $this->get_field_name('page_id'),
           'id'               => $this->get_field_id('page_id'),
-          //'show_option_none' => __('&mdash; Select &mdash;'),
-          //'sort_column'      => 'menu_order, post_title',
           'echo'             => true,
         ]);
       ?>

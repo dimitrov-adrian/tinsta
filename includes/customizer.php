@@ -462,25 +462,14 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_section('tinsta_region_topline', [
     'title' => __('Topline', 'tinsta'),
     'panel' => 'tinsta_regions',
-    'description' => sprintf(
-      __('
-        <p>
-          This region does not holding widgets, but display unfiltered HTML.
-          You can edit the content from <a href="%s">here</a>.
-        </p>', 'tinsta'),
-      'javascript:wp.customize.control(\'component_site_topline\').focus();'
-    ),
-    //    'active_callback' => function () {
-    //      return (bool) trim(get_theme_mod('component_site_topline'));
-    //    },
+    'description' => '<p>'
+      . sprintf(
+        __('This region does not holding widgets, but display unfiltered HTML. You can edit the content from <a href="%s">here</a>', 'tinsta'),
+        'javascript:wp.customize.control(\'component_site_topline\').focus();')
+      . '</p>',
   ]);
   $wp_customize->add_control('region_topline_sticky', [
     'type'    => 'checkbox',
-    'label'   => __('Sticky', 'tinsta'),
-    'section' => 'tinsta_region_topline',
-  ]);
-  $wp_customize->add_control('region_topline_sticky2', [
-    'type'    => 'text',
     'label'   => __('Sticky', 'tinsta'),
     'section' => 'tinsta_region_topline',
   ]);
@@ -494,6 +483,17 @@ add_action('customize_register', function ($wp_customize) {
       'boxed'    => __('Boxed', 'tinsta'),
       'extended' => __('Extended', 'tinsta'),
     ],
+  ]);
+  $wp_customize->add_control('region_topline_alignment', [
+    'type'    => 'select',
+    'label'   => __('Alignment', 'tinsta'),
+    'section' => 'tinsta_region_topline',
+    'choices' => [
+      '' => __('Auto', 'tinsta'),
+      'center' => __('Center', 'tinsta'),
+      'left' => __('Left', 'tinsta'),
+      'right' => __('Right', 'tinsta'),
+    ]
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'topline');
 
@@ -522,6 +522,17 @@ add_action('customize_register', function ($wp_customize) {
       'highlighted' => __('Highlighted', 'tinsta'),
     ],
   ]);
+  $wp_customize->add_control('region_header_alignment', [
+    'type'    => 'select',
+    'label'   => __('Alignment', 'tinsta'),
+    'section' => 'tinsta_region_header',
+    'choices' => [
+      '' => __('Auto', 'tinsta'),
+      'center' => __('Center', 'tinsta'),
+      'left' => __('Left', 'tinsta'),
+      'right' => __('Right', 'tinsta'),
+    ]
+  ]);
   $wp_customize->add_control('region_header_padding', [
     'label'       => __('Vertical Spacing', 'tinsta') . ' (px)',
     'section' => 'tinsta_region_header',
@@ -540,6 +551,13 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_section('tinsta_region_primary_menu', [
     'title' => __('Main Menu', 'tinsta'),
     'panel' => 'tinsta_regions',
+    'description' => '
+        <p>
+          <a href="javascript:wp.customize.control(\'nav_menu_locations[main]\').focus();">
+            ' . __('Edit primary menu.', 'tinsta') . '
+          </a>
+        </p>
+    ',
     'active_callback' => function () {
       return has_nav_menu('main');
     }
@@ -566,10 +584,16 @@ add_action('customize_register', function ($wp_customize) {
       'boxed' => __('Boxed', 'tinsta'),
     ],
   ]);
-  $wp_customize->add_control('region_primary_menu_aligncenter', [
-    'label'   => __('Center', 'tinsta'),
+  $wp_customize->add_control('region_primary_menu_alignment', [
+    'type'    => 'select',
+    'label'   => __('Alignment', 'tinsta'),
     'section' => 'tinsta_region_primary_menu',
-    'type'    => 'checkbox',
+    'choices' => [
+      '' => __('Auto', 'tinsta'),
+      'center' => __('Center', 'tinsta'),
+      'left' => __('Left', 'tinsta'),
+      'right' => __('Right', 'tinsta'),
+    ]
   ]);
   $wp_customize->add_control('region_primary_menu_highlight_root', [
     'label'   => __('Active Root Items Style', 'tinsta'),
@@ -578,9 +602,12 @@ add_action('customize_register', function ($wp_customize) {
     'choices' => [
       '' => __('None', 'tinsta'),
       'underline' => __('Underline', 'tinsta'),
-      'border' => __('Border', 'tinsta'),
+      'border-top' => __('Border', 'tinsta') . ' - ' . __('Top', 'tinsta'),
+      'border-bottom' => __('Border', 'tinsta') . ' - ' . __('Bottom', 'tinsta'),
       'background' => __('Background', 'tinsta'),
       'bold' => __('Bold', 'tinsta'),
+      'color-primary' => __('Primary Color', 'tinsta'),
+      'color-secondary' => __('Secondary Color', 'tinsta'),
     ],
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'primary_menu');
@@ -677,6 +704,18 @@ add_action('customize_register', function ($wp_customize) {
       'highlighted' => __('Highlighted', 'tinsta'),
     ],
   ]);
+  $wp_customize->add_control('region_footer_alignment', [
+    'type'    => 'select',
+    'label'   => __('Alignment', 'tinsta'),
+    'section' => 'tinsta_region_footer',
+    'choices' => [
+      '' => __('Auto', 'tinsta'),
+      'center' => __('Center', 'tinsta'),
+      'left' => __('Left', 'tinsta'),
+      'right' => __('Right', 'tinsta'),
+    ]
+  ]);
+
   tinsta_customizer_setup_color_controls($wp_customize, 'footer');
   tinsta_customizer_setup_background_controls($wp_customize, 'footer');
 
@@ -685,17 +724,11 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_section('tinsta_region_bottomline', [
     'title' => __('Bottomline', 'tinsta'),
     'panel' => 'tinsta_regions',
-    'description' => sprintf(
-      __('
-        <p>
-          This region does not holding widgets, but display unfiltered HTML.
-          You can edit the content from <a href="%s">here</a>.
-        </p>', 'tinsta'),
-      'javascript:wp.customize.control(\'component_site_bottomline\').focus();'
-    ),
-    //    'active_callback' => function () {
-    //      return (bool) trim(get_theme_mod('component_site_bottomline'));
-    //    },
+    'description' => '<p>'
+      . sprintf(
+        __('This region does not holding widgets, but display unfiltered HTML. You can edit the content from <a href="%s">here</a>', 'tinsta'),
+        'javascript:wp.customize.control(\'component_site_bottomline\').focus();')
+      . '</p>'
   ]);
   $wp_customize->add_control('region_bottomline_sticky', [
     'type'    => 'checkbox',
@@ -712,6 +745,18 @@ add_action('customize_register', function ($wp_customize) {
       'boxed' => __('Boxed', 'tinsta'),
     ],
   ]);
+  $wp_customize->add_control('region_bottomline_alignment', [
+    'type'    => 'select',
+    'label'   => __('Alignment', 'tinsta'),
+    'section' => 'tinsta_region_bottomline',
+    'choices' => [
+      '' => __('Auto', 'tinsta'),
+      'center' => __('Center', 'tinsta'),
+      'left' => __('Left', 'tinsta'),
+      'right' => __('Right', 'tinsta'),
+    ]
+  ]);
+
   tinsta_customizer_setup_color_controls($wp_customize, 'bottomline');
 
 

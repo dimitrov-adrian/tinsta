@@ -80,7 +80,7 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
         '%name%' => wp_get_current_user()->display_name,
       ]);
       return sprintf('<a href="%s">%s</a>',
-        get_edit_profile_url(),
+        empty($item->url) ? get_edit_profile_url() : $item->url,
         $title);
     }
     else {
@@ -202,6 +202,7 @@ function tinsta_nav_menu_items()
     'type_label' => __('Current User', 'tinsta'),
     'object' => 'tinsta-nav-menu-object',
     'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'url' => '',
   ];
 
   return $items;

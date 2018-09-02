@@ -105,8 +105,10 @@ body.login {
   max-height: calc(100% - 3rem - 4rem) !important;
   z-index: $z-index-modal !important;
   transform: translate(0, 0) !important;
-  box-shadow: 0 0 0 $region_root_width+px rgba(0, 0, 0, .76) !important;
+  box-shadow: 0 0 0 .6rem $region_root_color_background,
+              0 0 0 $region_root_width+px rgba($region_root_color_foreground, .84) !important;
   background: $region_root_color_background !important;
+  white-space: normal;
   padding: 1rem !important;
   margin: 0 !important;
   @include roundness();

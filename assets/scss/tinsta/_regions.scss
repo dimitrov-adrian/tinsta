@@ -75,6 +75,10 @@ body {
     }
   }
 
+  @if $region_topline_alignment {
+    text-align: $region_topline_alignment;
+  }
+
   @media (max-width: $breakpoint_max_tablet) {
     text-align: center;
   }
@@ -136,8 +140,17 @@ body {
       padding-top: $region_header_padding + px;
       padding-bottom: $region_header_padding + px;
     }
-    justify-content: space-between;
+
     align-items: center;
+    @if $region_header_alignment == 'left' {
+      justify-content: flex-start;
+    } @else if $region_header_alignment == 'right' {
+      justify-content: flex-end;
+    } @else if $region_header_alignment == 'center' {
+      justify-content: center;
+    } @else  {
+      justify-content: space-between;
+    }
 
     @if $region_header_layout == 'highlighted' {
       background-color: rgba($region_header_color_foreground, .1);
@@ -148,8 +161,10 @@ body {
     @media (max-width: $breakpoint_max_mobile) {
       flex-flow: column;
       // Reset user defined (from Customizer) padding from top and bottom.
-      padding-top: 0;
-      padding-bottom: 0;
+      @if $region_header_padding > 0 {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
     }
 
     @if $region_header_layout == 'extended' {
@@ -232,10 +247,10 @@ body {
 
   .menu {
     @extend %wrapper;
-    @if $region_primary_menu_aligncenter {
-      text-align: center;
+    @if $region_primary_menu_alignment {
+      text-align: $region_primary_menu_alignment;
     }
-    @include horizontalMenu($region_primary_menu_color_foreground, $region_primary_menu_color_background);
+    @include horizontalMenu($region_primary_menu_color_foreground, $region_primary_menu_color_background, $region_primary_menu_highlight_root);
   }
 }
 
@@ -468,11 +483,20 @@ body {
       margin-bottom: 0;
     }
 
+    @if $region_footer_alignment == 'left' {
+      justify-content: flex-start;
+    } @else if $region_footer_alignment == 'right' {
+      justify-content: flex-end;
+    } @else if $region_footer_alignment == 'center' {
+      justify-content: center;
+    } @else  {
+      justify-content: space-between;
+    }
+
     @media (max-width: $breakpoint_max_mobile) {
       flex-flow: column;
       display: block;
       width: 100%;
-      text-align: center;
     }
 
   }
@@ -482,7 +506,6 @@ body {
     margin: 0 0 .8rem 0;
     padding: .8rem 0;
     text-align: center;
-    font-weight: bold;
   }
 
 }
@@ -503,7 +526,6 @@ body {
   }
 
   padding: 1rem;
-  text-align: center;
 
   @include regionColors($region_bottomline_color_foreground,
     $region_bottomline_color_background,
@@ -523,6 +545,15 @@ body {
   }
 
   .site-bottomline {
+
+    @if $region_bottomline_alignment {
+      text-align: $region_bottomline_alignment;
+    }
+
+    @media (max-width: $breakpoint_max_mobile) {
+      text-align: center;
+    }
+
     a {
       color: colorInvert($region_topline_color_background);
       text-decoration: underline;

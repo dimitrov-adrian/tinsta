@@ -310,13 +310,13 @@
             richItemsLen++;
           }
         }
-        if (item.children.length === richItemsLen || !!item.parentNode.className.match('menu-item-object-tinsta-nav-menu-object')) {
+        if (item.children.length === richItemsLen || !!item.parentElement.className.match('menu-item-object-tinsta-nav-menu-object')) {
           item.parentNode.className += ' is-mega';
         }
 
         // Consider replacing window.innerWidth with window.outerWidth
         // innerWidth represent current width, and outerWidth represent the whole window
-        item.parentNode.addEventListener('mouseenter', function (event) {
+        item.parentElement.addEventListener('mouseenter', function (event) {
           if ( window.innerWidth >= parseInt(tinsta.breakpoints.tablet) ) {
             item.style.right = 'auto';
             item.style.left = 'auto';
@@ -330,16 +330,17 @@
         });
 
         // Mobile menu.
-        item.parentNode.addEventListener('click', function (event) {
-          if ( window.innerWidth < parseInt(tinsta.breakpoints.tablet) ) {
-            event.preventDefault();
-            event.stopPropagation();
-            item.className += ' mobile-menu';
-            addCloseButton(function () {
-              elementRemoveClass(item, 'mobile-menu');
-            });
-          }
-        });
+        if (item.parentElement.children.item(0)) {
+          item.parentElement.children.item(0).addEventListener('click', function (event) {
+            if (window.innerWidth < parseInt(tinsta.breakpoints.tablet)) {
+              event.preventDefault();
+              item.className += ' mobile-menu';
+              addCloseButton(function () {
+                elementRemoveClass(item, 'mobile-menu');
+              });
+            }
+          });
+        }
 
       });
 

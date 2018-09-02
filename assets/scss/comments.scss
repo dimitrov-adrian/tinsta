@@ -126,11 +126,6 @@ $la-is-loaded: true;
         } @else {
           @include border($region_root_color_foreground, '-top');
         }
-        //img {
-        //  display: block;
-        //  height: auto;
-        //  max-width: 100%;
-        //}
       }
 
       &.pingback,

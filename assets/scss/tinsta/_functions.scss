@@ -33,7 +33,6 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
   @if $width == null {
     $width: $typography_bordering;
   }
-  border#{$pos}: $width * 1px solid mix(colorInvert($color, $typography_brightness), $color, 100% - $typography_brightness);
   border#{$pos}: $width * 1px solid rgba($color, $brightness-base / 100);
 }
 
@@ -204,31 +203,29 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
   }
 }
 
-@mixin horizontalMenu($background: $region_root_color_background, $foreground: $region_root_color_foreground) {
+@mixin horizontalMenu($background: $region_root_color_background, $foreground: $region_root_color_foreground, $style: 'bold') {
   position: relative;
 
   @media (max-width: $breakpoint_max_tablet) {
-    //a {
-    //  @extend %no-select;
-    //}
-    // no need anymore
-    //margin-left: auto;
-    //margin-right: auto;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    padding-bottom: .6rem;
   }
 
   .depth-0 {
 
-    display: inline-block;
+    display: table-cell;
     vertical-align: middle;
     position: static;
 
     > a {
       padding: .6rem 1rem;
+      @media (max-width: $breakpoint_max_tablet) {
+        padding: 1rem;
+      }
       position: relative;
+      text-decoration: none;
+      font-weight: inherit;
     }
 
     > .sub-menu {
@@ -236,11 +233,38 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       margin: 0;
     }
 
+    &.current-menu-item {
+      @if $style == 'border-top' {
+        border-top: 4px solid $region_root_color_background;
+      } @else if $style == 'border-bottom' {
+        border-bottom: 4px solid $region_root_color_background;
+      } @else if $style == 'underline' {
+        > a {
+          text-decoration: underline;
+        }
+      } @else if $style == 'bold' {
+        > a {
+          font-weight: bolder;
+        }
+      } @else if $style == 'background' {
+        background: $background;
+        > a {
+          color: $foreground;
+        }
+      } @else if $style == 'color-primary' {
+        > a {
+          color: $region_root_color_primary;
+        }
+      } @else if $style == 'color-secondary' {
+        > a {
+          color: $region_root_color_secondary;
+        }
+      }
+    }
+
     @media (min-width: $breakpoint_max_tablet) {
       > .sub-menu {
         box-shadow: 0 5px 28px -12px rgba(0, 0, 0, .9);
-        //border: 1px solid rgba($foreground, .2);
-        //border-top: none;
         color: $foreground;
         background-color: $background;
         min-width: 12rem;
@@ -251,12 +275,6 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         a {
           color: $foreground;
           padding: .6rem;
-        }
-        .current-menu-item {
-          > a {
-            border: none;
-            font-weight: bold;
-          }
         }
 
         > .sub-menu-inner {
