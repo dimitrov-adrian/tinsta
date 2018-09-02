@@ -254,15 +254,6 @@ add_action('wp_enqueue_scripts', function () {
     }
   }
 
-  // Hack to use async. It cause troubles in some cases where jQuery is loaded afterthat,
-  // need better QA.
-  //  add_filter('script_loader_tag', function ($tag, $handle, $src) {
-  //    if (in_array($handle, ['comment-reply', 'smoothscroll', 'tinsta'])) {
-  //      $tag = str_replace('src=', ' async src=', $tag);
-  //    }
-  //    return $tag;
-  //  }, 10, 3);
-
 });
 
 /**

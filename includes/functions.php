@@ -1,5 +1,192 @@
 <?php
 
+/**
+ * @file
+ * Tinsta's core helper functions.
+ */
+
+/**
+ * Default theme mod array
+ *
+ * @return array
+ */
+function tinsta_get_options_defaults()
+{
+
+  $privacy_policy_link = home_url('?p=' . get_option('wp_page_for_privacy_policy'));
+
+  // Add all theme mods.
+  $settings = [
+
+    // Misc
+    // @TODO re-arrange to other regions.
+    'component_effects_animations' => 0,
+    'component_effects_shadows' => 0,
+    'component_effects_smooth_scroll' => false,
+    'component_effects_lazyload' => false,
+    'component_seo_enable' => true,
+
+    /**
+     * Typography
+     */
+    'typography_font_size' => 13,
+    'typography_font_line_height' => 140,
+    //'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
+    'typography_font_family_headings' => '',
+    'typography_font_google' => '',
+    'typography_font_headings_google' => '',
+    'typography_font_headings_style' => '',
+    'typography_text_justify' => false,
+    'typography_text_wordbreak' => false,
+    'typography_form_spacing' => 30,
+    // @TODO
+    //    'typography_text_font_weight' => 'normal',
+    //    'typography_text_font_weight' => 'normal',
+    //    'typography_font_letterspacing' => 'normal',
+    //    'typography_font_wordspacing' => 'normal',
+    //    'typography_link_style' => 'underline', // @TODO
+    'typography_roundness' => 0,
+    'typography_brightness' => 50,
+    'typography_bordering' => 1,
+    'typography_form_button_style' => 'fill',
+    'typography_font_button_text_style' => 'small-caps',
+    'typography_text_enhancements' => false,
+
+    // Regions
+    'region_root_breakpoint_tablet' => '960px',
+    'region_root_breakpoint_mobile' => '768px',
+    'region_root_height_full' => true,
+    'region_root_width' => 980,
+    'region_root_color_background' => '#ffffff',
+    'region_root_color_foreground' => '#222222',
+    'region_root_color_primary' => '#4285f4',
+    'region_root_color_secondary' => '#e55a19',
+    'region_root_image' => '',
+    'region_root_image_size' => 'auto',
+    'region_root_image_repeat' => true,
+    'region_root_image_attachment_scroll' => true,
+    'region_root_image_position_x' => 'center',
+    'region_root_image_position_y' => 'center',
+    'region_topline_layout' => '',
+    'region_topline_sticky' => false,
+    'region_topline_alignment' => '',
+    'region_topline_color_background' => '#eeeeee',
+    'region_topline_color_background_opacity' => 100,
+    'region_topline_color_foreground' => '#555555',
+    'region_header_layout' => '',
+    'region_header_padding' => 20,
+    'region_header_sticky' => false,
+    'region_header_alignment' => '',
+    'region_header_image' => '',
+    'region_header_image_size' => 'auto',
+    'region_header_image_repeat' => true,
+    'region_header_image_attachment_scroll' => true,
+    'region_header_image_position_x' => 'center',
+    'region_header_image_position_y' => 'center',
+    'region_header_color_background' => '#4285f4',
+    'region_header_color_background_opacity' => 100,
+    'region_header_color_foreground' => '#ffffff',
+    'region_header_color_primary' => '#eeeeee',
+    'region_header_color_secondary' => '#ffffff',
+    'region_primary_menu_layout' => '',
+    'region_primary_menu_position' => '',
+    'region_primary_menu_alignment' => '',
+    'region_primary_menu_highlight_root' => 'background',
+    'region_primary_menu_color_background' => '#000000',
+    'region_primary_menu_color_background_opacity' => 20,
+    'region_primary_menu_color_foreground' => '#ffffff',
+    'region_main_layout' => '',
+    'region_main_margin' => 0,
+    'region_main_color_background' => '#ffffff',
+    'region_main_color_background_opacity' => 100,
+    'region_main_image' => '',
+    'region_main_image_size' => 'auto',
+    'region_main_image_repeat' => true,
+    'region_main_image_attachment_scroll' => true,
+    'region_main_image_position_x' => 'center',
+    'region_main_image_position_y' => 'center',
+    'region_sidebar_primary_width' => 220,
+    'region_sidebar_primary_color_background' => '#ffffff',
+    'region_sidebar_primary_color_background_opacity' => 100,
+    'region_sidebar_primary_color_foreground' => '#222222',
+    'region_sidebar_primary_color_primary' => '#4285f4',
+    'region_sidebar_primary_color_secondary' => '#e55a19',
+    'region_sidebar_secondary_width' => 160,
+    'region_sidebar_secondary_color_background' => '#ffffff',
+    'region_sidebar_secondary_color_background_opacity' => 100,
+    'region_sidebar_secondary_color_foreground' => '#222222',
+    'region_sidebar_secondary_color_primary' => '#4285f4',
+    'region_sidebar_secondary_color_secondary' => '#e55a19',
+    'region_footer_layout' => '',
+    'region_footer_alignment' => '',
+    'region_footer_image' => '',
+    'region_footer_image_size' => 'auto',
+    'region_footer_image_repeat' => true,
+    'region_footer_image_attachment_scroll' => true,
+    'region_footer_image_position_x' => 'center',
+    'region_footer_image_position_y' => 'center',
+    'region_footer_color_background' => '#263238',
+    'region_footer_color_background_opacity' => 100,
+    'region_footer_color_foreground' => '#cfd8dc',
+    'region_footer_color_primary' => '#ffffff',
+    'region_footer_color_secondary' => '#e55a19',
+    'region_bottomline_layout' => '',
+    'region_bottomline_sticky' => false,
+    'region_bottomline_alignment' => 'center',
+    'region_bottomline_color_background' => '#455a64',
+    'region_bottomline_color_background_opacity' => 100,
+    'region_bottomline_color_foreground' => '#eeeeee',
+
+    // Components
+    'component_site_topline' => '',
+    'component_site_bottomline' => get_bloginfo('name') . ' - ' . date('Y'),
+    'component_header_markup' => '',
+    'component_footer_markup' => '',
+    'component_social_networks_code' => '',
+    'component_breadcrumbs_title' => '',
+    'component_breadcrumbs_include_home' => true,
+    'component_outdated_post_time' => 0,
+    'component_outdated_post_message' => __('This article is older than %time%, the content might not be relevant anymore.', 'tinsta'),
+    'component_pagination_style' => 'bordered',
+    'component_scrolltop' => '',
+    'component_site_agreement_enable' => true,
+    'component_site_agreement_style' => 'center',
+    'component_site_agreement_text' => sprintf(__('I agree with site <a href="%s">terms</a>.', 'tinsta'), $privacy_policy_link),
+    'component_site_agreement_agree_button' => __('Agree', 'tinsta'),
+    'component_site_agreement_cancel_url' => 'http://google.com/',
+    'component_site_agreement_cancel_title' => __('Cancel', 'tinsta'),
+    'component_context_header_date_format' => translate_with_gettext_context('F Y', 'textual', 'tinsta'),
+    'component_avatar_size' => 72,
+    'component_avatar_size_small' => 42,
+    'component_comments_style' => '',
+    'component_comments_order_selector' => true,
+
+    // Page Types
+    'system_page_login_theming' => 'brand',
+    'system_page_404_theming' => '',
+    'system_page_404_content' => '',
+    'system_page_search_search_force_post_type' => '',
+
+  ];
+
+  foreach (get_post_types(['public' => true], 'objects') as $post_type) {
+    $settings["post_type_{$post_type->name}_use_defaults"] = (bool) $post_type->_builtin;
+    $settings["post_type_{$post_type->name}_layout"] = '';
+    $settings["post_type_{$post_type->name}_append_authors"] = false;
+    $settings["post_type_{$post_type->name}_append_post_nav"] = true;
+    $settings["post_type_{$post_type->name}_outdated_notification"] = true;
+    if ( ! ($post_type->has_archive === 0 || $post_type->has_archive === false ) || $post_type->name == 'post' ) {
+      $settings["post_type_{$post_type->name}_layout_archive"] = '';
+      $settings["post_type_{$post_type->name}_archive_show"] = 'excerpt';
+      $settings["post_type_{$post_type->name}_archive_show_excerpt_words"] = 30;
+      $settings["post_type_{$post_type->name}_archive_per_page"] = get_option('posts_per_page', 10);
+    }
+  }
+
+  $settings = apply_filters('tinsta_default_options', $settings);
+  return $settings;
+}
 
 /**
  * Check if current request is in login page.
@@ -284,189 +471,6 @@ function tinsta_get_category_cover_image($object = null, $size = '', $attr = [])
   }
 
   return '';
-}
-
-/**
- * Default theme mod array
- *
- * @return array
- */
-function tinsta_get_options_defaults()
-{
-
-  $privacy_policy_link = home_url('?p=' . get_option('wp_page_for_privacy_policy'));
-
-  // Add all theme mods.
-  $settings = [
-
-    // Misc
-    // @TODO re-arrange to other regions.
-    'component_effects_animations' => 0,
-    'component_effects_shadows' => 0,
-    'component_effects_smooth_scroll' => false,
-    'component_effects_lazyload' => false,
-    'component_seo_enable' => true,
-
-    /**
-     * Typography
-     */
-    'typography_font_size' => 13,
-    'typography_font_line_height' => 140,
-    //'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-    'typography_font_family' => 'medium-content-sans-serif-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
-    'typography_font_family_headings' => '',
-    'typography_font_google' => '',
-    'typography_font_headings_google' => '',
-    'typography_font_headings_style' => '',
-    'typography_text_justify' => false,
-    'typography_text_wordbreak' => false,
-    'typography_form_spacing' => 30,
-    // @TODO
-    //    'typography_text_font_weight' => 'normal',
-    //    'typography_text_font_weight' => 'normal',
-    //    'typography_font_letterspacing' => 'normal',
-    //    'typography_font_wordspacing' => 'normal',
-    //    'typography_link_style' => 'underline', // @TODO
-    'typography_roundness' => 0,
-    'typography_brightness' => 50,
-    'typography_bordering' => 1,
-    'typography_form_button_style' => 'fill',
-    'typography_font_button_text_style' => 'small-caps',
-    'typography_text_enhancements' => false,
-
-    // Regions
-    'region_root_breakpoint_tablet' => '960px',
-    'region_root_breakpoint_mobile' => '768px',
-    'region_root_height_full' => true,
-    'region_root_width' => 980,
-    'region_root_color_background' => '#ffffff',
-    'region_root_color_foreground' => '#222222',
-    'region_root_color_primary' => '#4285f4',
-    'region_root_color_secondary' => '#e55a19',
-    'region_root_image' => '',
-    'region_root_image_size' => 'auto',
-    'region_root_image_repeat' => true,
-    'region_root_image_attachment_scroll' => true,
-    'region_root_image_position_x' => 'center',
-    'region_root_image_position_y' => 'center',
-    'region_topline_layout' => '',
-    'region_topline_sticky' => false,
-    'region_topline_alignment' => '',
-    'region_topline_color_background' => '#eeeeee',
-    'region_topline_color_background_opacity' => 100,
-    'region_topline_color_foreground' => '#555555',
-    'region_header_layout' => '',
-    'region_header_padding' => 20,
-    'region_header_sticky' => false,
-    'region_header_alignment' => '',
-    'region_header_image' => '',
-    'region_header_image_size' => 'auto',
-    'region_header_image_repeat' => true,
-    'region_header_image_attachment_scroll' => true,
-    'region_header_image_position_x' => 'center',
-    'region_header_image_position_y' => 'center',
-    'region_header_color_background' => '#4285f4',
-    'region_header_color_background_opacity' => 100,
-    'region_header_color_foreground' => '#ffffff',
-    'region_header_color_primary' => '#eeeeee',
-    'region_header_color_secondary' => '#ffffff',
-    'region_primary_menu_layout' => '',
-    'region_primary_menu_position' => '',
-    'region_primary_menu_alignment' => '',
-    'region_primary_menu_highlight_root' => 'background',
-    'region_primary_menu_color_background' => '#000000',
-    'region_primary_menu_color_background_opacity' => 20,
-    'region_primary_menu_color_foreground' => '#ffffff',
-    'region_main_layout' => '',
-    'region_main_margin' => 0,
-    'region_main_color_background' => '#ffffff',
-    'region_main_color_background_opacity' => 100,
-    'region_main_image' => '',
-    'region_main_image_size' => 'auto',
-    'region_main_image_repeat' => true,
-    'region_main_image_attachment_scroll' => true,
-    'region_main_image_position_x' => 'center',
-    'region_main_image_position_y' => 'center',
-    'region_sidebar_primary_width' => 220,
-    'region_sidebar_primary_color_background' => '#ffffff',
-    'region_sidebar_primary_color_background_opacity' => 100,
-    'region_sidebar_primary_color_foreground' => '#222222',
-    'region_sidebar_primary_color_primary' => '#4285f4',
-    'region_sidebar_primary_color_secondary' => '#e55a19',
-    'region_sidebar_secondary_width' => 160,
-    'region_sidebar_secondary_color_background' => '#ffffff',
-    'region_sidebar_secondary_color_background_opacity' => 100,
-    'region_sidebar_secondary_color_foreground' => '#222222',
-    'region_sidebar_secondary_color_primary' => '#4285f4',
-    'region_sidebar_secondary_color_secondary' => '#e55a19',
-    'region_footer_layout' => '',
-    'region_footer_alignment' => '',
-    'region_footer_image' => '',
-    'region_footer_image_size' => 'auto',
-    'region_footer_image_repeat' => true,
-    'region_footer_image_attachment_scroll' => true,
-    'region_footer_image_position_x' => 'center',
-    'region_footer_image_position_y' => 'center',
-    'region_footer_color_background' => '#263238',
-    'region_footer_color_background_opacity' => 100,
-    'region_footer_color_foreground' => '#cfd8dc',
-    'region_footer_color_primary' => '#ffffff',
-    'region_footer_color_secondary' => '#e55a19',
-    'region_bottomline_layout' => '',
-    'region_bottomline_sticky' => false,
-    'region_bottomline_alignment' => 'center',
-    'region_bottomline_color_background' => '#455a64',
-    'region_bottomline_color_background_opacity' => 100,
-    'region_bottomline_color_foreground' => '#eeeeee',
-
-    // Components
-    'component_site_topline' => '',
-    'component_site_bottomline' => get_bloginfo('name') . ' - ' . date('Y'),
-    'component_header_markup' => '',
-    'component_footer_markup' => '',
-    'component_social_networks_code' => '',
-    'component_breadcrumbs_title' => '',
-    'component_breadcrumbs_include_home' => true,
-    'component_outdated_post_time' => 0,
-    'component_outdated_post_message' => __('This article is older than %time%, the content might not be relevant anymore.', 'tinsta'),
-    'component_pagination_style' => 'bordered',
-    'component_scrolltop' => '',
-    'component_site_agreement_enable' => true,
-    'component_site_agreement_style' => 'center',
-    'component_site_agreement_text' => sprintf(__('I agree with site <a href="%s">terms</a>.', 'tinsta'), $privacy_policy_link),
-    'component_site_agreement_agree_button' => __('Agree', 'tinsta'),
-    'component_site_agreement_cancel_url' => 'http://google.com/',
-    'component_site_agreement_cancel_title' => __('Cancel', 'tinsta'),
-    'component_context_header_date_format' => translate_with_gettext_context('F Y', 'textual', 'tinsta'),
-    'component_avatar_size' => 72,
-    'component_avatar_size_small' => 42,
-    'component_comments_style' => '',
-    'component_comments_order_selector' => true,
-
-    // Page Types
-    'system_page_login_theming' => 'brand',
-    'system_page_404_theming' => '',
-    'system_page_404_content' => '',
-    'system_page_search_search_force_post_type' => '',
-
-  ];
-
-  foreach (get_post_types(['public' => true], 'objects') as $post_type) {
-    $settings["post_type_{$post_type->name}_use_defaults"] = (bool) $post_type->_builtin;
-    $settings["post_type_{$post_type->name}_layout"] = '';
-    $settings["post_type_{$post_type->name}_append_authors"] = false;
-    $settings["post_type_{$post_type->name}_append_post_nav"] = true;
-    $settings["post_type_{$post_type->name}_outdated_notification"] = true;
-    if ( ! ($post_type->has_archive === 0 || $post_type->has_archive === false ) || $post_type->name == 'post' ) {
-      $settings["post_type_{$post_type->name}_layout_archive"] = '';
-      $settings["post_type_{$post_type->name}_archive_show"] = 'excerpt';
-      $settings["post_type_{$post_type->name}_archive_show_excerpt_words"] = 30;
-      $settings["post_type_{$post_type->name}_archive_per_page"] = get_option('posts_per_page', 10);
-    }
-  }
-
-  $settings = apply_filters('tinsta_default_options', $settings);
-  return $settings;
 }
 
 /**

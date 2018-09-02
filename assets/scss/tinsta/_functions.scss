@@ -264,14 +264,22 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
     @media (min-width: $breakpoint_max_tablet) {
       > .sub-menu {
+        position: absolute;
+        z-index: $z-index-modal;
+        white-space: nowrap; // fix for with auto.
+        overflow-x: hidden;
+
+        min-width: 12rem;
+        max-width: 100%;
+        width: auto;
+
+        margin-left: unset;
+        margin-right: unset;
+
         box-shadow: 0 5px 28px -12px rgba(0, 0, 0, .9);
         color: $foreground;
         background-color: $background;
-        min-width: 12rem;
-        position: absolute;
-        margin-left: unset;
-        margin-right: unset;
-        z-index: $z-index-modal;
+
         a {
           color: $foreground;
           padding: .6rem;
@@ -280,13 +288,19 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         > .sub-menu-inner {
           display: table;
           border-spacing: 1rem;
+          table-layout: fixed;
+          //min-width: 24rem;
           .widget {
             display: table-cell;
             vertical-align: top;
             white-space: normal;
+            //min-width: 12rem;
           }
         }
 
+      }
+      &.menu-item-type-tinsta-nav-menu-widget-area > .sub-menu {
+        width: 100%;
       }
       &:hover {
         background: $background;
@@ -295,11 +309,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         }
         > .sub-menu {
           display: block;
-          white-space: nowrap; // fix for with auto.
-          width: auto;
-          min-width: 12rem;
-          max-width: 100%;
-          overflow-x: hidden;
+
         }
       }
     }

@@ -88,7 +88,12 @@ So here is short list of plugins that can be helpful.
 - Performance:
   - [Autoptimize](https://bg.wordpress.org/plugins/autoptimize/)
   - [WP Super Cache](https://bg.wordpress.org/plugins/wp-super-cache/)
- 
+- Widgets:
+  - [Post Field Widget](https://github.com/dimitrov-adrian/post-field-widget)
+  - [PHP Code Widget](https://wordpress.org/plugins/php-code-widget/)
+  - [Recent Posts Widget with thumbnails](https://wordpress.org/plugins/recent-posts-widget-with-thumbnails/)
+  - [Simple Social Icons](https://wordpress.org/plugins/simple-social-icons/)
+  
 
 ##
 ### Developers
@@ -137,7 +142,7 @@ Chrome's **Disable cache** option in dev panel)
 ## 
 ### License & Terms 
 Tinsta theme is available under the terms of the
-[GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. 
+[GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. Check `LICENSE` 
 
 The theme come bundled with following third-party resources:
 
