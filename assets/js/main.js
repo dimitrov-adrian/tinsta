@@ -1,5 +1,8 @@
 (function () {
 
+  var supports_querySelector = typeof(document.querySelector) === 'undefined' ? 0 : 1;
+  var supports_getComputedStyle = typeof(window.getComputedStyle) === 'undefined' ? 0 : 1;
+
   /**
    * Because CSS.supports() may not be fully supported.
    *
@@ -80,7 +83,6 @@
     document.documentElement.className += ' js';
     elementRemoveClass(document.documentElement, 'no-js');
     // Workaround for transition touch events.
-    // document.addEventListener('touchstart', function () {} );
     // document.body.addEventListener('touchstart', function () {}, false);
   }() );
 
@@ -107,32 +109,6 @@
   })();
 
   /**
-   * Search forms add focus class when focused element.
-   */
-  (function () {
-    document.querySelectorAll('.widget_search')
-      .forEach(function (widget) {
-        var field = widget.querySelectorAll('.search-field');
-        if (field.length < 1) {
-          return;
-        }
-        field = field[0];
-        field.addEventListener('keydown', function (event) {
-          if (event.which === 27) {
-            elementRemoveClass(this, 'focus');
-            field.blur();
-          }
-        });
-        field.addEventListener('focus', function () {
-          widget.className += ' focus';
-        });
-        field.addEventListener('blur', function () {
-          elementRemoveClass(widget, 'focus');
-        });
-      });
-  }());
-
-  /**
    * Auto-grow of comments.
    */
   (function () {
@@ -149,36 +125,6 @@
       commentTextArea.addEventListener('keydown', recalcTextAreaHeight);
       commentTextArea.addEventListener('keyup', recalcTextAreaHeight);
     }
-  }());
-
-  /**
-   * Avatar change based on inputed email.
-   */
-  (function () {
-      var respondForm = document.querySelector('#respond');
-      if (respondForm) {
-        var emailField = respondForm.querySelector('#email');
-        var avatarImg = respondForm.querySelector('img.avatar');
-        if (emailField && avatarImg) {
-          var avatarSize = avatarImg.naturalWidth || avatarImg.width;
-          console.log(avatarSize);
-          var emailIsChanged = function () {
-            if (avatarImg.hasAttribute('srcset')) {
-              avatarImg.removeAttribute('srcset');
-            }
-            var newUrl = tinsta.siteUrl + '?tinsta-resolve-user-avatar=' + encodeURIComponent(this.value.trim());
-            if (avatarSize) {
-              avatarImg.srcset = newUrl + '&s=' + avatarSize + ', ' + newUrl + '&s=' + (avatarSize*2) + ' 2x';
-              newUrl += '&s=' + avatarSize;
-            } else {
-              avatarImg.removeAttribute('srcset');
-            }
-            avatarImg.src = newUrl;
-          };
-          emailField.addEventListener('change', emailIsChanged);
-          emailField.addEventListener('keyup', emailIsChanged);
-        }
-      }
   }());
 
   /**
@@ -208,37 +154,6 @@
       window.addEventListener('orientationchange', fullHeightRecalc);
     }());
   }
-
-  /**
-   *  Agree accepted.
-   */
-  (function () {
-    var shouldShowAgreeDialog = !localStorage.getItem('agreeAccepted');
-    if (window.hasOwnProperty('tinstaCustomized')) {
-      shouldShowAgreeDialog = ( window.tinstaCustomized.hasOwnProperty('component_site_agreement_enable') && window.tinstaCustomized.component_site_agreement_enable )
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_style')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_text')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_agree_button')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_url')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_title');
-    }
-    if (shouldShowAgreeDialog) {
-      var siteAgreementDialog = document.getElementById('site-enter-agreement');
-      if (!siteAgreementDialog) {
-        return;
-      }
-      siteAgreementDialog.style.display = 'block';
-      document.getElementById('site-enter-agreement-button').addEventListener('mouseup', function (event) {
-        event.preventDefault();
-        siteAgreementDialog.className += ' agreed';
-        setTimeout(function () {
-          siteAgreementDialog.style.display = 'none';
-          siteAgreementDialog.parentNode.removeChild(siteAgreementDialog);
-        }, 150);
-        localStorage.setItem('agreeAccepted', true);
-      });
-    }
-  }());
 
   /**
    * Scrolltop.
@@ -285,9 +200,69 @@
   });
 
   /**
+   * Avatar change based on inputed email.
+   */
+  (supports_querySelector) && (function () {
+      var respondForm = document.querySelector('#respond');
+      if (respondForm) {
+        var emailField = respondForm.querySelector('#email');
+        var avatarImg = respondForm.querySelector('img.avatar');
+        if (emailField && avatarImg) {
+          var avatarSize = avatarImg.naturalWidth || avatarImg.width;
+          var emailIsChanged = function () {
+            if (avatarImg.hasAttribute('srcset')) {
+              avatarImg.removeAttribute('srcset');
+            }
+            var newUrl = tinsta.siteUrl + '?tinsta-resolve-user-avatar=' + encodeURIComponent(this.value.trim());
+            if (avatarSize) {
+              avatarImg.srcset = newUrl + '&s=' + avatarSize + ', ' + newUrl + '&s=' + (avatarSize*2) + ' 2x';
+              newUrl += '&s=' + avatarSize;
+            } else {
+              avatarImg.removeAttribute('srcset');
+            }
+            avatarImg.src = newUrl;
+          };
+          emailField.addEventListener('change', emailIsChanged);
+          emailField.addEventListener('keyup', emailIsChanged);
+        }
+      }
+  }());
+
+  /**
+   *  Agree accepted.
+   */
+  (supports_querySelector) && (function () {
+    var shouldShowAgreeDialog = !localStorage.getItem('agreeAccepted');
+    if (window.hasOwnProperty('tinstaCustomized')) {
+      shouldShowAgreeDialog = ( window.tinstaCustomized.hasOwnProperty('component_site_agreement_enable') && window.tinstaCustomized.component_site_agreement_enable )
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_style')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_text')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_agree_button')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_url')
+        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_title');
+    }
+    if (shouldShowAgreeDialog) {
+      var siteAgreementDialog = document.getElementById('site-enter-agreement');
+      if (!siteAgreementDialog) {
+        return;
+      }
+      siteAgreementDialog.style.display = 'block';
+      document.getElementById('site-enter-agreement-button').addEventListener('mouseup', function (event) {
+        event.preventDefault();
+        siteAgreementDialog.className += ' agreed';
+        setTimeout(function () {
+          siteAgreementDialog.style.display = 'none';
+          siteAgreementDialog.parentNode.removeChild(siteAgreementDialog);
+        }, 150);
+        localStorage.setItem('agreeAccepted', true);
+      });
+    }
+  }());
+
+  /**
    * Responsive menu.
    */
-  (function () {
+  (supports_querySelector) && (function () {
 
     var mainWrapper = document.getElementsByClassName('site-container').item(0);
     if (!mainWrapper) {
@@ -346,11 +321,10 @@
 
   }());
 
-
   /**
    * Make topline, header sticky.
    */
-  ( function () {
+  ( supports_getComputedStyle ) && ( function () {
     var topline = document.getElementsByClassName('site-topline-wrapper');
     var header = document.getElementsByClassName('site-header-wrapper');
     if (topline.length > 0 && header.length > 0) {
@@ -367,5 +341,130 @@
       setHeaderTop();
     }
   } () );
+
+  /**
+   * Search widget forms add focus class when focused element.
+   */
+  ( supports_querySelector ) && ( function () {
+    document.querySelectorAll('.widget_search')
+      .forEach(function (widget) {
+        var field = widget.querySelectorAll('.search-field');
+        if (field.length < 1) {
+          return;
+        }
+        field = field[0];
+        field.addEventListener('keydown', function (event) {
+          if (event.which === 27) {
+            elementRemoveClass(this, 'focus');
+            field.blur();
+          }
+        });
+        field.addEventListener('focus', function () {
+          widget.className += ' focus';
+        });
+        field.addEventListener('blur', function () {
+          elementRemoveClass(widget, 'focus');
+        });
+      });
+  }());
+
+  /**
+   * Search fields auto-complete.
+   */
+  ( supports_querySelector ) && ( function () {
+    document.addEventListener('DOMContentLoaded', function () {
+
+      var doAjaxAutocomplete = function () {
+        var autoCompletePlaceholder = this;
+        var keyword = autoCompletePlaceholder.value.trim();
+        if (keyword.length < 3) {
+          autoCompletePlaceholder.autocompleteListElement.style.display = 'none';
+        } else {
+          var httpRequest = new XMLHttpRequest();
+          httpRequest.onload = function (event) {
+            if (autoCompletePlaceholder.autocompleteListTimer && event.target.status === 200 && event.target.response) {
+              autoCompletePlaceholder.autocompleteListElement.style.display = 'block';
+              autoCompletePlaceholder.autocompleteListElement.innerHTML = event.target.response;
+            } else {
+              autoCompletePlaceholder.autocompleteListElement.style.display = 'none';
+            }
+          };
+          httpRequest.open('GET', window.tinsta.siteUrl + '?tinsta-ajax-search=' + keyword);
+          httpRequest.send();
+        }
+      };
+
+      var inputFields = document.querySelectorAll('.search-form input[type="search"]');
+
+      inputFields.forEach(function (element) {
+        element.autocompleteListTimer = null;
+        element.autocompleteListElement = document.createElement('DIV');
+        element.autocompleteListElement.className = 'search-autocomplete-list';
+        element.autocompleteListElement.style.display = 'none';
+        element.parentNode.insertBefore(element.autocompleteListElement, element.nextSibling);
+        element.setAttribute('autocomplete', 'off');
+        element.addEventListener('keypress', function (event) {
+          if (this.autocompleteListTimer) {
+            clearTimeout(this.autocompleteListTimer)
+          }
+          this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 500);
+        });
+        element.addEventListener('keydown', function (event) {
+          var nextItem = null;
+          var activeItem = this.autocompleteListElement.querySelector('li.active');
+          if (activeItem) {
+            if (event.keyCode === 38) {
+              nextItem = activeItem.previousSibling;
+            } else if (event.keyCode === 40) {
+              nextItem = activeItem.nextSibling;
+            } else if (event.keyCode === 13) {
+              var activeItemLink = activeItem.querySelector('a');
+              if (activeItemLink) {
+                event.preventDefault();
+                window.location.href = activeItemLink.href;
+              }
+              return true;
+            }
+            elementRemoveClass(activeItem, 'active');
+          }
+
+          if ( !nextItem || !activeItem ) {
+            if (event.keyCode === 38) {
+              nextItem = this.autocompleteListElement.querySelector('li:last-child');
+            } else if (event.keyCode === 40) {
+              nextItem = this.autocompleteListElement.querySelector('li:first-child');
+            }
+          }
+
+          if (nextItem) {
+            nextItem.className += ' active';
+          }
+
+        });
+        element.addEventListener('change', function () {
+          if (this.autocompleteListTimer) {
+            clearTimeout(this.autocompleteListTimer)
+          }
+          this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 500);
+        });
+        element.addEventListener('focus', function () {
+          if (element.autocompleteListElement.children.length > 0) {
+            element.autocompleteListElement.style.display = 'block';
+          } else {
+            this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 100);
+          }
+        });
+        element.addEventListener('blur', function () {
+          if (this.autocompleteListTimer) {
+            clearTimeout(this.autocompleteListTimer)
+          }
+          this.autocompleteListTimer = setTimeout(function () {
+            element.autocompleteListElement.style.display = 'none';
+          }, 250);
+        });
+      });
+
+    });
+  }() );
 
 }());

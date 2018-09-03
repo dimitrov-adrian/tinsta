@@ -230,6 +230,32 @@ add_action('widgets_init', function () {
   require __DIR__ . '/widgets/page-content-widget.php';
   register_widget('Tinsta_PageContent_Widget');
 
+  /**
+   * Make tinsta-nav-menu-widget-area available as sidebar.
+   */
+  // Register menu sidebars
+  $menu_sidebars = get_posts([
+    'post_type' => 'nav_menu_item',
+    'meta_query' => [
+      [
+        'key' => '_menu_item_type',
+        'value' => 'tinsta-nav-menu-widget-area',
+      ]
+    ]
+  ]);
+
+  foreach ($menu_sidebars as $sidebar) {
+    register_sidebar([
+      'name' => sprintf(__('Menu "%s"', 'tinsta'), $sidebar->post_title),
+      'description' => sprintf(__('Appears only in %s as sub-menu', 'tinsta'), $sidebar->post_title),
+      'id' => 'tinsta-menu-' . $sidebar->post_name,
+      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<div class="widgettitle">',
+      'after_title' => '</div>',
+    ]);
+  }
+
 });
 
 /**

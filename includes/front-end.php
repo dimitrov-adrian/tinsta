@@ -21,11 +21,14 @@ add_action('template_redirect', function () {
   }
 
   // Simple ajax search.
-  if (!empty($_GET['tinsta-ajax-search'])) {
-    $posts = get_posts([
-      's' => $_GET['tinsta-ajax-search'],
+  if (isset($_GET['tinsta-ajax-search'])) {
+    $args = [
       'posts_per_page' => 10,
-    ]);
+    ];
+    if ($_GET['tinsta-ajax-search'] != '*' && is_scalar($_GET['tinsta-ajax-search'])) {
+      $args['s'] = $_GET['tinsta-ajax-search'];
+    }
+    $posts = get_posts($args);
     if ($posts) {
       echo '<ul>';
       foreach ($posts as $post) {
@@ -34,9 +37,6 @@ add_action('template_redirect', function () {
         echo '">' . $post->post_title . '</a></li>';
       }
       echo '</ul>';
-    }
-    else {
-      header('HTTP/1.0 404 Not Found');
     }
     exit;
   }
@@ -221,11 +221,11 @@ add_action('wp_enqueue_scripts', function () {
 
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_lazyload')) {
-    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/js/lazyload.js', [], '1.0', true);
+    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/js/lazyload.' . ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' ) . 'js', [], '1.0', true);
   }
 
   // Theme's script.
-  wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/js/main.js', [], wp_get_theme()->get('Version'), true);
+  wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/js/main.' . ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' ) . 'js', [], wp_get_theme()->get('Version'), true);
   wp_localize_script('tinsta', 'tinsta', [
     'siteUrl' => home_url(),
     'assetsDir' => get_template_directory_uri() . '/assets/',
@@ -526,3 +526,119 @@ add_filter('widget_tag_cloud_args', function ( $args ) {
   $args['unit']     = 'rem';
   return $args;
 });
+
+/**
+ * Filter user menus
+ *
+ * Must happen only on front-end
+ */
+if ( !is_customize_preview() && !is_admin() ) {
+
+  add_filter('wp_get_nav_menu_items', function ($items) {
+
+    $to_remove = [];
+
+    $is_logged_user = wp_get_current_user()->ID;
+
+    foreach ($items as $item_index => $item) {
+
+      if ($item->type == 'tinsta-nav-menu-login-register' && $is_logged_user) {
+        $to_remove[$item->ID] = $item->ID;
+      }
+
+      if ($item->type == 'tinsta-nav-menu-current-user' && !$is_logged_user) {
+        $to_remove[$item->ID] = $item->ID;
+      }
+
+      if ($item->type == 'tinsta-nav-menu-widget-area' && !is_active_sidebar('tinsta-menu-' . $item->post_name)) {
+        $to_remove[$item->ID] = $item->ID;
+      }
+
+    }
+
+    if ($to_remove) {
+      foreach ($items as $item_index => $item) {
+        foreach ($items as $item_inner_index => $item_inner) {
+          if (isset($to_remove[$item_inner->menu_item_parent])) {
+            $to_remove[$item_inner->ID] = $item_inner->ID;
+          }
+        }
+      }
+
+      foreach ($items as $item_index => $item) {
+        if (isset($to_remove[$item->ID])) {
+          unset($items[$item_index]);
+        }
+      }
+
+    }
+
+    return $items;
+
+  });
+}
+
+/**
+ * Alter the menus to support theme's customization.
+ */
+add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
+
+  if ($item->object === 'tinsta-nav-menu-object') {
+
+    $item_output = null;
+
+    if ($item->type == 'tinsta-nav-menu-frontpage') {
+      $item_output = get_custom_logo();
+
+    } elseif ($item->type == 'tinsta-nav-menu-login-register') {
+      if (!is_user_logged_in()) {
+        $item_output = sprintf('<a href="%s">%s</a>', wp_login_url(),
+          (get_option('users_can_register') ? __('Login & Register', 'tinsta') : __('Login', 'tinsta')));
+      }
+
+    } elseif ($item->type == 'tinsta-nav-menu-current-user') {
+      if (is_user_logged_in()) {
+        $title = $item->post_title;
+        if (!$title) {
+          $title = '%avatar% %name%';
+        }
+        $title = strtr($title, [
+          '%avatar%' => get_avatar(wp_get_current_user()->ID),
+          '%name%' => wp_get_current_user()->display_name,
+        ]);
+
+        $item_output = sprintf('<a href="%s">%s</a>', empty($item->url) ? get_edit_profile_url() : $item->url, $title);
+      }
+
+    } elseif ($item->type == 'tinsta-nav-menu-search-box') {
+      if ($depth < 2) {
+        $item_output = get_search_form(false);
+      }
+
+    } elseif ($item->type == 'tinsta-nav-menu-widget-area') {
+      $item_output = null;
+      if ($depth < 3) {
+        if (is_customize_preview() || is_active_sidebar('tinsta-menu-' . $item->post_name)) {
+          ob_start();
+          dynamic_sidebar('tinsta-menu-' . $item->post_name);
+          $widgets = ob_get_clean();
+          if (trim($widgets)) {
+            $item_output = '
+        <a href="#menu-item-' . $item->ID . '" >' . $item->post_title . '</a>
+        <div class="sub-menu">
+          <div class="sub-menu-inner">
+            ' . $widgets . '
+          </div>
+        </div>';
+          }
+        }
+      }
+    }
+
+  }
+
+  $item_output = preg_replace('#\@icon\(([\w\-]+)\)#i', '<i class="la $1"></i>', $item_output);
+
+  return $item_output;
+
+}, 10, 4);

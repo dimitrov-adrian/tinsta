@@ -280,3 +280,172 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
 
   return [$object, $return, $instance];
 }, 10, 3);
+
+/**
+ * Show Tinsta's types instead of "Custom Link"
+ */
+add_filter('wp_setup_nav_menu_item', function ($item) {
+  if ($item->object === 'tinsta-nav-menu-object') {
+    $items = tinsta_nav_menu_items();
+    if (!empty($items[$item->type])) {
+      $item->type_label = $items[$item->type]['type_label'];
+    }
+    else {
+      $item->type_label = __('Dynamic Content', 'tinsta');
+    }
+  }
+  return $item;
+});
+
+/**
+ * Helper function that returns Tinsta's custom menu items.
+ *
+ * The fake ID is required because customizer do not want to accept if they have no unique ID
+ *
+ * @return array
+ */
+function tinsta_nav_menu_items()
+{
+  $items = [];
+
+  $items['tinsta-nav-menu-frontpage'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Front Page (with logo)', 'tinsta'),
+    'type' => 'tinsta-nav-menu-frontpage',
+    'type_label' => __('Front Page (with logo)', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+  ];
+
+  $items['tinsta-nav-menu-widget-area'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Widgets Area', 'tinsta'),
+    'type' => 'tinsta-nav-menu-widget-area',
+    'type_label' => __('Widgets Area', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'description' => __('Create <em>sidebar</em> and allow managing widgets as <em>mega-menu</em>.', 'tinsta'),
+  ];
+
+  $items['tinsta-nav-menu-search-box'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Search Box', 'tinsta'),
+    'type' => 'tinsta-nav-menu-search-box',
+    'type_label' => __('Search Box', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+  ];
+
+  $items['tinsta-nav-menu-current-user'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('%avatar% Hey %name%', 'tinsta'),
+    'type' => 'tinsta-nav-menu-current-user',
+    'type_label' => __('Current User', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'url' => '',
+    'description' => __('Displayed only on logged users.', 'tinsta'),
+  ];
+
+  $items['tinsta-nav-menu-login-register'] = [
+    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'title' => __('Login & Register', 'tinsta'),
+    'type' => 'tinsta-nav-menu-login-register',
+    'type_label' => __('Login & Register', 'tinsta'),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'url' => '',
+    'description' => __('Displayed only on anonymous users.', 'tinsta'),
+  ];
+
+  return $items;
+}
+
+/**
+ * Add metabox for Tinsta's items in the wp-admin/nav-menus.php
+ */
+add_action( 'admin_head-nav-menus.php', function() {
+  add_meta_box('tinsta_nav_menu_items', __('Dynamic Content', 'tinsta'), function () {
+    global $nav_menu_selected_id;
+    ?>
+    <div id="tinsta-menu-items-div">
+      <div class="tabs-panel tabs-panel-active">
+
+        <p>
+          <?php _e('Dynamic content items works if are placed as 1st or 2nd level. When placed deeper, they are not dislpayed.', 'tinsta')?>
+        </p>
+
+        <ul class="categorychecklist form-no-clear" >
+          <?php $index = 0; foreach (tinsta_nav_menu_items() as $item): $index++; ?>
+            <li>
+              <div>
+                <label class="menu-item-title">
+                  <input type="checkbox" class="menu-item-checkbox"
+                         name="menu-item[<?php echo esc_attr($index)?>][menu-item-object-id]"
+                         value="<?php echo esc_attr($index); ?>" />
+                  <?php echo esc_html($item['title'])?>
+                </label>
+                <?php if (!empty($item['description'])):?>
+                  <div class="howto">
+                    <?php echo $item['description']?>
+                  </div>
+                <?php endif?>
+
+                <input type="hidden" class="menu-item-type" name="menu-item[<?php echo esc_attr($index)?>][menu-item-type]"
+                       value="<?php echo esc_html($item['type'])?>" />
+
+                <input type="hidden" class="menu-item-object" name="menu-item[<?php echo esc_attr($index)?>][menu-item-object]"
+                       value="<?php echo esc_html($item['object'])?>" />
+
+                <input type="hidden" class="menu-item-title"
+                       name="menu-item[<?php echo esc_attr($index)?>][menu-item-title]"
+                       value="<?php echo esc_html($item['title'])?>" />
+
+                <?php if (!empty($item['url'])):?>
+                  <input type="hidden" class="menu-item-url" name="menu-item[<?php echo esc_attr($index); ?>][menu-item-url]"
+                         value="<?php echo esc_url($item['url']); ?>" />
+                <?php endif?>
+
+                <input type="hidden" class="menu-item-classes"
+                       name="menu-item[<?php echo esc_attr($index)?>][menu-item-classes]" />
+              </div>
+            </li>
+          <?php endforeach?>
+        </ul>
+      </div>
+      <p class="button-controls">
+      <span class="add-to-menu">
+        <input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id )?>
+               class="button-secondary submit-add-to-menu right"
+               value="<?php esc_attr_e( 'Add to Menu', 'tinsta' )?>"
+               name="add-tinsta-menu-item" id="submit-tinsta-menu-items-div" />
+        <span class="spinner"></span>
+      </span>
+      </p>
+    </div>
+    <?php
+  }, 'nav-menus', 'side', 'low');
+});
+
+/**
+ * Add metabox for Tinsta's items in the customizer.
+ */
+add_filter('customize_nav_menu_available_item_types', function($menu_types) {
+  $menu_types[] = [
+    'title' => __('Dynamic Content', 'tinsta'),
+    'type_label' => __('Dynamic Content', 'tinsta'),
+    'type' => 'tinsta-menu-item',
+    'object' => 'tinsta-nav-menu-object',
+  ];
+  return $menu_types;
+});
+
+/**
+ * Add Tinsta's custom menu item to customizer's metabox.
+ */
+add_filter( 'customize_nav_menu_available_items', function( $items = [], $type = '', $object = '', $page = 0 ) {
+  if ( 'tinsta-nav-menu-object' !== $object ) {
+    return $items;
+  }
+  return array_merge( $items, array_values(tinsta_nav_menu_items()) );
+}, 10, 4);

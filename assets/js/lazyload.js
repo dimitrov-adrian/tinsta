@@ -1,12 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+  // Unsupported.
+  if (typeof(document.querySelectorAll) === 'undefined') {
+    var images = document.getElementsByName('IMG');
+    for ( var i = 0; i < images.length; i++ ) {
+      if (images[i].getAttribute('data-src')) {
+        images[i].setAttribute('src', images[i].getAttribute('data-src'));
+      }
+      if (images[i].getAttribute('data-srcset')) {
+        images[i].setAttribute('srcset', images[i].getAttribute('data-srcset'));
+      }
+    }
+    return false;
+  }
+
   // Images.
   var lazyImages = [].slice.call(document.querySelectorAll('img[data-srcset],img[data-src],iframe[data-src],video[data-src]'));
 
   // IntersectionObserver version.
   if ('IntersectionObserver' in window) {
-    var lazyImageObserver = new IntersectionObserver( function (entries, observer) {
-      entries.forEach(function(entry) {
+    var lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           var lazyImage = entry.target;
           if (lazyImage.dataset.hasOwnProperty('src') && lazyImage.dataset.src) {
@@ -20,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    lazyImages.forEach(function(lazyImage) {
+    lazyImages.forEach(function (lazyImage) {
       lazyImage.className += ' lazy';
       lazyImage.addEventListener('load', function () {
         this.className += ' lazy-loaded';
@@ -57,6 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', checkImages);
     window.addEventListener('load', checkImages);
     window.addEventListener('orientationchange', checkImages);
-    document.addEventListener('DOMContentLoaded', checkImages);
+    checkImages();
   }
 });

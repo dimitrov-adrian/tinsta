@@ -302,6 +302,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       &.menu-item-type-tinsta-nav-menu-widget-area > .sub-menu {
         width: 100%;
       }
+      //&:target,
       &:hover {
         background: $background;
         > a {

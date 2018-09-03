@@ -140,5 +140,5 @@ if ( TINSTA_INTEGRATIONS ) {
  * Include experiments.
  */
 if ( TINSTA_EXPERIMENTAL ) {
-  include __DIR__ . '/includes/experimental/nav-menu-items.php';
+  // include __DIR__ . '/includes/experimental/<experimental_theme_ext>.php';
 }
