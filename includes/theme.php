@@ -151,9 +151,9 @@ add_action('widgets_init', function () {
 
   // Post type variants.
   foreach (get_post_types(['public' => true], 'objects') as $post_type) {
-    
+
     // If twe are on customizer preview, then should register all sidebars, just to register it in customizer.
-    if (get_theme_mod("post_type_{$post_type->name}_layout_archive") || $is_customizer_preview) {
+    if (get_theme_mod("post_type_{$post_type->name}_layout_archive") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Archive %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
         'id' => "post-layout-archive-widget-{$post_type->name}",
@@ -167,7 +167,7 @@ add_action('widgets_init', function () {
     }
     
     // If twe are on customizer preview, then should register all sidebars, just to register it in customizer.
-    if (get_theme_mod("post_type_{$post_type->name}_layout") || $is_customizer_preview) {
+    if (get_theme_mod("post_type_{$post_type->name}_layout") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Single %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
         'id' => "post-layout-widget-{$post_type->name}",
@@ -199,6 +199,29 @@ add_action('widgets_init', function () {
     'after_title' => '</div>',
   ]);
 
+
+  // Make tinsta-nav-menu-widget-area available as sidebar.
+  $menu_sidebars = get_posts([
+    'post_type' => 'nav_menu_item',
+    'meta_query' => [
+      [
+        'key' => '_menu_item_type',
+        'value' => 'tinsta-nav-menu-widget-area',
+      ]
+    ]
+  ]);
+  foreach ($menu_sidebars as $sidebar) {
+    register_sidebar([
+      'name' => sprintf(__('Menu "%s"', 'tinsta'), $sidebar->post_title),
+      'description' => sprintf(__('Appears only in %s as sub-menu', 'tinsta'), $sidebar->post_title),
+      'id' => 'tinsta-menu-' . $sidebar->post_name,
+      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<div class="widgettitle">',
+      'after_title' => '</div>',
+    ]);
+  }
+
 });
 
 /**
@@ -229,32 +252,6 @@ add_action('widgets_init', function () {
 
   require __DIR__ . '/widgets/page-content-widget.php';
   register_widget('Tinsta_PageContent_Widget');
-
-  /**
-   * Make tinsta-nav-menu-widget-area available as sidebar.
-   */
-  // Register menu sidebars
-  $menu_sidebars = get_posts([
-    'post_type' => 'nav_menu_item',
-    'meta_query' => [
-      [
-        'key' => '_menu_item_type',
-        'value' => 'tinsta-nav-menu-widget-area',
-      ]
-    ]
-  ]);
-
-  foreach ($menu_sidebars as $sidebar) {
-    register_sidebar([
-      'name' => sprintf(__('Menu "%s"', 'tinsta'), $sidebar->post_title),
-      'description' => sprintf(__('Appears only in %s as sub-menu', 'tinsta'), $sidebar->post_title),
-      'id' => 'tinsta-menu-' . $sidebar->post_name,
-      'before_widget' => '<div id="%1$s" class="widget %2$s">',
-      'after_widget' => '</div>',
-      'before_title' => '<div class="widgettitle">',
-      'after_title' => '</div>',
-    ]);
-  }
 
 });
 

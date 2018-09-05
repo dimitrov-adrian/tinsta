@@ -16,6 +16,30 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 /**
+ * Add metabox for Tinsta's items in the customizer.
+ */
+add_filter('customize_nav_menu_available_item_types', function($menu_types) {
+  $menu_types[] = [
+    'title' => __('Dynamic Content', 'tinsta'),
+    'type_label' => __('Dynamic Content', 'tinsta'),
+    'type' => 'tinsta-menu-item',
+    'object' => 'tinsta-nav-menu-object',
+  ];
+  return $menu_types;
+});
+
+/**
+ * Add Tinsta's custom menu item to customizer's metabox.
+ */
+add_filter( 'customize_nav_menu_available_items', function( $items = [], $type = '', $object = '', $page = 0 ) {
+  if ( 'tinsta-nav-menu-object' !== $object ) {
+    return $items;
+  }
+  return array_merge( $items, array_values(tinsta_nav_menu_items()) );
+}, 10, 4);
+
+
+/**
  * Setup base region setting controls
  *
  * @param \WP_Customize_Manager
@@ -304,22 +328,6 @@ add_action('customize_register', function ($wp_customize) {
     'description' => __('Leave blank to inherit global font-family from text.', 'tinsta'),
     'type'    => 'textarea',
   ]);
-  // Actually, may be there is no point of such settings, as it come from typography.scss
-  //  for ($hn = 1; $hn <= 6; $hn++) {
-  //    $wp_customize->add_setting("typography_font_heading_size_h{$hn}");
-  //    $wp_customize->add_control("typography_font_heading_size_h{$hn}", [
-  //      'label'       => sprintf('H%d %s (px)', $hn, __('Size', 'tinsta')),
-  //      'section' => 'tinsta_typography_headings',
-  //      'type'        => 'number',
-  //      'input_attrs' => [
-  //        'min'   => 10,
-  //        'max'   => 20,
-  //        'step'  => 0.5,
-  //        'style' => 'width:6em;',
-  //      ],
-  //    ]);
-  //  }
-
 
   // Typography: Other Elements
   $wp_customize->add_section('tinsta_typography_forms', [
@@ -1155,6 +1163,23 @@ add_action('customize_register', function ($wp_customize) {
     if ($wp_customize->get_setting("post_type_{$post_type->name}")) {
       $wp_customize->get_setting("post_type_{$post_type->name}")->panel = 'tinsta_page_types';
     }
+
+    // experiment
+    //    $wp_customize->add_control("{$post_type_base_control_id}_elements_", [
+    //      'label'   => sprintf(__('Single %s layout', 'tinsta'), $singular_label),
+    //      'section' => $region_name,
+    //      'type'    => 'select',
+    //      // Mode @see &.site-entries-singular { ... } from _entries.scss
+    //      'choices' => apply_filters('tinsta_post_type_layouts_single', [
+    //        ''                  => __('Default', 'tinsta'),
+    //        'left-thumbnail'    => __('Left Thumbnail', 'tinsta'),
+    //        'right-thumbnail'   => __('Right Thumbnail', 'tinsta'),
+    //        'contextual-header' => __('Contextual Header', 'tinsta'),
+    //        'catalog-item'      => __('Catalog Item', 'tinsta'),
+    //        'widgets-area'      => __('Widgets Area', 'tinsta'),
+    //      ], $post_type->name),
+    //    ]);
+    // /experiment
 
     $wp_customize->add_control("{$post_type_base_control_id}_use_defaults", [
       'label'   => __('Use Default Views', 'tinsta'),

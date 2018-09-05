@@ -2,9 +2,7 @@
 
 /**
  * @file
- *
- * This is WordPress's default functions.php file,
- * if simple theme
+ * Theme bootstrap.
  */
 
 
@@ -14,7 +12,7 @@
 global $wp_version;
 $tinsta_supports_failcheck = [
   'php' => version_compare( phpversion(), '5.4.0', '<' ),
-  'wp' => version_compare( $wp_version, '4.4.0', '<' ),
+  'wp' => version_compare( $wp_version, '5.0-alpha', '<' ),
   'phar' => !extension_loaded('phar'),
   // @TODO add check if wp-content is writeable
 ];
@@ -47,6 +45,10 @@ if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
           'tinsta');
         echo '</p>';
       }
+
+      echo '<p>';
+      _e('Meanwhile, maintenance message is displayed on yor front-end.', 'tinsta');
+      echo '</p>';
 
       echo '</div>';
     }

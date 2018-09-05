@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Only hooks that are responsible for front-end and NOT for admin/back-end interface.
+ * Only hooks that are responsible for front-end only
  */
 
 
@@ -445,10 +445,17 @@ add_filter('dynamic_sidebar_params', function ($params) {
 
       $settings = $settings[$params[1]['number']];
 
+      $style = '';
+
       if (!empty($settings['tinsta_widget_size'])) {
-        $replacement = 'style="width:' . round($settings['tinsta_widget_size'], 2) . '%;"';
-        $params[0]['before_widget'] = str_replace('class="', " $replacement class=\"", $params[0]['before_widget']);
+        $style .= 'width:' . round($settings['tinsta_widget_size'], 2) . '%;';
       }
+
+      if (!empty($settings['tinsta_widget_float'])) {
+        $style .= 'float:' . $settings['tinsta_widget_float'];
+      }
+
+      $params[0]['before_widget'] = str_replace('class="', " style=\"{$style}\" class=\"", $params[0]['before_widget']);
 
       if (!empty($settings['tinsta_boxed']) && $settings['tinsta_boxed'] == 'on') {
         $params[0]['before_widget'] = str_replace('class="', 'class="wrapper ', $params[0]['before_widget']);

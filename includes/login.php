@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Only hooks that are responsible for login/register pages.
+ * Only hooks that are responsible for login/register pages only
  */
 
 

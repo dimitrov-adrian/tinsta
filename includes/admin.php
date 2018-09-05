@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Only hooks that are responsible for admin/back-end and NOT for front-end interface.
+ * Only hooks that are responsible for admin panel only.
  */
 
 
@@ -159,7 +159,7 @@ add_action('admin_print_scripts', function () {
 add_action('admin_menu', function () {
 
   add_theme_page(__('Tools', 'tinsta'), __('Tools', 'tinsta'), 'edit_theme_options', 'tinsta-tools', function () {
-    require __DIR__ . '/tools.php';
+    require __DIR__ . '/page-tools.php';
   });
 
 });
@@ -304,12 +304,12 @@ add_filter('wp_setup_nav_menu_item', function ($item) {
  *
  * @return array
  */
-function tinsta_nav_menu_items()
+function tinsta_nav_menu_items($idbase = 0)
 {
   $items = [];
 
   $items['tinsta-nav-menu-frontpage'] = [
-    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'id' => 'tinsta-nav-menu-frontpage-' . $idbase,
     'title' => __('Front Page (with logo)', 'tinsta'),
     'type' => 'tinsta-nav-menu-frontpage',
     'type_label' => __('Front Page (with logo)', 'tinsta'),
@@ -318,7 +318,7 @@ function tinsta_nav_menu_items()
   ];
 
   $items['tinsta-nav-menu-widget-area'] = [
-    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'id' => 'tinsta-nav-menu-widget-area-' . $idbase,
     'title' => __('Widgets Area', 'tinsta'),
     'type' => 'tinsta-nav-menu-widget-area',
     'type_label' => __('Widgets Area', 'tinsta'),
@@ -328,7 +328,7 @@ function tinsta_nav_menu_items()
   ];
 
   $items['tinsta-nav-menu-search-box'] = [
-    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'id' => 'tinsta-nav-menu-search-box-' . $idbase,
     'title' => __('Search Box', 'tinsta'),
     'type' => 'tinsta-nav-menu-search-box',
     'type_label' => __('Search Box', 'tinsta'),
@@ -337,7 +337,7 @@ function tinsta_nav_menu_items()
   ];
 
   $items['tinsta-nav-menu-current-user'] = [
-    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'id' => 'tinsta-nav-menu-current-user-' . $idbase,
     'title' => __('%avatar% Hey %name%', 'tinsta'),
     'type' => 'tinsta-nav-menu-current-user',
     'type_label' => __('Current User', 'tinsta'),
@@ -348,7 +348,7 @@ function tinsta_nav_menu_items()
   ];
 
   $items['tinsta-nav-menu-login-register'] = [
-    'id' => md5( microtime(1) . wp_rand(0, 1000)),
+    'id' => 'tinsta-nav-menu-login-register-' . $idbase,
     'title' => __('Login & Register', 'tinsta'),
     'type' => 'tinsta-nav-menu-login-register',
     'type_label' => __('Login & Register', 'tinsta'),
@@ -426,26 +426,3 @@ add_action( 'admin_head-nav-menus.php', function() {
     <?php
   }, 'nav-menus', 'side', 'low');
 });
-
-/**
- * Add metabox for Tinsta's items in the customizer.
- */
-add_filter('customize_nav_menu_available_item_types', function($menu_types) {
-  $menu_types[] = [
-    'title' => __('Dynamic Content', 'tinsta'),
-    'type_label' => __('Dynamic Content', 'tinsta'),
-    'type' => 'tinsta-menu-item',
-    'object' => 'tinsta-nav-menu-object',
-  ];
-  return $menu_types;
-});
-
-/**
- * Add Tinsta's custom menu item to customizer's metabox.
- */
-add_filter( 'customize_nav_menu_available_items', function( $items = [], $type = '', $object = '', $page = 0 ) {
-  if ( 'tinsta-nav-menu-object' !== $object ) {
-    return $items;
-  }
-  return array_merge( $items, array_values(tinsta_nav_menu_items()) );
-}, 10, 4);

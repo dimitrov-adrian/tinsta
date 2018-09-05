@@ -17,6 +17,14 @@ very standard web site layout with a lot of customization options.
 - WordPress 4.4 or later
 
 ##
+### Installation
+1. In your admin panel, go to Appearance -> Themes and click the 'Add New' button.
+2. Type in Tinsta in the search form and press the 'Enter' key on your keyboard.
+3. Click on the 'Activate' button to use your new theme right away.
+4. Go to https://github.com/dimitrov-adrian/tinsta for theme documentation.
+5. Navigate to Appearance > Customize in your admin panel and customize to taste.
+
+##
 ### wp-config.php constants
 
 ##### Setup directory to store cache css files

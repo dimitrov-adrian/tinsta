@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Tinsta's core helper functions.
+ * Theme helpers.
  */
 
 /**

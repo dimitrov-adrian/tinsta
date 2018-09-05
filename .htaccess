@@ -1,5 +1,5 @@
-Options -Indexes
 Deny from all
-<Files ~ "screenshot.png">
+
+<FilesMatch "\.(css|js|png|jpe?g|svg|eot|ttf|woff2?)$">
   Allow from all
-</Files>
+</FilesMatch>

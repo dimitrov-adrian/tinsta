@@ -10,6 +10,7 @@ $la-is-loaded: false !default;
   $la-is-loaded: true;
 
   @font-face {
+    font-display: auto;
     font-family: "LineAwesome";
     src: url($tinsta_theme_dir_url + "/assets/fonts/line-awesome.eot?v=1.1.");
     src: url($tinsta_theme_dir_url + "/assets/fonts/line-awesome.eot??v=1.1.#iefix") format("embedded-opentype"),

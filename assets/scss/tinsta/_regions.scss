@@ -383,6 +383,10 @@ body {
           padding-left: 0;
         }
 
+        @media (max-width: $breakpoint_max_tablet) {
+          padding: 0;
+        }
+
         @include regionColors($region_sidebar_primary_color_foreground,
           $region_sidebar_primary_color_background,
           $region_sidebar_primary_color_background_opacity,
@@ -404,6 +408,10 @@ body {
         } @else {
           padding-left: 2rem;
           padding-right: 0;
+        }
+
+        @media (max-width: $breakpoint_max_tablet) {
+          padding: 0;
         }
 
         @include regionColors($region_sidebar_primary_color_foreground,
