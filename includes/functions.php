@@ -166,7 +166,8 @@ function tinsta_get_options_defaults()
     'system_page_login_theming' => 'brand',
     'system_page_404_theming' => '',
     'system_page_404_content' => '',
-    'system_page_search_search_force_post_type' => '',
+    'system_page_search_force_post_type' => '',
+    'system_page_search_disable_search' => false,
 
   ];
 
@@ -519,7 +520,7 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
   // Stylesheet hashes.
   $stylesheet_hashes = get_transient('tinsta_theme');
   $stylesheet_hash_stored = empty($stylesheet_hashes[$source_file_hash]) ? null : $stylesheet_hashes[$source_file_hash];
-  $stylesheet_hash_current = md5(serialize($args['variables']));
+  $stylesheet_hash_current = md5(json_encode($args['variables']));
 
   // Rebuild only when:
   if (

@@ -46,7 +46,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 @mixin shadow() {
   @if ($component_effects_shadows) {
-    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 0 12px rgba($region_root_color_foreground, .12);
   }
 }
 
@@ -263,6 +263,18 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     }
 
     @media (min-width: $breakpoint_max_tablet) {
+
+      // @TODO consider if to show arrows or not.
+      //&.menu-item-has-children,
+      //&.menu-item-type-tinsta-nav-menu-widget-area {
+      //  > a:after {
+      //    @extend %la;
+      //    content: $la-angle-down;
+      //    font-size: .6rem;
+      //    margin-left: .6rem;
+      //  }
+      //}
+
       > .sub-menu {
         position: absolute;
         z-index: $z-index-modal;

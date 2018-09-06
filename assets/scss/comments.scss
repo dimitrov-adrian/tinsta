@@ -53,6 +53,12 @@ $la-is-loaded: true;
       clear: both;
       overflow: hidden;
 
+      &.bypostauthor {
+        @include border(muted($region_root_color_primary));
+        background-color: opa(muted($region_root_color_primary));
+        padding: .6rem 1rem;
+      }
+
       .comment-author-avatar {
         width: $component_avatar_size + px;
         @media (min-width: 421px) {

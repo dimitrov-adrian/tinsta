@@ -1124,13 +1124,18 @@ add_action('customize_register', function ($wp_customize) {
     'title' => __('Search', 'tinsta'),
     'panel' => 'tinsta_system_pages',
   ]);
+  $wp_customize->add_control('system_page_search_disable_search', [
+    'label'   => __('Globally disable search', 'tinsta'),
+    'section' => 'tinsta_system_page_search',
+    'type'    => 'checkbox',
+  ]);
   $post_types = [
     '' => '&mdash; ' . __('All', 'tinsta') . ' &mdash;',
   ];
   foreach ($public_post_types as $post_type) {
     $post_types["{$post_type->name}"] = $post_type->label;
   }
-  $wp_customize->add_control('system_page_search_search_force_post_type', [
+  $wp_customize->add_control('system_page_search_force_post_type', [
     'label'   => __('Force search to find only', 'tinsta'),
     'section' => 'tinsta_system_page_search',
     'type'    => 'select',

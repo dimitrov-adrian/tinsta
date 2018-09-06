@@ -749,8 +749,9 @@ input::-moz-focus-inner {
  * Avatars
  */
 .avatar {
-  background-color: mix(colorInvert($region_root_color_foreground, $typography_brightness), $region_root_color_foreground, 100% - $typography_brightness);
-  background-color: rgba($region_root_color_foreground, $brightness-base / 100);
+  // Could cause background on transparent images.
+  //background-color: mix(colorInvert($region_root_color_foreground, $typography_brightness), $region_root_color_foreground, 100% - $typography_brightness);
+  //background-color: rgba($region_root_color_foreground, $brightness-base / 100);
   @include roundness();
 }
 

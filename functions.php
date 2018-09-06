@@ -12,7 +12,7 @@
 global $wp_version;
 $tinsta_supports_failcheck = [
   'php' => version_compare( phpversion(), '5.4.0', '<' ),
-  'wp' => version_compare( $wp_version, '5.0-alpha', '<' ),
+  'wp' => version_compare( $wp_version, '4.6.0', '<' ),
   'phar' => !extension_loaded('phar'),
   // @TODO add check if wp-content is writeable
 ];
@@ -59,7 +59,10 @@ if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
 
     add_action('template_redirect', '_tinsta_check_notices_frontend');
     function _tinsta_check_notices_frontend() {
-      wp_die(__('The site is under maintenance. We are working to get it back as soon as possible.', 'tinsta'));
+      wp_die( __('The site is under maintenance. We are working to get it back as soon as possible.', 'tinsta'),
+        '',
+        [ 'response' => '503' ]
+      );
     }
 
   }

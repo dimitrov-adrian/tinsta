@@ -12,7 +12,7 @@
 add_action('template_redirect', function () {
 
   // Handle requests like /?tinsta-resolve-user-avatar=<email|id>[&s=<size>]
-  if (!empty($_GET['tinsta-resolve-user-avatar'])) {
+  if ( !empty($_GET['tinsta-resolve-user-avatar']) ) {
     $avatar_url = get_avatar_url($_GET['tinsta-resolve-user-avatar'], [
       'size' => empty($_GET['s']) || !is_numeric($_GET['s']) ? null : $_GET['s'],
     ]);
@@ -21,7 +21,7 @@ add_action('template_redirect', function () {
   }
 
   // Simple ajax search.
-  if (isset($_GET['tinsta-ajax-search'])) {
+  if ( isset($_GET['tinsta-ajax-search']) && !get_theme_mod('system_page_search_disable_search') ) {
     $args = [
       'posts_per_page' => 10,
     ];
@@ -51,11 +51,6 @@ add_action('wp_head', function () {
   $color = esc_attr(get_theme_mod('region_root_color_primary'));
   $sitename = esc_attr(get_bloginfo('sitename'));
   $sitedescription = esc_attr(substr(get_bloginfo('description'), 0, 160));
-
-  // No need anymore.
-  //  if (get_theme_mod('typography_font_google') | get_theme_mod('typography_font_headings_google')) {
-  //    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com" />';
-  //  }
 
   echo get_theme_mod('component_header_markup');
 
@@ -190,7 +185,7 @@ add_action('wp_enqueue_scripts', function () {
   wp_script_add_data('respondjs', 'conditional', 'lte IE 8');
 
   // Tinsta theme hash.
-  $theme_hash = substr(md5(is_customize_preview() ? microtime(1) : serialize(get_transient('tinsta_theme'))), 2, 4);
+  $theme_hash = substr(md5(is_customize_preview() ? microtime(1) : json_encode(get_transient('tinsta_theme'))), 2, 4);
 
   $fonts_google = [];
 
@@ -468,25 +463,19 @@ add_filter('dynamic_sidebar_params', function ($params) {
 });
 
 /**
- * Add first level menu items, depth-0 class.
+ * Parse query hook
  */
-add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
-  $classes[] = 'depth-' . $depth;
-  return $classes;
-}, 10, 4);
-
-/**
- * Add description to menu items
- */
-add_filter('walker_nav_menu_start_el', function ($item_output, $item) {
-
-  if (!empty($item->description)) {
-    $item_output = str_replace('</a>', '<span class="description">' . $item->description . '</span></a>', $item_output);
+add_action( 'parse_query', function ( $query, $error = true ) {
+  if ( get_theme_mod('system_page_search_disable_search') && is_main_query() && is_search() ) {
+    $query->is_search = false;
+    $query->query_vars['s'] = false;
+    $query->query['s'] = false;
+    // to error
+    if ( $error == true ) {
+      $query->is_404 = true;
+    }
   }
-
-  return $item_output;
-
-}, 10, 2);
+});
 
 /**
  * Override post fetching
@@ -500,7 +489,7 @@ add_action('pre_get_posts', function ($query) {
   if ( $query->is_main_query() ) {
 
     if ( is_search() ) {
-      $post_type = get_theme_mod('system_page_search_search_force_post_type');
+      $post_type = get_theme_mod('system_page_search_force_post_type');
       if ($post_type) {
         $query->set('post_type', $post_type);
       }
@@ -533,6 +522,14 @@ add_filter('widget_tag_cloud_args', function ( $args ) {
   $args['unit']     = 'rem';
   return $args;
 });
+
+/**
+ * Add first level menu items, depth-0 class.
+ */
+add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
+  $classes[] = 'depth-' . $depth;
+  return $classes;
+}, 10, 4);
 
 /**
  * Filter user menus
@@ -590,7 +587,13 @@ if ( !is_customize_preview() && !is_admin() ) {
  */
 add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
 
+  static $wp_current_user = null;
+
   if ($item->object === 'tinsta-nav-menu-object') {
+
+    if ($wp_current_user === null) {
+      $wp_current_user = wp_get_current_user();
+    }
 
     $item_output = null;
 
@@ -598,23 +601,28 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
       $item_output = get_custom_logo();
 
     } elseif ($item->type == 'tinsta-nav-menu-login-register') {
-      if (!is_user_logged_in()) {
-        $item_output = sprintf('<a href="%s">%s</a>', wp_login_url(),
-          (get_option('users_can_register') ? __('Login & Register', 'tinsta') : __('Login', 'tinsta')));
+      if (!$wp_current_user->ID) {
+        $item_output = sprintf('<a href="%s">%s</a>',
+          wp_login_url(),
+          ( get_option('users_can_register') ? __('Login & Register', 'tinsta') : __('Login', 'tinsta') )
+        );
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-current-user') {
-      if (is_user_logged_in()) {
+      if ($wp_current_user->ID) {
         $title = $item->post_title;
         if (!$title) {
           $title = '%avatar% %name%';
         }
         $title = strtr($title, [
-          '%avatar%' => get_avatar(wp_get_current_user()->ID),
-          '%name%' => wp_get_current_user()->display_name,
+          '%avatar%' => get_avatar($wp_current_user->ID),
+          '%name%' => $wp_current_user->display_name,
         ]);
 
-        $item_output = sprintf('<a href="%s">%s</a>', empty($item->url) ? get_edit_profile_url() : $item->url, $title);
+        $item_output = sprintf('<a href="%s">%s</a>',
+          empty($item->url) ? get_edit_profile_url() : $item->url,
+          $title
+        );
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-search-box') {
@@ -631,12 +639,13 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
           $widgets = ob_get_clean();
           if (trim($widgets)) {
             $item_output = '
-        <a href="#menu-item-' . $item->ID . '" >' . $item->post_title . '</a>
-        <div class="sub-menu">
-          <div class="sub-menu-inner">
-            ' . $widgets . '
-          </div>
-        </div>';
+              <a href="#menu-item-' . $item->ID . '" >' . $item->post_title . '</a>
+              <div class="sub-menu">
+                <div class="sub-menu-inner">
+                  ' . $widgets . '
+                </div>
+              </div>
+              ';
           }
         }
       }
@@ -645,6 +654,12 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
   }
 
   $item_output = preg_replace('#\@icon\(([\w\-]+)\)#i', '<i class="la $1"></i>', $item_output);
+
+  if (!empty($item->description)) {
+    $item_output = str_replace('</a>',
+      '<span class="description">' . $item->description . '</span></a>',
+      $item_output);
+  }
 
   return $item_output;
 

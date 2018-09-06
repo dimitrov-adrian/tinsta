@@ -4,25 +4,26 @@
 > **Using on production is on Your own risk.**
 
 
-# Tinsta (Tiny Standard) ![](https://img.shields.io/github/release/dimitrov-adrian/tinsta.svg)
+# Tinsta (Tiny Standard)
 
 ![](https://raw.githubusercontent.com/dimitrov-adrian/tinsta/master/screenshot.png)
 
-Tinsta (as from Tiny Standard) is free open source WordPress theme, that aims to provide 
+Tinsta (as from **Ti**ny **sta**ndard) is free open source WordPress theme, that aims to provide 
 very standard web site layout with a lot of customization options.
 
 ##
 ### Requirements
 - PHP 5.4 or later
-- WordPress 4.4 or later
+- WordPress 4.6 or later
 
 ##
 ### Installation
-1. In your admin panel, go to Appearance -> Themes and click the 'Add New' button.
-2. Type in Tinsta in the search form and press the 'Enter' key on your keyboard.
-3. Click on the 'Activate' button to use your new theme right away.
-4. Go to https://github.com/dimitrov-adrian/tinsta for theme documentation.
-5. Navigate to Appearance > Customize in your admin panel and customize to taste.
+1. Download [Tinsta](https://github.com/dimitrov-adrian/tinsta/archive/master.zip)
+2. Unzip `tinsta-master.zip` and rename `tinsta-master` to `tinsta`
+3. Upload to your `wp-content/themes`
+4. In your admin panel, go to Appearance -> Themes
+5. Click on the 'Activate' button to use your new theme right away.
+4. Navigate to Appearance > Customize in your admin panel and customize to taste.
 
 ##
 ### wp-config.php constants
@@ -50,13 +51,13 @@ define('TINSTA_INTEGRATIONS', true);
 ##
 ### TODO
 List by priority
-- [ ] **[WIP]** Improve strings
+- [ ] **[WIP]** Improve UI strings
 - [ ] **[WIP]** Gutenberg blocks *(integration)*
-- [ ] Sticky Sidebars
+- [ ] **[WIP]** SiteOrigin Panels *(integration)*
 - [ ] WooCommerce *(integration)*
+- [ ] Sticky Sidebars
 - [ ] Allow full width layout
-- [ ] SiteOrigin Panels *(integration)*
-- [ ] BbPress *(integration)*
+- [ ] bbPress *(integration)*
 - [ ] Add ability to add icon to menu items
 - [ ] More layouts for post's single/archive views
 - [ ] Share Buttons by AddThis *(integration)*
@@ -64,6 +65,13 @@ List by priority
 
 ##
 #### FAQ
+
+##### How to update
+Tinsta theme is not in the [theme directory](https://wordpress.org/themes/),
+so cannot be updated through WordPress built-in store. The only way to get automatic
+updates is via [github-udpater](https://github.com/afragen/github-updater) plugin.
+
+Manual update is always an option. Check **INSTALLATION** for more information.
 
 ##### Why no complete customizeable ability like Headway
 Because the theme's purpose is not to be a complete design builder,
@@ -77,10 +85,11 @@ Anyway, the theme can integrate with some of these plugins very well,
 so you can pick the plugin you are familiar with it and do the job.
 
 ##### Why no per post type or page sidebars (widget areas), how can manage different widgets in same sidebars
-Adding variants to sidebar per post_type or type family will be very limited way to managing widgets.
-Using plugin that provide widget logic is more flexible way to do the goal. There is plenty of good 
-solutions for this, so right now there is no reason to reinvent the wheel. Check some of the 
-**Widget Logic** recommentations, and pick by your choice.
+Adding variants to sidebar per post_type or type family will be very limited way
+to managing widgets. Using plugin that provide widget logic is more flexible way
+to do the goal. There is plenty of good solutions for this, so right now there 
+is no reason to reinvent the wheel. Check some of the **Widget Logic** recommentations,
+and pick by your choice.
 
 
 ### Want to extend. Plugins recommendation list.
@@ -150,7 +159,7 @@ Chrome's **Disable cache** option in dev panel)
 ## 
 ### License & Terms 
 Tinsta theme is available under the terms of the
-[GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. Check `LICENSE` 
+[GPL-v2](http://www.gnu.org/licenses/gpl-2.0.html) or later license. 
 
 The theme come bundled with following third-party resources:
 

@@ -33,6 +33,12 @@ add_action( 'after_setup_theme', function () {
     'gallery',
     'caption',
   ]);
+
+  // Nulling search forms
+  if (get_theme_mod('system_page_search_disable_search')) {
+    add_filter('get_search_form', '__return_null');
+  }
+
 });
 
 /**
@@ -77,6 +83,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Header', 'tinsta'),
+    'description' => __('Display widgets in Header Region.', 'tinsta'),
     'id' => 'header',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -86,6 +93,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Before Main Content', 'tinsta'),
+    'description' => __('Full width region between Header and Main Content of the page.', 'tinsta'),
     'id' => 'before-content',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -95,6 +103,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Front Page', 'tinsta'),
+    'description' => __('Displayed before main content of home page (front-page).', 'tinsta'),
     'id' => 'frontpage',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -115,6 +124,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Primary Sidebar', 'tinsta'),
+    'description' => __('Primary Sidebar, usually displayed left to Main Content.', 'tinsta'),
     'id' => 'primary',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -124,6 +134,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Secondary Sidebar', 'tinsta'),
+    'description' => __('Secondary Sidebar, usually displayed right to Main Content.', 'tinsta'),
     'id' => 'secondary',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -133,6 +144,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Before Entries', 'tinsta'),
+    'description' => __('Displayed before entries or single entry, between the sidebars. Scoped in Main Content.', 'tinsta'),
     'id' => 'before-entries',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -142,6 +154,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('After Entries', 'tinsta'),
+    'description' => __('Displayed after entries or single entry, between the sidebars. Scoped in Main Content.', 'tinsta'),
     'id' => 'after-entries',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -156,6 +169,7 @@ add_action('widgets_init', function () {
     if (get_theme_mod("post_type_{$post_type->name}_layout_archive") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Archive %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
+        'description' => sprintf(__('Manage %s display, when displaying multiple entries, via Widgets.', 'tinsta'), $post_type->label),
         'id' => "post-layout-archive-widget-{$post_type->name}",
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget' => '</div>',
@@ -170,6 +184,7 @@ add_action('widgets_init', function () {
     if (get_theme_mod("post_type_{$post_type->name}_layout") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Single %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
+        'description' => sprintf(__('Manage %s display, when displaying single entry, via Widgets.', 'tinsta'), $post_type->label),
         'id' => "post-layout-widget-{$post_type->name}",
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget' => '</div>',
@@ -183,6 +198,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('After Main Content', 'tinsta'),
+    'description' => __('Full width region between Main Content and Footer of the page.', 'tinsta'),
     'id' => 'after-content',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -192,6 +208,7 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Footer', 'tinsta'),
+    'description' => __('Display widgets in Footer Region.', 'tinsta'),
     'id' => 'footer',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -213,7 +230,7 @@ add_action('widgets_init', function () {
   foreach ($menu_sidebars as $sidebar) {
     register_sidebar([
       'name' => sprintf(__('Menu "%s"', 'tinsta'), $sidebar->post_title),
-      'description' => sprintf(__('Appears only in %s as sub-menu', 'tinsta'), $sidebar->post_title),
+      'description' => sprintf(__('Appears under the "%s" menu item as mega menu', 'tinsta'), $sidebar->post_title),
       'id' => 'tinsta-menu-' . $sidebar->post_name,
       'before_widget' => '<div id="%1$s" class="widget %2$s">',
       'after_widget' => '</div>',
