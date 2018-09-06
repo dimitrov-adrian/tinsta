@@ -44,9 +44,11 @@ add_action('template_redirect', function () {
 });
 
 /**
- * Add extra markup in header, SEO/MEO and other hacks to be good for Google.
+ * Add extra markup in header.
  */
 add_action('wp_head', function () {
+
+  // @TODO performance improvements.
 
   $color = esc_attr(get_theme_mod('region_root_color_primary'));
   $sitename = esc_attr(get_bloginfo('sitename'));
@@ -148,11 +150,15 @@ add_filter('the_content_rss', function ($content = '') {
  */
 add_action('wp_footer', function () {
 
+  // Output footer markup.
   echo get_theme_mod('component_footer_markup');
 
-  $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
-  if ( ! ($privacy_policy_page_id && is_page($privacy_policy_page_id)) && get_theme_mod('component_site_agreement_enable') ) {
-    get_template_part('template-parts/components/agreement');
+  // Add agreement dialog markup.
+  if ( !is_user_logged_in() && get_theme_mod('component_site_agreement_enable') ) {
+    $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
+    if (!($privacy_policy_page_id && is_page($privacy_policy_page_id))) {
+      get_template_part('template-parts/components/agreement');
+    }
   }
 
 });
@@ -162,26 +168,30 @@ add_action('wp_footer', function () {
  */
 add_action('wp_enqueue_scripts', function () {
 
+  $template_directory_uri = get_template_directory_uri();
+
+  $min_suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' );
+
   // https://github.com/aFarkas/html5shiv
-  wp_enqueue_script('html5shiv', get_template_directory_uri() . '/assets/js/html5shiv.min.js', [], '3.7.3');
+  wp_enqueue_script('html5shiv', $template_directory_uri . '/assets/js/html5shiv.min.js', [], '3.7.3');
   wp_script_add_data('html5shiv', 'conditional', 'lte IE 8');
 
   // https://github.com/corysimmons/selectivizr2
-  wp_enqueue_script('selectivizr', get_template_directory_uri() . '/assets/js/selectivizr2.min.js', [], '1.0.9');
+  wp_enqueue_script('selectivizr', $template_directory_uri . '/assets/js/selectivizr2.min.js', [], '1.0.9');
   wp_script_add_data('selectivizr', 'conditional', 'lte IE 8');
 
   // Seems that this make more mess than benefits, it cause 403 (Forbidden)
   // https://github.com/LeaVerou/prefixfree
-  wp_enqueue_script('prefixfree', get_template_directory_uri() . '/assets/js/prefixfree.min.js', [], '1.0.7');
+  wp_enqueue_script('prefixfree', $template_directory_uri . '/assets/js/prefixfree.min.js', [], '1.0.7');
   wp_script_add_data('prefixfree', 'conditional', 'lte IE 8');
 
   // Rem polyfill
   // https://github.com/nbouvrette/remPolyfill
-  wp_enqueue_script('remPolyfill', get_template_directory_uri() . '/assets/js/remPolyfill.js', [], '1.0.0');
+  wp_enqueue_script('remPolyfill', $template_directory_uri . '/assets/js/remPolyfill.js', [], '1.0.0');
   wp_script_add_data('remPolyfill', 'conditional', 'lte IE 8');
 
   // Respond.js v1.4.2: min/max-width media query polyfill
-  wp_enqueue_script('respondjs', get_template_directory_uri() . '/assets/js/respond.min.js', [], '1.4.2');
+  wp_enqueue_script('respondjs', $template_directory_uri . '/assets/js/respond.min.js', [], '1.4.2');
   wp_script_add_data('respondjs', 'conditional', 'lte IE 8');
 
   // Tinsta theme hash.
@@ -199,7 +209,7 @@ add_action('wp_enqueue_scripts', function () {
 
   if ($fonts_google) {
     $fonts_google = implode('|', array_map('urlencode', $fonts_google));
-    wp_enqueue_style('tinsta-google-fonts', "//fonts.googleapis.com/css?family={$fonts_google}", [], null);
+    wp_enqueue_style('tinsta-google-fonts', '//fonts.googleapis.com/css?family=' . $fonts_google);
   }
 
   // Disable the ugly WP styles for recent comments widget.
@@ -211,24 +221,22 @@ add_action('wp_enqueue_scripts', function () {
 
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_smooth_scroll')) {
-    wp_enqueue_script('smoothscroll', get_template_directory_uri() . '/assets/js/smoothscroll.min.js', [], '1.4.6', true);
+    wp_enqueue_script('smoothscroll', $template_directory_uri . '/assets/js/smoothscroll.min.js', [], '1.4.6', true);
   }
 
   // Add nice scroll if when enabled.
   if (get_theme_mod('component_effects_lazyload')) {
-    wp_enqueue_script('tinsta-lazyload', get_template_directory_uri() . '/assets/js/lazyload.' . ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' ) . 'js', [], '1.0', true);
+    wp_enqueue_script('tinsta-lazyload', $template_directory_uri . '/assets/js/lazyload.' . $min_suffix . 'js', [], $theme_hash, true);
   }
 
   // Theme's script.
-  wp_enqueue_script('tinsta', get_template_directory_uri() . '/assets/js/main.' . ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' ) . 'js', [], wp_get_theme()->get('Version'), true);
+  wp_enqueue_script('tinsta', $template_directory_uri . '/assets/js/main.' . $min_suffix . 'js', [], $theme_hash, true);
   wp_localize_script('tinsta', 'tinsta', [
     'siteUrl' => home_url(),
-    'assetsDir' => get_template_directory_uri() . '/assets/',
+    'assetsDir' => $template_directory_uri . '/assets/',
     'fullHeight' => get_theme_mod('region_root_height_full'),
     'scrolltop' => get_theme_mod('component_scrolltop'),
     'strings' => [
-      //'editLabel' => __('Edit %s', 'tinsta'),
-      //'menuLabel' => __('Menu', 'tinsta'),
       'close' => __('Close', 'tinsta'),
       'top' => __('Top', 'tinsta'),
     ],
@@ -240,13 +248,17 @@ add_action('wp_enqueue_scripts', function () {
 
     // Comment respond form reply script.
   if (is_singular()) {
-    if (have_comments() || comments_open() || intval(get_comments_number()) > 0) {
+    $comments_open = comments_open();
+
+    if (have_comments() || $comments_open || intval(get_comments_number()) > 0) {
       // Enqueue stylesheets.
       wp_enqueue_style('tinsta-comments', tinsta_get_stylesheet('comments'), [], $theme_hash);
     }
-    if (comments_open()) {
+
+    if ($comments_open) {
       wp_enqueue_script('comment-reply');
     }
+
   }
 
 });
@@ -256,11 +268,19 @@ add_action('wp_enqueue_scripts', function () {
  */
 add_filter('body_class', function ($classes, $class) {
 
-  if (get_theme_mod('component_effects_shadows')) {
+  static $cached_vars = null;
+  if ($cached_vars === null) {
+    $cached_vars = [
+      'component_effects_shadows' => get_theme_mod('component_effects_shadows'),
+      'component_effects_animations' => get_theme_mod('component_effects_animations'),
+    ];
+  }
+
+  if ($cached_vars['component_effects_shadows']) {
     $classes[] = 'effects-shadows';
   }
 
-  if (get_theme_mod('component_effects_animations')) {
+  if ($cached_vars['component_effects_animations']) {
     $classes[] = 'effects-animations';
   }
 
@@ -331,26 +351,37 @@ add_filter('embed_oembed_html', function ($html, $url, $attr) {
  */
 add_filter('the_content', function ($content) {
 
-  if (is_singular()) {
+  static $cached_vars = null;
+  if ($cached_vars === null) {
+    $cached_vars = [
+      'is_singular' => is_singular(),
+      'is_user_logged_in' => is_user_logged_in(),
+      'is_admin_bar_showing' => is_admin_bar_showing(),
+      'component_outdated_post_time' => (int) get_theme_mod('component_outdated_post_time', 0)  * 60 * 60 * 24,
+      'component_outdated_post_message' => get_theme_mod('component_outdated_post_message'),
+    ];
+  }
+
+  if ($cached_vars['is_singular']) {
     $post = get_post();
 
-    if (is_user_logged_in() && !is_admin_bar_showing()) {
+    if ($cached_vars['is_user_logged_in'] && !$cached_vars['is_admin_bar_showing']) {
       ob_start();
       edit_post_link(null, '<p>', '</p> ');
       $content = ob_get_clean() . $content;
     }
 
-    $component_outdated_post_time = get_theme_mod('component_outdated_post_time', 0);
-    if ($component_outdated_post_time && (int)get_the_time('U') + ((int)$component_outdated_post_time * 60 * 60 * 24) < time()) {
-      $component_outdated_post_message = get_theme_mod('component_outdated_post_message');
-      $component_outdated_post_message = str_replace('%time%', human_time_diff(get_the_time('U')), $component_outdated_post_message);
-      $content .= "
-        <div class=\"message warning\">
-          {$component_outdated_post_message}
-        </div>";
+    if ($cached_vars['component_outdated_post_time'] && (int) get_the_time('U') + $cached_vars['component_outdated_post_time'] < time()) {
+      $content .= '<div class="message warning">';
+      $content .= str_replace('%time%', human_time_diff(get_the_time('U')), $cached_vars['component_outdated_post_message']);
+      $content .= '</div>';
     }
 
-    if (get_theme_mod("post_type_{$post->post_type}_append_authors")) {
+    if (!isset($cached_vars["post_type_{$post->post_type}_append_authors"])) {
+      $cached_vars["post_type_{$post->post_type}_append_authors"] = get_theme_mod("post_type_{$post->post_type}_append_authors");
+    }
+
+    if ($cached_vars["post_type_{$post->post_type}_append_authors"]) {
       ob_start();
       locate_template('template-parts/components/post-authors.php', true, false);
       $content .= ob_get_clean();

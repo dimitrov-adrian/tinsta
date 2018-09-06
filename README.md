@@ -47,7 +47,6 @@ Disabled by default
 define('TINSTA_INTEGRATIONS', true);
 ```
 
-
 ##
 ### TODO
 List by priority

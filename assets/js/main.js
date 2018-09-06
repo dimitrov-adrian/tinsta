@@ -372,6 +372,7 @@
    * Search fields auto-complete.
    */
   ( supports_querySelector ) && ( function () {
+    // @TODO add option to disable/enable auto-complete per widget or globally.
     document.addEventListener('DOMContentLoaded', function () {
 
       var doAjaxAutocomplete = function () {

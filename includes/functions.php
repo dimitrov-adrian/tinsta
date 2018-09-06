@@ -403,7 +403,12 @@ function tinsta_render_posts_loop($display_mode, $post_type = '')
  */
 function tinsta_comment_callback($comment, $args, $depth)
 {
-  if ($comment->comment_approved || current_user_can('moderate_comments')) {
+  static $current_user_can_moderate_comments = null;
+  if ($current_user_can_moderate_comments === null) {
+    $current_user_can_moderate_comments = current_user_can('moderate_comments');
+  }
+
+  if ($comment->comment_approved || $current_user_can_moderate_comments) {
     if ($comment->comment_type == 'pingback' || $comment->comment_type == 'trackback') {
       get_template_part('template-parts/comments/pingback');
     } else {
@@ -485,13 +490,19 @@ function tinsta_get_category_cover_image($object = null, $size = '', $attr = [])
  */
 function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
 {
-  require_once( ABSPATH . '/wp-admin/includes/file.php' );
-  WP_Filesystem();
   global $wp_filesystem;
 
+  if (!$wp_filesystem) {
+    require_once ( ABSPATH . '/wp-admin/includes/file.php' );
+    WP_Filesystem();
+  }
+
+  $template_directory_uri = get_template_directory_uri();
+  $template_directory = get_template_directory();
+
   $source_file = $scss_file . '.scss';
-  if ($wp_filesystem->exists(get_template_directory() . '/assets/scss/' . $source_file)) {
-    $source_file = get_template_directory() . '/assets/scss/' . $source_file;
+  if ($wp_filesystem->exists($template_directory . '/assets/scss/' . $source_file)) {
+    $source_file = $template_directory . '/assets/scss/' . $source_file;
   }
   $source_file_hash = md5($source_file);
 
@@ -499,8 +510,8 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
     'preview' => false,
     'preview_is_updated' => false,
     'variables' => [
-      'tinsta_theme_dir_url' => '"' . get_template_directory_uri() . '"',
-      'stylesheet_directory_uri' => '"' . get_stylesheet_directory_uri() . '"',
+      'tinsta_theme_dir_url' => '"' . $template_directory_uri . '"',
+      'stylesheet_directory_uri' => '"' . $template_directory_uri . '"',
     ],
   ], $scss_file);
   // @TODO add scss variables sanitization.
@@ -558,7 +569,7 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
     // Setup import paths.
     $import_paths = [ dirname($source_file) ];
     if ($include_tinsta_includes) {
-      $import_paths[] = get_template_directory() . '/assets/scss';
+      $import_paths[] = $template_directory . '/assets/scss';
     }
     $compiler->setImportPaths($import_paths);
 

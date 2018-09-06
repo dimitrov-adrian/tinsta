@@ -45,6 +45,7 @@ add_action( 'after_setup_theme', function () {
  * Init hook
  */
 add_action('init', function () {
+  // @TODO performance improvements.
   // Because we need to ensure all used theme mods had default values, and the filters like:
   // "default_option_theme_mods_{$theme_slug}" and "option_theme_mods_{$theme_slug}" doesn't do what expected to do...
   // Also set forced theme mods from tinsta_force_options filter.
@@ -225,7 +226,9 @@ add_action('widgets_init', function () {
         'key' => '_menu_item_type',
         'value' => 'tinsta-nav-menu-widget-area',
       ]
-    ]
+    ],
+    'orderby' => 'title',
+    'posts_per_page' => -1,
   ]);
   foreach ($menu_sidebars as $sidebar) {
     register_sidebar([
