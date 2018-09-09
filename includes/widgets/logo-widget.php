@@ -8,7 +8,13 @@ class Tinsta_Logo_Widget extends WP_Widget
 
   public function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Logo', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Logo', 'tinsta')),
+      [
+        'description' => __('Display site logo.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

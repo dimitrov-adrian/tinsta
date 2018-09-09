@@ -104,18 +104,6 @@ add_action('widgets_init', function () {
     'after_title' => '</div>',
   ]);
 
-  if (get_option('show_on_front') == 'widgets') {
-    register_sidebar([
-      'name' => __('Front Page', 'tinsta'),
-      'description' => __('Displayed before main content of home page (front-page).', 'tinsta'),
-      'id' => 'frontpage',
-      'before_widget' => '<div id="%1$s" class="widget %2$s">',
-      'after_widget' => '</div>',
-      'before_title' => '<div class="widgettitle">',
-      'after_title' => '</div>',
-    ]);
-  }
-
   if (get_theme_mod("system_page_404_content") == 'widgets' || $is_customizer_preview) {
     register_sidebar([
       'name' => __('Error 404', 'tinsta'),
@@ -245,6 +233,8 @@ add_action('widgets_init', function () {
       'after_title' => '</div>',
     ]);
   }
+
+  // _wp_page_template
 
   // Register theme's widgets.
 
@@ -384,3 +374,22 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
 
   return $args;
 });
+
+
+
+/* EXPERIMENTAL !!! */
+add_action('add_meta_boxes', function () {
+  add_meta_box(
+    'tinsta-page-attributes',
+    __( 'Tinsta', 'tinsta' ),
+    'tinsta_page_attributes_render',
+    'page',
+    'side',
+    'low'
+  );
+});
+
+function tinsta_page_attributes_render( $post )
+{
+  echo '123123123123123';
+}

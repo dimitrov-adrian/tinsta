@@ -5,7 +5,13 @@ class Tinsta_PageSubnav_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Pages Navigation', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Page Navigation', 'tinsta')),
+      [
+        'description' => __('Display page\'s siblings and childrens.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

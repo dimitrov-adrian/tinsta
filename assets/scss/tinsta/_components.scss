@@ -480,49 +480,27 @@ body.login {
  * Message boxes
  */
 .message {
-  background-color: #eee;
-  border: 2px solid #e3e3e3;
-  color: #777;
-  margin: 2rem auto;
-  padding: 1.6rem;
-  text-align: center;
-  @include roundness();
+  @extend %message;
 }
 
 .ok {
-  background-color: #e6ffdb;
-  border-color: #cfeac4;
-  color: #104c10;
+  @extend %ok;
 }
 
 .error {
-  background-color: #ffebe0;
-  border-color: #ead2c6;
-  color: #845f4c;
+  @extend %error;
 }
 
 .info {
-  background-color: #ebf6fb;
-  border-color: #dbedee;
-  color: #3d6380;
+  @extend %info;
 }
 
 .warning {
-  background-color: #fdfddc;
-  border-color: #efe8cc;
-  color: #79680a;
+  @extend %warning;
 }
 
 .notice {
-  background-color: $region_main_color_background;
-  border-bottom: none;
-  border-right: none;
-  border-top: none;
-  border-left-width: 2px;
-  margin: 2rem auto;
-  padding: 1.6rem;
-  text-align: inherit;
-  border-radius: 0;
+  @extend %notice;
 }
 
 /**

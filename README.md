@@ -59,7 +59,6 @@ List by priority
 - [ ] bbPress *(integration)*
 - [ ] Add ability to add icon to menu items
 - [ ] More layouts for post's single/archive views
-- [ ] Share Buttons by AddThis *(integration)*
 - [ ] Documentation
 
 

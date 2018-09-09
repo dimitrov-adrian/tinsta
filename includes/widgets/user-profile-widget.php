@@ -9,7 +9,13 @@ class Tinsta_UserProfile_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('User Profile', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('User Profile', 'tinsta')),
+      [
+        'description' => __('Display current logged user.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

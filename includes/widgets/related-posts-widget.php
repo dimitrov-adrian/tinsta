@@ -5,7 +5,13 @@ class Tinsta_RelatedPosts_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Related posts', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Related Posts', 'tinsta')),
+      [
+        'description' => __('Simple similar posts widget.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

@@ -23,8 +23,10 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
   function widget($args, $instance)
   {
 
+    global $wp;
+
     // Do not show breadcrumbs on homepage.
-    if (is_front_page()) {
+    if (is_front_page() || empty($wp->query_vars) ) {
       return;
     }
 

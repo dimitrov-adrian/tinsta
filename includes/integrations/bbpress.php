@@ -1,29 +1,52 @@
 <?php
 
-add_action('bbp_enqueue_scripts', function() {
-  //wp_enqueue_style(tinsta_get_stylesheet('integrations/bbpress'));
-});
+// Customizer.
+if (is_customize_preview()) {
+  add_filter('tinsta_supported_customizer_post_types', function ($post_types) {
+    unset($post_types['forum'], $post_types['topic'], $post_types['reply']);
+    return $post_types;
+  });
+}
 
-//
-if (0) {
-  if (function_exists('is_bbpress') && is_bbpress()) {
-    $bbp_breadcrumbs = bbp_get_breadcrumb([
-      'before'          => '<div class="breadcrumbs">',
-      'after'           => '</div>',
-      'sep'             => '',
-      'pad_sep'         => 1,
-      'sep_before'      => '',
-      'sep_after'       => '',
-      'crumb_before'    => '',
-      'crumb_after'     => '',
-      'include_home'    => get_theme_mod('component_breadcrumbs_include_home'),
-      'home_text'       => get_bloginfo('name'),
-      'include_root'    => true,
-      'include_current' => true,
-      'current_before'  => '',//<span class="bbp-breadcrumb-current">',
-      'current_after'   => '',//</span>',
-    ]);
-    echo str_replace('class="', 'class="trail ', $bbp_breadcrumbs);
-    return;
-  }
+// Admin.
+if (is_admin()) {
+
+}
+
+// Front-End.
+else {
+
+  // Override user profile edit url.
+  add_filter('edit_profile_url', function ( $url, $user_id, $scheme ) {
+    return bbp_get_user_profile_url($user_id);
+  }, 10, 3);
+
+  // Some stuff...
+  add_action('wp', function () {
+
+    if (is_bbpress()) {
+
+      // Enqueue scripts and styles.
+      add_action('bbp_enqueue_scripts', function () {
+        wp_enqueue_style('tinsta-bbpress', tinsta_get_stylesheet('integrations/bbpress'));
+      }, 20);
+
+      // Disable breadcrumbs.
+      add_filter('bbp_no_breadcrumb', '__return_true', 100);
+
+      // Override template.
+      add_filter('template_include', function ($template) {
+        return __DIR__ . '/../../template-content-only.php';
+      });
+
+      //      add_filter('tinsta_render_posts_loop_template', function ($templates) {
+      //        $templates = [
+      //          "template-parts/global/post-content-only-renderer.php",
+      //        ];
+      //
+      //        return $templates;
+      //      });
+
+    }
+  });
 }

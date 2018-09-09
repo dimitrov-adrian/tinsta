@@ -1093,9 +1093,6 @@ add_action('customize_register', function ($wp_customize) {
   // System Page: Homepage settings
   $wp_customize->get_section('static_front_page')->panel = 'tinsta_system_pages';
 
-  // Add Widget area to frontpage variations.
-  $wp_customize->get_control('show_on_front')->choices['widgets'] = __('Widgets', 'tinsta');
-
   // System Page: Login and Register
   $wp_customize->add_section('tinsta_system_page_login', [
     'title' => __('Login & Register', 'tinsta'),
@@ -1314,5 +1311,11 @@ add_action('customize_register', function ($wp_customize) {
   foreach ($forced_theme_mods as $mod => $value) {
     $wp_customize->remove_control($mod);
   }
+
+  // Re-arrange third-party plugin's controls and sections.
+  if ($wp_customize->get_section('tt_font_typography')) {
+    $wp_customize->get_section('tt_font_typography')->panel = 'tinsta_typography';
+  }
+
 
 });

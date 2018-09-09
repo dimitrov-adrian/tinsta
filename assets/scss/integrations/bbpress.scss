@@ -3,7 +3,14 @@
  * https://gist.github.com/cdils/ac1f5cf0b64977046d66314b1758109f could be good starting point.
  */
 
+@import '../tinsta/functions';
+
 body.bbpress {
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    vertical-align: baseline;
+  }
 
   
   span.bbp-admin-links a {
@@ -79,7 +86,7 @@ body.bbpress {
   }
 
   .bbp-template-notice {
-    @extend .message;
+    @extend %message;
   }
 
   #bbpress-forums .bbp-forum-info .bbp-forum-content,
@@ -89,7 +96,7 @@ body.bbpress {
 
   #bbpress-forums > #subscription-toggle .subscription-toggle {
     font-size: .9rem;
-    @extend .button;
+    //@extend .button;
     padding: 0 .2rem;
     line-height: 1.2rem;
     vertical-align: middle;
@@ -103,7 +110,7 @@ body.bbpress {
   #bbpress-forums div.bbp-template-notice img.avatar,
   #bbpress-forums .widget_display_topics img.avatar,
   #bbpress-forums .widget_display_replies img.avatar {
-    @extend .avatar;
+    //@extend .avatar;
     border: none;
     vertical-align: middle;
     margin: 0;

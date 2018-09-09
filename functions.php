@@ -124,10 +124,15 @@ if ( is_customize_preview() ) {
  * Setup integrations with other themes and plugins.
  */
 if ( TINSTA_INTEGRATIONS ) {
+  $has_layout_plugin = false;
   foreach ( (array) get_option('active_plugins', []) as $active_plugin ) {
     $integration_include = __DIR__ . '/includes/integrations/' . dirname($active_plugin) . '.php';
     if ($active_plugin && file_exists($integration_include)) {
       include $integration_include;
     }
   }
+}
+
+if (empty($has_layout_plugin)) {
+  include __DIR__ . '/includes/integrations/_no-layouting-plugin.php';
 }

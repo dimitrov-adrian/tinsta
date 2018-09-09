@@ -5,7 +5,13 @@ class Tinsta_LoginForm_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Login Form', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Login Form', 'tinsta')),
+      [
+        'description' => __('Display login form.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

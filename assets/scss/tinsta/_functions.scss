@@ -1,4 +1,4 @@
-$z-index-modal: 999999999;
+$z-index-modal: 99990; // wpadminbar is 99999
 $z-index-normal: 100;
 $z-index-low: 0;
 
@@ -237,6 +237,10 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     > .sub-menu {
       display: none;
       margin: 0;
+
+      //transition: transform 150ms ease-in-out;
+      //transform: scale(1, 0);
+      transform-origin: top center;
     }
 
     &.current-menu-item {
@@ -330,7 +334,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         }
         > .sub-menu {
           display: block;
-
+          transform: scale(1, 1);
         }
       }
     }
@@ -389,4 +393,50 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 .no-scroll {
   overflow: hidden !important;
+}
+
+%message {
+  background-color: #eee;
+  border: 2px solid #e3e3e3;
+  color: #777;
+  margin: 2rem auto;
+  padding: 1.6rem;
+  text-align: center;
+  @include roundness();
+}
+
+%ok {
+  background-color: #e6ffdb;
+  border-color: #cfeac4;
+  color: #104c10;
+}
+
+%error {
+  background-color: #ffebe0;
+  border-color: #ead2c6;
+  color: #845f4c;
+}
+
+%info {
+  background-color: #ebf6fb;
+  border-color: #dbedee;
+  color: #3d6380;
+}
+
+%warning {
+  background-color: #fdfddc;
+  border-color: #efe8cc;
+  color: #79680a;
+}
+
+%notice {
+  background-color: $region_main_color_background;
+  border-bottom: none;
+  border-right: none;
+  border-top: none;
+  border-left-width: 2px;
+  margin: 2rem auto;
+  padding: 1.6rem;
+  text-align: inherit;
+  border-radius: 0;
 }

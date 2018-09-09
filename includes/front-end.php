@@ -208,7 +208,7 @@ add_action('wp_head', function () {
     }
 
     // Always set some description.
-    $sitedescription = esc_attr(substr(get_bloginfo('description'), 0, 160));
+    $sitedescription = esc_attr(substr(strip_tags(get_bloginfo('description')), 0, 160));
     if ($sitedescription) {
       echo "<meta name=\"subject\" content=\"{$sitedescription}\" />";
     }
@@ -218,6 +218,7 @@ add_action('wp_head', function () {
     }
 
     if ($description) {
+      $description = esc_attr(substr(strip_tags(get_bloginfo('description')), 0, 160));
       echo "<meta name=\"description\" content=\"{$description}\" />";
     }
 

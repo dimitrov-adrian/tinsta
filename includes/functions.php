@@ -298,9 +298,7 @@ function tinsta_should_show_beforeafter_entries()
   if ($result === null) {
     $result = true;
 
-    if ( is_home() && get_option('show_on_front') == 'widgets' ) {
-      $result = false;
-    } elseif ( is_singular() ) {
+    if ( is_singular() ) {
       $page_template = get_page_template_slug();
       if ( in_array($page_template, [
         'template-content-only.php',
@@ -323,9 +321,7 @@ function tinsta_should_show_sidebars()
   if ($result === null) {
     $result = true;
 
-    if ( is_home() && get_option('show_on_front') == 'widgets' ) {
-      $result = false;
-    } elseif ( is_singular() ) {
+    if ( is_singular() ) {
       $page_template = get_page_template_slug();
       if ( in_array($page_template, [
         'template-nosidebars.php',
