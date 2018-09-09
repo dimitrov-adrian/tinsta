@@ -5,6 +5,7 @@
  * Theme helpers.
  */
 
+
 /**
  * Default theme mod array
  *
@@ -12,6 +13,12 @@
  */
 function tinsta_get_options_defaults()
 {
+
+  // Could make troubles because not all post types are registered during first call of tinsta_get_options_defaults().
+  //  static $settings = null;
+  //  if ($settings !== null) {
+  //    return $settings;
+  //  }
 
   $privacy_policy_link = home_url('?p=' . get_option('wp_page_for_privacy_policy'));
 
@@ -90,7 +97,8 @@ function tinsta_get_options_defaults()
     'region_header_color_primary' => '#eeeeee',
     'region_header_color_secondary' => '#ffffff',
     'region_primary_menu_layout' => '',
-    'region_primary_menu_position' => '',
+    'region_primary_menu_position' => 'append-header',
+    'region_primary_menu_sticky' => false,
     'region_primary_menu_alignment' => '',
     'region_primary_menu_highlight_root' => 'background',
     'region_primary_menu_color_background' => '#000000',
@@ -283,6 +291,78 @@ function tinsta_pagination($type = '')
   }
 }
 
+function tinsta_should_show_beforeafter_entries()
+{
+
+  static $result = null;
+  if ($result === null) {
+    $result = true;
+
+    if ( is_home() && get_option('show_on_front') == 'widgets' ) {
+      $result = false;
+    } elseif ( is_singular() ) {
+      $page_template = get_page_template_slug();
+      if ( in_array($page_template, [
+        'template-content-only.php',
+      ] ) ) {
+        $result = false;
+      }
+    } elseif ( is_404() ) {
+      $result = false;
+    }
+
+  }
+
+  return $result;
+}
+
+function tinsta_should_show_sidebars()
+{
+
+  static $result = null;
+  if ($result === null) {
+    $result = true;
+
+    if ( is_home() && get_option('show_on_front') == 'widgets' ) {
+      $result = false;
+    } elseif ( is_singular() ) {
+      $page_template = get_page_template_slug();
+      if ( in_array($page_template, [
+        'template-nosidebars.php',
+        'template-fullwidth-nosidebars.php',
+        'template-content-only.php',
+        'template-thin.php'
+      ] ) ) {
+        $result = false;
+      }
+    } elseif ( is_404() ) {
+      $result = false;
+    }
+
+  }
+
+  return $result;
+}
+
+function tinsta_should_fullscreen()
+{
+  static $result = null;
+  if ($result === null) {
+    $result = ( is_singular() && get_page_template_slug() == 'template-fullscreen.php' );
+  }
+  return $result;
+}
+
+function tinsta_primary_menu()
+{
+  wp_nav_menu([
+    'menu_class' => 'menu site-primary-menu',
+    'container_class' => 'site-primary-menu-wrapper',
+    'theme_location' => 'main',
+    'fallback_cb' => NULL
+  ]);
+}
+
 /**
  * Render posts with wrapper from current request
  *
@@ -292,47 +372,49 @@ function tinsta_pagination($type = '')
 function tinsta_render_posts($post_type = '', $display_mode = '')
 {
 
-  rewind_posts();
+  die('deprecated');
 
-  // Before post entries sidebar area.
-  if (is_active_sidebar('before-entries')) {
-    echo '<div class="sidebar-before-entries">';
-    dynamic_sidebar('before-entries');
-    echo '</div>';
-  }
-
-  // Actual post rendering
-  if (!$post_type) {
-    $post_type = get_post_type();
-  }
-  if (!$display_mode) {
-    $display_mode = is_singular() ? 'single' : 'archive';
-  }
-
-  echo "<div class=\"site-entries site-entries-type-{$post_type} site-entries-{$display_mode}\">";
-  if (have_posts()) {
-    tinsta_render_posts_loop($display_mode, $post_type);
-  } else {
-    get_template_part('template-parts/theme/no-entries', $post_type);
-  }
-  echo '</div>';
-
-  // Pagination.
-  if ($display_mode !== 'single') {
-    tinsta_pagination('archive');
-  }
-
-  // After post entries sidebar area.
-  if (is_active_sidebar('after-entries')) {
-    echo '<div class="sidebar-after-entries">';
-    dynamic_sidebar('after-entries');
-    echo '</div>';
-  }
-
-  // Append comments for singular modes.
-  if ($display_mode == 'single') {
-    comments_template('/comments.php', true);
-  }
+  //  rewind_posts();
+  //
+  //  // Before post entries sidebar area.
+  //  if (is_active_sidebar('before-entries')) {
+  //    echo '<div class="sidebar-before-entries">';
+  //    dynamic_sidebar('before-entries');
+  //    echo '</div>';
+  //  }
+  //
+  //  // Actual post rendering
+  //  if (!$post_type) {
+  //    $post_type = get_post_type();
+  //  }
+  //  if (!$display_mode) {
+  //    $display_mode = is_singular() ? 'single' : 'archive';
+  //  }
+  //
+  //  echo "<div class=\"site-entries site-entries-type-{$post_type} site-entries-{$display_mode}\">";
+  //  if (have_posts()) {
+  //    tinsta_render_posts_loop($display_mode, $post_type);
+  //  } else {
+  //    get_template_part('template-parts/global/no-entries', $post_type);
+  //  }
+  //  echo '</div>';
+  //
+  //  // Pagination.
+  //  if ($display_mode !== 'single') {
+  //    tinsta_pagination('archive');
+  //  }
+  //
+  //  // After post entries sidebar area.
+  //  if (is_active_sidebar('after-entries')) {
+  //    echo '<div class="sidebar-after-entries">';
+  //    dynamic_sidebar('after-entries');
+  //    echo '</div>';
+  //  }
+  //
+  //  // Append comments for singular modes.
+  //  if ($display_mode == 'single') {
+  //    comments_template('/comments.php', true);
+  //  }
 
 }
 
@@ -342,54 +424,96 @@ function tinsta_render_posts($post_type = '', $display_mode = '')
  * @param $display_mode
  * @param $post_type
  */
-function tinsta_render_posts_loop($display_mode, $post_type = '')
+function tinsta_render_posts_loop($display_mode = '', $post_type = '')
 {
 
+  // Cache already known templates.
   static $post_type_layouts = [];
 
+  // Cache tinsta_render_posts_loop_template filter.
   static $has_template_filter = NULL;
   if ($has_template_filter === NULL) {
     $has_template_filter = has_filter('tinsta_render_posts_loop_template');
   }
 
-  while (have_posts()) {
+  // Cache possible templates.
+  static $founded_templates = [];
 
-    the_post();
-    $page_template = get_page_template_slug(get_the_ID());
-    $post_post_type = $post_type ? $post_type : get_post_type();
+  rewind_posts();
 
-    if (!isset($post_type_layouts[$post_type])) {
-      if ($display_mode == 'single') {
-        $post_type_layouts[$post_type] = get_theme_mod("post_type_{$post_type}_layout");
+  if (have_posts()) {
+
+    if (!$post_type) {
+      $post_type = get_post_type();
+    }
+
+    if (!$display_mode) {
+      $display_mode = is_singular() ? 'single' : 'archive';
+    }
+
+    while (have_posts()) {
+
+      the_post();
+
+      $post_post_type = $post_type ? $post_type : get_post_type();
+
+      if (post_type_supports($post_post_type, 'page-attributes')) {
+        $page_template = get_page_template_slug(get_the_ID());
+      }
+      else {
+        $page_template = null;
+      }
+
+      if (!isset($post_type_layouts[$post_type])) {
+        if ($display_mode == 'single') {
+          $post_type_layouts[$post_type] = get_theme_mod("post_type_{$post_type}_layout");
+        } else {
+          $post_type_layouts[$post_type] = get_theme_mod("post_type_{$post_type}_layout_archive");
+        }
+      }
+
+      $template_key = "{$post_post_type}:{$display_mode}:{$page_template}:{$post_type_layouts[$post_type]}";
+
+      // Cache located templates for faster finding.
+      // If tinsta_render_posts_loop_template filter is implemented, the cache won't be relevant so it's disabled.
+      if (!$has_template_filter && !empty($founded_templates[$template_key])) {
+        load_template($founded_templates[$template_key], false);
+        continue;
+      }
+
+      if ($page_template && in_array($page_template, ['template-content-only.php', 'template-fullscreen.php'])) {
+        $templates = [
+          "template-parts/entries/{$post_post_type}-embed.php",
+          "template-parts/entries/post-embed.php",
+        ];
       } else {
-        $post_type_layouts[$post_type] = get_theme_mod("post_type_{$post_type}_layout_archive");
+        $templates = [
+          "template-parts/entries/{$post_post_type}-{$display_mode}-{$post_type_layouts[$post_type]}.php",
+          "template-parts/entries/post-{$display_mode}-{$post_type_layouts[$post_type]}.php",
+          "template-parts/entries/{$post_post_type}-{$display_mode}.php",
+          "template-parts/entries/{$post_post_type}.php",
+          "template-parts/entries/post-{$display_mode}.php",
+          "template-parts/entries/post.php",
+        ];
       }
-    }
 
-    if (in_array($page_template, ['template-content-only.php', 'template-fullscreen.php'])) {
-      $templates = [
-        "template-parts/entries/{$post_post_type}-embed.php",
-        "template-parts/entries/post-embed.php",
-      ];
-    } else {
-      $templates = [
-        "template-parts/entries/post-{$display_mode}-{$post_type_layouts[$post_type]}.php",
-        "template-parts/entries/{$post_post_type}-{$display_mode}.php",
-        "template-parts/entries/{$post_post_type}.php",
-        "template-parts/entries/post-{$display_mode}.php",
-        "template-parts/entries/post.php",
-      ];
-      if (!empty($post_type_layouts[$post_type])) {
-        array_unshift($templates, "template-parts/entries/{$post_post_type}-{$display_mode}-{$post_type_layouts[$post_type]}.php");
+      if ($has_template_filter) {
+        $templates = apply_filters('tinsta_render_posts_loop_template', $templates, get_post(), $display_mode,
+          $post_post_type, $post_type_layouts[$post_type]);
       }
+
+      $founded_templates[$template_key] = locate_template($templates, true, false);
+
     }
 
-    if ($has_template_filter) {
-      $templates = apply_filters('tinsta_render_posts_loop_template', $templates, get_post(), $display_mode, $post_post_type, $post_type_layouts[$post_type]);
+    // Pagination.
+    if ($display_mode !== 'single') {
+      tinsta_pagination('archive');
     }
 
-    locate_template($templates, true, false);
+  } else {
 
+    locate_template('template-parts/global/no-entries.php');
   }
 
 }
@@ -410,10 +534,10 @@ function tinsta_comment_callback($comment, $args, $depth)
 
   if ($comment->comment_approved || $current_user_can_moderate_comments) {
     if ($comment->comment_type == 'pingback' || $comment->comment_type == 'trackback') {
-      get_template_part('template-parts/comments/pingback');
+      locate_template('template-parts/comments/pingback.php', true, false);
     } else {
       $args['depth'] = $depth > 1 ? $depth - 1 : $depth;
-      get_template_part('template-parts/comments/comment');
+      locate_template('template-parts/comments/comment.php', true, false);
     }
   }
 }
@@ -490,10 +614,10 @@ function tinsta_get_category_cover_image($object = null, $size = '', $attr = [])
  */
 function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
 {
-  global $wp_filesystem;
 
+  global $wp_filesystem;
   if (!$wp_filesystem) {
-    require_once ( ABSPATH . '/wp-admin/includes/file.php' );
+    require_once ABSPATH . '/wp-admin/includes/file.php';
     WP_Filesystem();
   }
 
@@ -556,7 +680,7 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
   ) {
 
     // Init SCSS compiler.
-    require_once 'phar://' . __DIR__ . '/vendor/scssphp.phar/scss.inc.php';
+    require_once 'phar://' . __DIR__ . '/vendor/scssphp-0.7.7.phar/scss.inc.php';
     $compiler = new \Leafo\ScssPhp\Compiler();
 
     if ( SCRIPT_DEBUG ) {
@@ -600,6 +724,8 @@ function tinsta_get_stylesheet($scss_file, $include_tinsta_includes = false)
         set_transient('tinsta_theme', $stylesheet_hashes);
       }
 
+      do_action('tinsta_css_regenerated', $scss_file, $stylesheet_hash_current);
+
     } catch (\Exception $e) {
       error_log(__FUNCTION__ . '(): ' . $e->getMessage());
       if ( SCRIPT_DEBUG ) {
@@ -621,8 +747,8 @@ function tinsta_get_color_palette()
   $palette = null;
   if ($palette === null) {
     $palette = [];
-    foreach (tinsta_get_options_defaults() as $k => $val) {
-      if ( $val && $val{0} === '#' && ( strlen($val) === 7 || strlen($val) === 4 ) ) {
+    foreach (get_theme_mods() as $k => $val) {
+      if ( $val && is_scalar($val) && $val{0} === '#' && ( strlen($val) === 7 || strlen($val) === 4 ) ) {
         $palette[] = $val;
       }
     }

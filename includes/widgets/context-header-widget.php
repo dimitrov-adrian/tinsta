@@ -8,7 +8,13 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Context Header', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Context Header', 'tinsta')),
+      [
+        'description' => __('Context Header Widget is related to object of current page (post, category, tag, ...). Displays big image and some short information.', 'tinsta'),
+      ]
+    );
   }
 
   function form($instance)

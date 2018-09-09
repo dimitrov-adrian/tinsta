@@ -53,23 +53,24 @@ add_action('init', function () {
 //  ]);
 
   add_filter('siteorigin_panels_settings', function ($settings) {
-    $settings['home-page'] = false;
     $settings['home-page'] = true;
-    $settings['home-page-default'] = false;
-    $settings['home-page-default'] = true;
-    $settings['home-template'] = 'index.php';
-    $settings['title-html'] = '<div class="widget-title">{{title}}</div>';
+//    $settings['home-page'] = true;
+//    $settings['home-page-default'] = false;
+//    $settings['home-page-default'] = true;
+//    $settings['home-template'] = 'index.php';
+//
+    $settings['title-html'] = '<div class="widgettitle">{{title}}</div>';
     $settings['post-types'][] = 'tinsta-layouts';
-    // $settings['responsive'] = true;
-    // $settings['mobile-width'] = 800;
-    // $settings['margin-bottom'] = NULL;
-    // $settings['margin-sides'] = 20;
-    // $settings['copy-content'] = true;
-    //$settings['inline-css'] = false;
-    // Mobile/responsive settings taken from tinsta root layout.
 
-    //  $settings['responsive'] = !empty($_tinsta_layout_settings['mobile_behavior_breakpoint']);
-    //  $settings['mobile-width'] = !empty($_tinsta_layout_settings['mobile_behavior_breakpoint']) ? $_tinsta_layout_settings['mobile_behavior_breakpoint'] : 0;
+
+    $settings['responsive'] = true;
+    $settings['mobile-width'] = (int) get_theme_mod('region_root_breakpoint_mobile');
+    $settings['tablet-width'] = (int) get_theme_mod('region_root_breakpoint_tablet');
+
+    $settings['margin-top'] = (int) get_theme_mod('typography_font_size');
+    $settings['margin-sides'] = $settings['margin-top'];
+
+
     return $settings;
   });
 

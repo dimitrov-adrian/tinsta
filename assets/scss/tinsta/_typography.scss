@@ -136,6 +136,9 @@ body {
     z-index: 999999999; /* Above WP toolbar. */
   }
 }
+.skip-link:focus {
+  position: fixed;
+}
 
 .color-primary {
   color: $region_root_color_primary;
@@ -600,6 +603,10 @@ input[type="checkbox"] {
   cursor: pointer;
   vertical-align: middle;
   padding: 0; /* Addresses excess padding in IE8/9 */
+}
+
+input[type="search"] {
+  -webkit-appearance: none;
 }
 
 select {

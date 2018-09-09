@@ -50,6 +50,12 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
   }
 }
 
+@mixin shadowBottom() {
+  @if ($component_effects_shadows) {
+    box-shadow: 0 12px 12px -12px $region_root_color_foreground;
+  }
+}
+
 @mixin roundness($pos: '', $coef: 1) {
   @if $typography_roundness {
     $val: ( $typography_roundness / ( 50 / $coef ) ) + 'em';
@@ -280,15 +286,17 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         z-index: $z-index-modal;
         white-space: nowrap; // fix for with auto.
         overflow-x: hidden;
+        top: 100%;
 
-        min-width: 12rem;
+        min-width: 13.2rem;
         max-width: 100%;
         width: auto;
+        max-height: 80vh;
 
         margin-left: unset;
         margin-right: unset;
 
-        box-shadow: 0 5px 28px -12px rgba(0, 0, 0, .9);
+        box-shadow: 0 7px 28px -12px rgba(0, 0, 0, .9);
         color: $foreground;
         background-color: $background;
 

@@ -25,3 +25,15 @@
   padding-left: .6em;
   padding-right: .6em;
 }
+
+
+/* Third-Party plugins tweaks */
+input[name="panels_setting[tablet-width]"],
+input[name="panels_setting[mobile-width]"],
+input[name="panels_setting[margin-sides]"],
+input[name="panels_setting[margin-top]"] {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}

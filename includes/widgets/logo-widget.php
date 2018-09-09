@@ -23,6 +23,9 @@ class Tinsta_Logo_Widget extends WP_Widget
 
     ?>
     <p>
+      <?php _e('The logo can be changed from Apperance -&gt; Customizer', 'tinsta')?>
+    </p>
+    <p>
       <label for="<?php echo $this->get_field_id('style') ?>">
         <?php _e('Style', 'tinsta') ?>
       </label>

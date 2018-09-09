@@ -98,12 +98,12 @@ add_action('login_init', function () {
 
     // Apply theme's header.
     add_action('login_header', function () {
-      locate_template('template-parts/theme/header.php', true);
+      locate_template('template-parts/global/header.php', true);
     });
 
     // Apply theme's footer.
     add_action('login_footer', function () {
-      locate_template('template-parts/theme/footer.php', true);
+      locate_template('template-parts/global/footer.php', true);
     });
   }
 

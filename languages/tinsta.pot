@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tinsta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-30 09:34+0000\n"
+"POT-Creation-Date: 2018-09-06 09:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -38,28 +38,32 @@ msgstr ""
 msgid "Full Width"
 msgstr ""
 
-#: functions.php:32
+#: functions.php:31
 #, php-format
 msgid ""
 "Tinsta theme requires PHP >= 5.4.0, but you have %s. Upgrade it or contact "
 "your hosting provider. Otherwise the theme will not work."
 msgstr ""
 
-#: functions.php:39
+#: functions.php:38
 #, php-format
 msgid ""
 "Tinsta theme requires WordPress >= 4.4.0, but you have %s. Upgrade it or "
 "contact your hosting provider. Otherwise the theme will not work."
 msgstr ""
 
-#: functions.php:45
+#: functions.php:44
 msgid ""
 "Tinsta theme requires Phar support for PHP, but you don't have it enabled. "
 "Enable Phar for PHP or contact your hosting provider. Otherwise the theme "
 "will not work."
 msgstr ""
 
-#: functions.php:59
+#: functions.php:50
+msgid "Meanwhile, maintenance message is displayed on yor front-end."
+msgstr ""
+
+#: functions.php:62
 msgid ""
 "The site is under maintenance. We are working to get it back as soon as "
 "possible."
@@ -95,855 +99,1023 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: includes/functions.php:27
-msgid "Post navigation"
-msgstr ""
-
-#: includes/functions.php:35
-msgid "Prev"
-msgstr ""
-
-#: includes/functions.php:36
-msgid "Next"
-msgstr ""
-
-#: includes/functions.php:432
-msgid ""
-"This article is older than %time%, the content might not be relevant anymore."
-msgstr ""
-
-#: includes/functions.php:437
-#, php-format
-msgid "I agree with site <a href=\"%s\">terms</a>."
-msgstr ""
-
-#: includes/functions.php:438
-msgid "Agree"
-msgstr ""
-
-#: includes/functions.php:440
-msgid "Cancel"
-msgstr ""
-
-#: includes/front-end.php:197
-msgid "Menu"
-msgstr ""
-
-#: includes/front-end.php:198
-msgid "Close"
-msgstr ""
-
-#: includes/front-end.php:199 includes/customizer.php:714
-#: includes/customizer.php:788 includes/customizer.php:789
-msgid "Top"
-msgstr ""
-
-#: includes/login.php:74
-msgid "Lost Password"
-msgstr ""
-
-#: includes/login.php:77
-msgid "Retrieve Password"
-msgstr ""
-
-#: includes/login.php:80
-msgid "Reset password"
-msgstr ""
-
-#: includes/login.php:83
-msgid "Register new account"
-msgstr ""
-
-#: includes/login.php:86 includes/experiments/nav-menu-items.php:93
-msgid "Login"
-msgstr ""
-
-#: includes/theme.php:18
-msgid "Primary Site Menu"
-msgstr ""
-
-#: includes/theme.php:78 includes/customizer.php:482
-msgid "Header"
-msgstr ""
-
-#: includes/theme.php:87
-msgid "Before Main Content"
-msgstr ""
-
-#: includes/theme.php:96 includes/widgets/logo-widget.php:95
-msgid "Front Page"
-msgstr ""
-
-#: includes/theme.php:106
-msgid "Error 404"
-msgstr ""
-
-#: includes/theme.php:116 includes/customizer.php:588
-msgid "Primary Sidebar"
-msgstr ""
-
-#: includes/theme.php:125 includes/customizer.php:609
-msgid "Secondary Sidebar"
-msgstr ""
-
-#: includes/theme.php:134
-msgid "Before Entries"
-msgstr ""
-
-#: includes/theme.php:143
-msgid "After Entries"
-msgstr ""
-
-#: includes/theme.php:157
-#, php-format
-msgid "Archive %s &mdash; Widgets Area Layout"
-msgstr ""
-
-#: includes/theme.php:171
-#, php-format
-msgid "Single %s &mdash; Widgets Area Layout"
-msgstr ""
-
-#: includes/theme.php:184
-msgid "After Main Content"
-msgstr ""
-
-#: includes/theme.php:193 includes/customizer.php:630
-msgid "Footer"
-msgstr ""
-
-#: includes/customizer.php:24
-msgid "Background Color"
-msgstr ""
-
-#: includes/customizer.php:31
-msgid "Background Color Opacity"
-msgstr ""
-
-#: includes/customizer.php:45
-msgid "Foreground Color"
-msgstr ""
-
-#: includes/customizer.php:52
-msgid "Primary Color"
-msgstr ""
-
-#: includes/customizer.php:59
-msgid "Secondary Color"
-msgstr ""
-
-#: includes/customizer.php:80
-msgid "Background Image"
-msgstr ""
-
-#: includes/customizer.php:84
-msgid "Background Image Position"
-msgstr ""
-
-#: includes/customizer.php:95
-msgid "Background Image Size"
-msgstr ""
-
-#: includes/customizer.php:99
-msgid "Original"
-msgstr ""
-
-#: includes/customizer.php:100
-msgid "Fit to Screen"
-msgstr ""
-
-#: includes/customizer.php:101
-msgid "Fill Screen"
-msgstr ""
-
-#: includes/customizer.php:108
-msgid "Repeat Background Image"
-msgstr ""
-
-#: includes/customizer.php:116
-msgid "Scroll with Page"
-msgstr ""
-
-#: includes/customizer.php:206
-msgid "Typography"
-msgstr ""
-
-#: includes/customizer.php:210 includes/customizer.php:720
-msgid "Text"
-msgstr ""
-
-#: includes/customizer.php:215
-msgid "Base Font Size"
-msgstr ""
-
-#: includes/customizer.php:226
-msgid "Line Height"
-msgstr ""
-
-#: includes/customizer.php:237 includes/customizer.php:285
-msgid "Google Font"
-msgstr ""
-
-#: includes/customizer.php:240 includes/customizer.php:288
-#, php-format
-msgid "Use font name from %s"
-msgstr ""
-
-#: includes/customizer.php:244 includes/customizer.php:292
-msgid "Font-Family"
-msgstr ""
-
-#: includes/customizer.php:250
-msgid "Word-break"
-msgstr ""
-
-#: includes/customizer.php:255
-msgid "Justify Text"
-msgstr ""
-
-#: includes/customizer.php:260
-msgid "Improve text readability with CSS tweaks"
-msgstr ""
-
-#: includes/customizer.php:268
-msgid "Headings"
-msgstr ""
-
-#: includes/customizer.php:274 includes/customizer.php:767
-#: includes/customizer.php:847 includes/customizer.php:997
-#: includes/customizer.php:1013 includes/widgets/logo-widget.php:27
-#: includes/widgets/user-profile-widget.php:25
-msgid "Style"
-msgstr ""
-
-#: includes/customizer.php:278 includes/customizer.php:335
-#: includes/customizer.php:473 includes/customizer.php:499
-#: includes/customizer.php:545 includes/customizer.php:568
-#: includes/customizer.php:642 includes/customizer.php:679
-#: includes/customizer.php:851 includes/customizer.php:1026
-#: includes/customizer.php:1088 includes/customizer.php:1126
-#: includes/admin.php:273
-msgid "Default"
-msgstr ""
-
-#: includes/customizer.php:279 includes/customizer.php:336
-msgid "Uppercase"
-msgstr ""
-
-#: includes/customizer.php:280 includes/customizer.php:337
-msgid "All Small Caps"
-msgstr ""
-
-#: includes/customizer.php:281 includes/customizer.php:338
-msgid "Small Caps"
-msgstr ""
-
-#: includes/customizer.php:294
-msgid "Leave blank to inherit global from text."
-msgstr ""
-
-#: includes/customizer.php:316
-msgid "Other Elements"
-msgstr ""
-
-#: includes/customizer.php:321
-msgid "Button Style"
-msgstr ""
-
-#: includes/customizer.php:325 includes/customizer.php:787
-#: includes/widgets/logo-widget.php:30
-msgid "None"
-msgstr ""
-
-#: includes/customizer.php:326
-msgid "Fill"
-msgstr ""
-
-#: includes/customizer.php:327
-msgid "Border"
-msgstr ""
-
-#: includes/customizer.php:331
-msgid "Button Text Style"
-msgstr ""
-
-#: includes/customizer.php:342
-msgid "Bordering"
-msgstr ""
-
-#: includes/customizer.php:353
-msgid "Brightness"
-msgstr ""
-
-#: includes/customizer.php:363
-msgid "Roundness"
-msgstr ""
-
-#: includes/customizer.php:374
-msgid "Forms Field Spacing"
-msgstr ""
-
-#: includes/customizer.php:389
-msgid "Regions & Layout"
-msgstr ""
-
-#: includes/customizer.php:391
-msgid ""
-"Regions are main parts of page. They are predefined from the theme, and "
-"typically can hold widgets or other content depending grom current page."
-msgstr ""
-
-#: includes/customizer.php:396
-msgid "General"
-msgstr ""
-
-#: includes/customizer.php:401
-msgid "Full Height"
-msgstr ""
-
-#: includes/customizer.php:402
-msgid ""
-"If page is shorten than a window height, this will apply JS fix to make it "
-"full height. Most noticeable if have footer or bottomline"
-msgstr ""
-
-#: includes/customizer.php:406
-msgid "Page Width"
-msgstr ""
-
-#: includes/customizer.php:417
-msgid "Tablet Breakpoint"
-msgstr ""
-
-#: includes/customizer.php:428
-msgid "Mobile Breakpoint"
-msgstr ""
-
-#: includes/customizer.php:443 includes/customizer.php:863
-msgid "Topline"
-msgstr ""
-
-#: includes/customizer.php:446 includes/customizer.php:657
-#, php-format
-msgid ""
-"\n"
-"        <p>\n"
-"          This region does not holding widgets, but display unfiltered HTML."
-"\n"
-"          You can edit the content from <a href=\"%s\">here</a>.\n"
-"        </p>"
-msgstr ""
-
-#: includes/customizer.php:459 includes/customizer.php:464
-#: includes/customizer.php:490 includes/customizer.php:670
-msgid "Sticky"
-msgstr ""
-
-#: includes/customizer.php:468 includes/customizer.php:494
-#: includes/customizer.php:540 includes/customizer.php:563
-#: includes/customizer.php:637 includes/customizer.php:674
-#: includes/admin.php:288 includes/integrations/siteorigin-panels.php:9
-msgid "Layout"
-msgstr ""
-
-#: includes/customizer.php:470 includes/customizer.php:495
-#: includes/customizer.php:541 includes/customizer.php:564
-#: includes/customizer.php:638 includes/customizer.php:675
-msgid "Noticeable when used colors"
-msgstr ""
-
-#: includes/customizer.php:474 includes/customizer.php:500
-#: includes/customizer.php:546 includes/customizer.php:569
-#: includes/customizer.php:643 includes/customizer.php:680
-#: includes/admin.php:239
-msgid "Boxed"
-msgstr ""
-
-#: includes/customizer.php:475 includes/customizer.php:501
-#: includes/customizer.php:644
-msgid "Extended"
-msgstr ""
-
-#: includes/customizer.php:502 includes/customizer.php:645
-msgid "Highlighted"
-msgstr ""
-
-#: includes/customizer.php:506
-msgid "Vertical Spacing"
-msgstr ""
-
-#: includes/customizer.php:521
-msgid "Main Menu"
-msgstr ""
-
-#: includes/customizer.php:528 includes/customizer.php:709
-#: includes/customizer.php:783
-msgid "Position"
-msgstr ""
-
-#: includes/customizer.php:532
-msgid "Before Header"
-msgstr ""
-
-#: includes/customizer.php:533
-msgid "After Header"
-msgstr ""
-
-#: includes/customizer.php:550 includes/customizer.php:713
-msgid "Center"
-msgstr ""
-
-#: includes/customizer.php:559
-msgid "Main Content"
-msgstr ""
-
-#: includes/customizer.php:573
-msgid "Margin"
-msgstr ""
-
-#: includes/customizer.php:595 includes/customizer.php:616
-#: includes/admin.php:253 includes/widgets/logo-widget.php:48
-#: includes/widgets/logo-widget.php:57
-msgid "Width"
-msgstr ""
-
-#: includes/customizer.php:654 includes/customizer.php:876
-msgid "Bottomline"
-msgstr ""
-
-#: includes/customizer.php:691
-msgid "Components"
-msgstr ""
-
-#: includes/customizer.php:692
-msgid ""
-"Configure main components settings and behavior. They also could be and "
-"WordPress core components or widgets."
-msgstr ""
-
-#: includes/customizer.php:700
-msgid "Agreement Dialog"
-msgstr ""
-
-#: includes/customizer.php:704
-msgid "Enable"
-msgstr ""
-
-#: includes/customizer.php:715 includes/customizer.php:790
-#: includes/customizer.php:791
-msgid "Bottom"
-msgstr ""
-
-#: includes/customizer.php:716
-msgid "Bottom - Full Width"
-msgstr ""
-
-#: includes/customizer.php:725
-msgid "Button Text"
-msgstr ""
-
-#: includes/customizer.php:729
-msgid "Cancel Text"
-msgstr ""
-
-#: includes/customizer.php:733
-msgid "Cancel URL"
-msgstr ""
-
-#: includes/customizer.php:739 includes/widgets/breadcrumbs-widget.php:8
-msgid "Breadcrumbs"
-msgstr ""
-
-#: includes/customizer.php:744
-msgid "Include Home"
-msgstr ""
-
-#: includes/customizer.php:750 includes/widgets/context-header-widget.php:11
-msgid "Context Header"
-msgstr ""
-
-#: includes/customizer.php:754
-msgid "Date format"
-msgstr ""
-
-#: includes/customizer.php:757
-#, php-format
-msgid ""
-"Use <a href=\"%s\" target=\"_blank\" rel=\"noopener\">PHP date</a> format."
-msgstr ""
-
-#: includes/customizer.php:763
-msgid "Pagination"
-msgstr ""
-
-#: includes/customizer.php:771
-msgid "Plain"
-msgstr ""
-
-#: includes/customizer.php:772
-msgid "Bordered"
-msgstr ""
-
-#: includes/customizer.php:773
-msgid "Bold"
-msgstr ""
-
-#: includes/customizer.php:779
-msgid "Scroll Top"
-msgstr ""
-
-#: includes/customizer.php:788 includes/customizer.php:790
-#: includes/admin.php:275
-msgid "Right"
-msgstr ""
-
-#: includes/customizer.php:789 includes/customizer.php:791
-#: includes/admin.php:274
-msgid "Left"
-msgstr ""
-
-#: includes/customizer.php:797
-msgid "Outdated Content Notification"
-msgstr ""
-
-#: includes/customizer.php:802
-msgid "Time"
-msgstr ""
-
-#: includes/customizer.php:804
-msgid "Number of days to display the message."
-msgstr ""
-
-#: includes/customizer.php:808
-msgid "Message"
-msgstr ""
-
-#: includes/customizer.php:810
-msgid "Use %time% token to show the time ago"
-msgstr ""
-
-#: includes/customizer.php:815
-msgid "Avatars"
-msgstr ""
-
-#: includes/customizer.php:819
-msgid "Size"
-msgstr ""
-
-#: includes/customizer.php:830
-msgid "Small Size"
-msgstr ""
-
-#: includes/customizer.php:843
-#: template-parts/entries/post-single-catalog-item.php:24
-#: template-parts/entries/post-single.php:30 template-parts/entries/post.php:30
-msgid "Comments"
-msgstr ""
-
-#: includes/customizer.php:852
-msgid "Chat"
-msgstr ""
-
-#: includes/customizer.php:856
-msgid "Show order selector"
-msgstr ""
-
-#: includes/customizer.php:889
-msgid "Social Networks Code"
-msgstr ""
-
-#: includes/customizer.php:895
-msgid ""
-"Appears in posts headers. Can be used to put AddThis or social networks "
-"buttons (like, follow, share, etc&hellip;)"
-msgstr ""
-
-#: includes/customizer.php:901 includes/customizer.php:913
-#, php-format
-msgid "Custom %s HTML"
-msgstr ""
-
-#: includes/customizer.php:907 includes/customizer.php:919
-#, php-format
-msgid ""
-"Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics "
-"or etc. Insert just before %s tag."
-msgstr ""
-
-#: includes/customizer.php:929
-msgid "Effects"
-msgstr ""
-
-#: includes/customizer.php:936
-msgid "Image Lazy Loading"
-msgstr ""
-
-#: includes/customizer.php:940
-msgid "Smooth Scroll"
-msgstr ""
-
-#: includes/customizer.php:941
-msgid ""
-"Smooth scroll is nice effect, but may decrease the scrolling performance."
-msgstr ""
-
-#: includes/customizer.php:947
-msgid "(TODO) Animations"
-msgstr ""
-
-#: includes/customizer.php:948
-msgid "Enable animation effect for some elements."
-msgstr ""
-
-#: includes/customizer.php:950 includes/customizer.php:962
-msgid "Disabled"
-msgstr ""
-
-#: includes/customizer.php:951
-msgid "Fast"
-msgstr ""
-
-#: includes/customizer.php:952
-msgid "Normal"
-msgstr ""
-
-#: includes/customizer.php:953
-msgid "Slow"
-msgstr ""
-
-#: includes/customizer.php:959
-msgid "(TODO) Shadows"
-msgstr ""
-
-#: includes/customizer.php:960
-msgid "Enable shadow effect for some elements."
-msgstr ""
-
-#: includes/customizer.php:963
-msgid "Light"
-msgstr ""
-
-#: includes/customizer.php:964
-msgid "Big"
-msgstr ""
-
-#: includes/customizer.php:971
-msgid "SEO"
-msgstr ""
-
-#: includes/customizer.php:976
-msgid "Enable SEO Helpers"
-msgstr ""
-
-#: includes/customizer.php:985
-msgid "System Pages"
-msgstr ""
-
-#: includes/customizer.php:993
-msgid "Login & Register"
-msgstr ""
-
-#: includes/customizer.php:1002 includes/customizer.php:1017
-msgid "Simple"
-msgstr ""
-
-#: includes/customizer.php:1003 includes/customizer.php:1018
-msgid "As a regular page"
-msgstr ""
-
-#: includes/customizer.php:1022
-msgid "Content"
-msgstr ""
-
-#: includes/customizer.php:1027 includes/customizer.php:1093
-#: includes/customizer.php:1133 includes/experiments/nav-menu-items.php:178
-#: includes/experiments/nav-menu-items.php:180
-msgid "Widgets Area"
-msgstr ""
-
-#: includes/customizer.php:1033 includes/integrations/siteorigin-panels.php:18
-msgid "Search"
-msgstr ""
-
-#: includes/customizer.php:1037
-msgid "All"
-msgstr ""
-
-#: includes/customizer.php:1043
-msgid "Force search to find only"
-msgstr ""
-
-#: includes/customizer.php:1053
-msgid "Post Types"
-msgstr ""
-
-#: includes/customizer.php:1077
-msgid "Use Default Views"
-msgstr ""
-
-#: includes/customizer.php:1083
-#, php-format
-msgid "Single %s layout"
-msgstr ""
-
-#: includes/customizer.php:1089 includes/customizer.php:1131
-msgid "Left Thumbnail"
-msgstr ""
-
-#: includes/customizer.php:1090 includes/customizer.php:1132
-msgid "Right Thumbnail"
-msgstr ""
-
-#: includes/customizer.php:1091
-msgid "Contextual Header"
-msgstr ""
-
-#: includes/customizer.php:1092
-msgid "Catalog Item"
-msgstr ""
-
-#: includes/customizer.php:1098
-msgid "Add author's bio at end of content"
-msgstr ""
-
-#: includes/customizer.php:1104
-msgid "Add parent/child navigation"
-msgstr ""
-
-#: includes/customizer.php:1110
-msgid "Add outdated content notification"
-msgstr ""
-
-#: includes/customizer.php:1112
-#, php-format
-msgid ""
-"The notification message could be edited from <a href=\"%s\">the "
-"component</a>."
-msgstr ""
-
-#: includes/customizer.php:1121
-msgid "Archive Layout"
-msgstr ""
-
-#: includes/customizer.php:1127
-msgid "Boxes"
-msgstr ""
-
-#: includes/customizer.php:1128
-msgid "Cover Boxes"
-msgstr ""
-
-#: includes/customizer.php:1129
-msgid "Time-Line"
-msgstr ""
-
-#: includes/customizer.php:1130
-msgid "Poetry"
-msgstr ""
-
-#: includes/customizer.php:1138
-msgid "Display Archive Post Content as"
-msgstr ""
-
-#: includes/customizer.php:1142
-msgid "Excerpt"
-msgstr ""
-
-#: includes/customizer.php:1143
-msgid "Full Text"
-msgstr ""
-
-#: includes/customizer.php:1151
-msgid "Number of words in excerpts"
-msgstr ""
-
-#: includes/customizer.php:1167
-msgid "Per Page"
-msgstr ""
-
-#: includes/admin.php:176 includes/tools.php:4
+#: includes/page-tools.php:4 includes/admin.php:161 includes/admin.php:161
 msgid "Tools"
 msgstr ""
 
-#: includes/admin.php:267
-msgid "Floating"
-msgstr ""
-
-#: includes/tools.php:16
+#: includes/page-tools.php:16
 #, php-format
 msgid "%d settings are imported."
 msgstr ""
 
-#: includes/tools.php:25
+#: includes/page-tools.php:25
 msgid "Upload error."
 msgstr ""
 
-#: includes/tools.php:37
+#: includes/page-tools.php:37
 msgid "All theme settings are reset."
 msgstr ""
 
-#: includes/tools.php:46
+#: includes/page-tools.php:46
 msgid "Invalidated"
 msgstr ""
 
-#: includes/tools.php:57
+#: includes/page-tools.php:57
 msgid "Export"
 msgstr ""
 
-#: includes/tools.php:62
+#: includes/page-tools.php:62
 msgid "Export .tinsta file with current settings."
 msgstr ""
 
-#: includes/tools.php:65
+#: includes/page-tools.php:67
+msgid ""
+"Export Tinsta's settings only. <span class=\"description\">All other "
+"variables created from custom theme or plugins will be ignored.</span>"
+msgstr ""
+
+#: includes/page-tools.php:71
 msgid "Download"
 msgstr ""
 
-#: includes/tools.php:72 includes/tools.php:93
+#: includes/page-tools.php:78 includes/page-tools.php:93
 msgid "Import"
 msgstr ""
 
-#: includes/tools.php:75 includes/tools.php:105
+#: includes/page-tools.php:81 includes/page-tools.php:105
 msgid "This action is going to override settings. Do you want to continue?"
 msgstr ""
 
-#: includes/tools.php:77
+#: includes/page-tools.php:83
 msgid ""
 "Import theme settings from .tinsta file. Note that this will override all "
 "your current settings about the theme."
 msgstr ""
 
-#: includes/tools.php:81
+#: includes/page-tools.php:87
 msgid "File"
 msgstr ""
 
-#: includes/tools.php:88
-msgid ""
-"Import Tinsta's settings only. <span class=\"description\">All other "
-"variables created from custom theme or plugins will be ignored (usually, "
-"there should be none).</span>"
-msgstr ""
-
-#: includes/tools.php:102 includes/tools.php:111
+#: includes/page-tools.php:102 includes/page-tools.php:111
 msgid "Reset"
 msgstr ""
 
-#: includes/tools.php:107
+#: includes/page-tools.php:107
 msgid "Reset all theme settings to default values."
 msgstr ""
 
-#: includes/tools.php:120
+#: includes/page-tools.php:120
 msgid "Invalidate CSS Cache"
 msgstr ""
 
-#: includes/tools.php:125
+#: includes/page-tools.php:125
 msgid ""
 "Invalidate currently generated stylesheets. Usually this is not required, "
 "and after every settings save they are invalidate automatically, but "
 "sometimes this button could helps."
 msgstr ""
 
-#: includes/tools.php:129
+#: includes/page-tools.php:129
 msgid "Invalidate"
+msgstr ""
+
+#: includes/functions.php:150
+msgid ""
+"This article is older than %time%, the content might not be relevant anymore."
+msgstr ""
+
+#: includes/functions.php:155
+#, php-format
+msgid "I agree with site <a href=\"%s\">terms</a>."
+msgstr ""
+
+#: includes/functions.php:156
+msgid "Agree"
+msgstr ""
+
+#: includes/functions.php:158
+msgid "Cancel"
+msgstr ""
+
+#: includes/functions.php:213
+msgid "Post navigation"
+msgstr ""
+
+#: includes/functions.php:221
+msgid "Prev"
+msgstr ""
+
+#: includes/functions.php:222
+msgid "Next"
+msgstr ""
+
+#: includes/front-end.php:237
+msgid "Close"
+msgstr ""
+
+#: includes/front-end.php:238 includes/customizer.php:613
+#: includes/customizer.php:879 includes/customizer.php:880
+msgid "Top"
+msgstr ""
+
+#: includes/front-end.php:603 includes/customizer.php:1084
+#: includes/admin.php:352 includes/admin.php:354
+msgid "Login & Register"
+msgstr ""
+
+#: includes/front-end.php:603 includes/login.php:81
+msgid "Login"
+msgstr ""
+
+#: includes/login.php:73
+msgid "Lost Password"
+msgstr ""
+
+#: includes/login.php:75
+msgid "Retrieve Password"
+msgstr ""
+
+#: includes/login.php:77
+msgid "Reset password"
+msgstr ""
+
+#: includes/login.php:79
+msgid "Register new account"
+msgstr ""
+
+#: includes/theme.php:18
+msgid "Primary Site Menu"
+msgstr ""
+
+#: includes/theme.php:79 includes/customizer.php:510
+msgid "Header"
+msgstr ""
+
+#: includes/theme.php:80
+msgid "Display widgets in Header Region."
+msgstr ""
+
+#: includes/theme.php:89
+msgid "Before Main Content"
+msgstr ""
+
+#: includes/theme.php:90
+msgid "Full width region between Header and Main Content of the page."
+msgstr ""
+
+#: includes/theme.php:99 includes/widgets/logo-widget.php:95
+msgid "Front Page"
+msgstr ""
+
+#: includes/theme.php:100
+msgid "Displayed before main content of home page (front-page)."
+msgstr ""
+
+#: includes/theme.php:110
+msgid "Error 404"
+msgstr ""
+
+#: includes/theme.php:120 includes/customizer.php:655
+msgid "Primary Sidebar"
+msgstr ""
+
+#: includes/theme.php:121
+msgid "Primary Sidebar, usually displayed left to Main Content."
+msgstr ""
+
+#: includes/theme.php:130 includes/customizer.php:676
+msgid "Secondary Sidebar"
+msgstr ""
+
+#: includes/theme.php:131
+msgid "Secondary Sidebar, usually displayed right to Main Content."
+msgstr ""
+
+#: includes/theme.php:140
+msgid "Before Entries"
+msgstr ""
+
+#: includes/theme.php:141
+msgid ""
+"Displayed before entries or single entry, between the sidebars. Scoped in "
+"Main Content."
+msgstr ""
+
+#: includes/theme.php:150
+msgid "After Entries"
+msgstr ""
+
+#: includes/theme.php:151
+msgid ""
+"Displayed after entries or single entry, between the sidebars. Scoped in "
+"Main Content."
+msgstr ""
+
+#: includes/theme.php:165
+#, php-format
+msgid "Archive %s &mdash; Widgets Area Layout"
+msgstr ""
+
+#: includes/theme.php:166
+#, php-format
+msgid "Manage %s display, when displaying multiple entries, via Widgets."
+msgstr ""
+
+#: includes/theme.php:180
+#, php-format
+msgid "Single %s &mdash; Widgets Area Layout"
+msgstr ""
+
+#: includes/theme.php:181
+#, php-format
+msgid "Manage %s display, when displaying single entry, via Widgets."
+msgstr ""
+
+#: includes/theme.php:194
+msgid "After Main Content"
+msgstr ""
+
+#: includes/theme.php:195
+msgid "Full width region between Main Content and Footer of the page."
+msgstr ""
+
+#: includes/theme.php:204 includes/customizer.php:697
+msgid "Footer"
+msgstr ""
+
+#: includes/theme.php:205
+msgid "Display widgets in Footer Region."
+msgstr ""
+
+#: includes/theme.php:226
+#, php-format
+msgid "Menu \"%s\""
+msgstr ""
+
+#: includes/theme.php:227
+#, php-format
+msgid "Appears under the \"%s\" menu item as mega menu"
+msgstr ""
+
+#: includes/customizer.php:23 includes/customizer.php:24 includes/admin.php:294
+#: includes/admin.php:368
+msgid "Dynamic Content"
+msgstr ""
+
+#: includes/customizer.php:57 includes/integrations/gutenberg.php:14
+msgid "Background Color"
+msgstr ""
+
+#: includes/customizer.php:64
+msgid "Background Color Opacity"
+msgstr ""
+
+#: includes/customizer.php:78 includes/integrations/gutenberg.php:19
+msgid "Foreground Color"
+msgstr ""
+
+#: includes/customizer.php:85 includes/customizer.php:617
+#: includes/integrations/gutenberg.php:24
+msgid "Primary Color"
+msgstr ""
+
+#: includes/customizer.php:92 includes/customizer.php:618
+#: includes/integrations/gutenberg.php:29
+msgid "Secondary Color"
+msgstr ""
+
+#: includes/customizer.php:113
+msgid "Background Image"
+msgstr ""
+
+#: includes/customizer.php:117
+msgid "Background Image Position"
+msgstr ""
+
+#: includes/customizer.php:128
+msgid "Background Image Size"
+msgstr ""
+
+#: includes/customizer.php:132
+msgid "Original"
+msgstr ""
+
+#: includes/customizer.php:133
+msgid "Fit to Screen"
+msgstr ""
+
+#: includes/customizer.php:134
+msgid "Fill Screen"
+msgstr ""
+
+#: includes/customizer.php:141
+msgid "Repeat Background Image"
+msgstr ""
+
+#: includes/customizer.php:149
+msgid "Scroll with Page"
+msgstr ""
+
+#: includes/customizer.php:239
+msgid "Basics"
+msgstr ""
+
+#: includes/customizer.php:240
+msgid "Adjust typography parameters and some other design basics."
+msgstr ""
+
+#: includes/customizer.php:244 includes/customizer.php:806
+msgid "Text"
+msgstr ""
+
+#: includes/customizer.php:249
+msgid "Base Font Size"
+msgstr ""
+
+#: includes/customizer.php:260
+msgid "Line Height"
+msgstr ""
+
+#: includes/customizer.php:271 includes/customizer.php:319
+msgid "Include Google Font"
+msgstr ""
+
+#: includes/customizer.php:274 includes/customizer.php:322
+#, php-format
+msgid "Use font name from %s"
+msgstr ""
+
+#: includes/customizer.php:278 includes/customizer.php:326
+msgid "Font-Family"
+msgstr ""
+
+#: includes/customizer.php:284
+msgid "Word-break"
+msgstr ""
+
+#: includes/customizer.php:289
+msgid "Justify Text"
+msgstr ""
+
+#: includes/customizer.php:294
+msgid "Improve text readability with CSS tweaks"
+msgstr ""
+
+#: includes/customizer.php:302
+msgid "Headings"
+msgstr ""
+
+#: includes/customizer.php:308 includes/customizer.php:794
+#: includes/customizer.php:858 includes/customizer.php:938
+#: includes/customizer.php:1088 includes/customizer.php:1104
+#: includes/widgets/logo-widget.php:27
+#: includes/widgets/user-profile-widget.php:25
+msgid "Style"
+msgstr ""
+
+#: includes/customizer.php:312 includes/customizer.php:353
+#: includes/customizer.php:490 includes/customizer.php:527
+#: includes/customizer.php:591 includes/customizer.php:635
+#: includes/customizer.php:709 includes/customizer.php:752
+#: includes/customizer.php:942 includes/customizer.php:1117
+#: includes/customizer.php:1196 includes/customizer.php:1234
+msgid "Default"
+msgstr ""
+
+#: includes/customizer.php:313 includes/customizer.php:354
+msgid "Uppercase"
+msgstr ""
+
+#: includes/customizer.php:314 includes/customizer.php:355
+msgid "All Small Caps"
+msgstr ""
+
+#: includes/customizer.php:315 includes/customizer.php:356
+msgid "Small Caps"
+msgstr ""
+
+#: includes/customizer.php:328
+msgid "Leave blank to inherit global font-family from text."
+msgstr ""
+
+#: includes/customizer.php:334
+msgid "Forms"
+msgstr ""
+
+#: includes/customizer.php:339
+msgid "Button Style"
+msgstr ""
+
+#: includes/customizer.php:343 includes/customizer.php:611
+#: includes/customizer.php:878 includes/widgets/logo-widget.php:30
+msgid "None"
+msgstr ""
+
+#: includes/customizer.php:344
+msgid "Fill"
+msgstr ""
+
+#: includes/customizer.php:345 includes/customizer.php:613
+#: includes/customizer.php:614
+msgid "Border"
+msgstr ""
+
+#: includes/customizer.php:349
+msgid "Button Text Style"
+msgstr ""
+
+#: includes/customizer.php:360
+msgid "Forms Field Spacing"
+msgstr ""
+
+#: includes/customizer.php:372
+msgid "Features"
+msgstr ""
+
+#: includes/customizer.php:378
+msgid "Brightness"
+msgstr ""
+
+#: includes/customizer.php:388
+msgid "Bordering"
+msgstr ""
+
+#: includes/customizer.php:398
+msgid "Roundness"
+msgstr ""
+
+#: includes/customizer.php:413
+msgid "Regions Design"
+msgstr ""
+
+#: includes/customizer.php:415
+msgid ""
+"Regions are main parts of page. They are predefined from the theme, and "
+"typically can hold widgets or other content depending grom current page."
+msgstr ""
+
+#: includes/customizer.php:420
+msgid "General"
+msgstr ""
+
+#: includes/customizer.php:425
+msgid "Full Height"
+msgstr ""
+
+#: includes/customizer.php:426
+msgid ""
+"If page is shorten than a window height, this will apply JS fix to make it "
+"full height. Most noticeable if have footer or bottomline"
+msgstr ""
+
+#: includes/customizer.php:430
+msgid "Page Width"
+msgstr ""
+
+#: includes/customizer.php:441
+msgid "Tablet Breakpoint"
+msgstr ""
+
+#: includes/customizer.php:442
+msgid "Upper boundary to switch tablet view."
+msgstr ""
+
+#: includes/customizer.php:454
+msgid "Mobile Breakpoint"
+msgstr ""
+
+#: includes/customizer.php:455
+msgid "Upper boundary to switch mobile view."
+msgstr ""
+
+#: includes/customizer.php:471 includes/customizer.php:954
+msgid "Topline"
+msgstr ""
+
+#: includes/customizer.php:475 includes/customizer.php:737
+#, php-format
+msgid ""
+"This region does not holding widgets, but display unfiltered HTML. You can "
+"edit the content from <a href=\"%s\">here</a>"
+msgstr ""
+
+#: includes/customizer.php:481 includes/customizer.php:518
+#: includes/customizer.php:743
+msgid "Sticky"
+msgstr ""
+
+#: includes/customizer.php:485 includes/customizer.php:522
+#: includes/customizer.php:586 includes/customizer.php:630
+#: includes/customizer.php:704 includes/customizer.php:747
+#: includes/admin.php:274
+msgid "Layout"
+msgstr ""
+
+#: includes/customizer.php:487 includes/customizer.php:523
+#: includes/customizer.php:587 includes/customizer.php:631
+#: includes/customizer.php:705 includes/customizer.php:748
+msgid "Noticeable when used colors"
+msgstr ""
+
+#: includes/customizer.php:491 includes/customizer.php:528
+#: includes/customizer.php:592 includes/customizer.php:636
+#: includes/customizer.php:710 includes/customizer.php:753
+#: includes/admin.php:220
+msgid "Boxed"
+msgstr ""
+
+#: includes/customizer.php:492 includes/customizer.php:529
+#: includes/customizer.php:711
+msgid "Extended"
+msgstr ""
+
+#: includes/customizer.php:497 includes/customizer.php:535
+#: includes/customizer.php:597 includes/customizer.php:717
+#: includes/customizer.php:758
+msgid "Alignment"
+msgstr ""
+
+#: includes/customizer.php:500 includes/customizer.php:538
+#: includes/customizer.php:600 includes/customizer.php:720
+#: includes/customizer.php:761 includes/admin.php:238 includes/admin.php:256
+msgid "Auto"
+msgstr ""
+
+#: includes/customizer.php:501 includes/customizer.php:539
+#: includes/customizer.php:601 includes/customizer.php:721
+#: includes/customizer.php:762 includes/customizer.php:798
+msgid "Center"
+msgstr ""
+
+#: includes/customizer.php:502 includes/customizer.php:540
+#: includes/customizer.php:602 includes/customizer.php:722
+#: includes/customizer.php:763 includes/customizer.php:880
+#: includes/customizer.php:882 includes/admin.php:259
+msgid "Left"
+msgstr ""
+
+#: includes/customizer.php:503 includes/customizer.php:541
+#: includes/customizer.php:603 includes/customizer.php:723
+#: includes/customizer.php:764 includes/customizer.php:879
+#: includes/customizer.php:881 includes/admin.php:262
+msgid "Right"
+msgstr ""
+
+#: includes/customizer.php:530 includes/customizer.php:712
+msgid "Highlighted"
+msgstr ""
+
+#: includes/customizer.php:545
+msgid "Vertical Spacing"
+msgstr ""
+
+#: includes/customizer.php:560
+msgid "Main Menu"
+msgstr ""
+
+#: includes/customizer.php:565
+msgid "Edit primary menu."
+msgstr ""
+
+#: includes/customizer.php:574 includes/customizer.php:874
+msgid "Position"
+msgstr ""
+
+#: includes/customizer.php:578
+msgid "Before Header"
+msgstr ""
+
+#: includes/customizer.php:579
+msgid "After Header"
+msgstr ""
+
+#: includes/customizer.php:607
+msgid "Active Root Items Style"
+msgstr ""
+
+#: includes/customizer.php:612
+msgid "Underline"
+msgstr ""
+
+#: includes/customizer.php:614 includes/customizer.php:881
+#: includes/customizer.php:882
+msgid "Bottom"
+msgstr ""
+
+#: includes/customizer.php:615
+msgid "Background"
+msgstr ""
+
+#: includes/customizer.php:616 includes/customizer.php:864
+msgid "Bold"
+msgstr ""
+
+#: includes/customizer.php:626
+msgid "Main Content"
+msgstr ""
+
+#: includes/customizer.php:640
+msgid "Margin"
+msgstr ""
+
+#: includes/customizer.php:662 includes/customizer.php:683
+#: includes/admin.php:233 includes/widgets/logo-widget.php:48
+#: includes/widgets/logo-widget.php:57
+msgid "Width"
+msgstr ""
+
+#: includes/customizer.php:733 includes/customizer.php:967
+msgid "Bottomline"
+msgstr ""
+
+#: includes/customizer.php:776
+msgid "Components"
+msgstr ""
+
+#: includes/customizer.php:777
+msgid ""
+"Configure main components settings and behavior. They also could be and "
+"WordPress core components or widgets."
+msgstr ""
+
+#: includes/customizer.php:785
+msgid "Agreement Dialog"
+msgstr ""
+
+#: includes/customizer.php:789
+msgid "Enable"
+msgstr ""
+
+#: includes/customizer.php:799
+msgid "Top, Modal"
+msgstr ""
+
+#: includes/customizer.php:800
+msgid "Top, Full Width"
+msgstr ""
+
+#: includes/customizer.php:801
+msgid "Bottom, Modal"
+msgstr ""
+
+#: includes/customizer.php:802
+msgid "Bottom, Full Width"
+msgstr ""
+
+#: includes/customizer.php:811
+msgid "Button Text"
+msgstr ""
+
+#: includes/customizer.php:815
+msgid "Cancel Text"
+msgstr ""
+
+#: includes/customizer.php:819
+msgid "Cancel URL"
+msgstr ""
+
+#: includes/customizer.php:825 includes/widgets/breadcrumbs-widget.php:8
+msgid "Breadcrumbs"
+msgstr ""
+
+#: includes/customizer.php:830
+msgid "Include Home"
+msgstr ""
+
+#: includes/customizer.php:835
+msgid "Label"
+msgstr ""
+
+#: includes/customizer.php:841 includes/widgets/context-header-widget.php:11
+msgid "Context Header"
+msgstr ""
+
+#: includes/customizer.php:845
+msgid "Date format"
+msgstr ""
+
+#: includes/customizer.php:848
+#, php-format
+msgid ""
+"Use <a href=\"%s\" target=\"_blank\" rel=\"noopener\">PHP date</a> format."
+msgstr ""
+
+#: includes/customizer.php:854
+msgid "Pagination"
+msgstr ""
+
+#: includes/customizer.php:862
+msgid "Plain"
+msgstr ""
+
+#: includes/customizer.php:863
+msgid "Bordered"
+msgstr ""
+
+#: includes/customizer.php:870
+msgid "Scroll Top"
+msgstr ""
+
+#: includes/customizer.php:888
+msgid "Outdated Content Notification"
+msgstr ""
+
+#: includes/customizer.php:893
+msgid "Time"
+msgstr ""
+
+#: includes/customizer.php:895
+msgid "Number of days to display the message."
+msgstr ""
+
+#: includes/customizer.php:899
+msgid "Message"
+msgstr ""
+
+#: includes/customizer.php:901
+msgid "Use %time% token to show the time ago"
+msgstr ""
+
+#: includes/customizer.php:906
+msgid "Avatars"
+msgstr ""
+
+#: includes/customizer.php:910
+msgid "Size"
+msgstr ""
+
+#: includes/customizer.php:921
+msgid "Small Size"
+msgstr ""
+
+#: includes/customizer.php:934
+#: template-parts/entries/post-single-catalog-item.php:24
+#: template-parts/entries/post-single.php:30 template-parts/entries/post.php:30
+msgid "Comments"
+msgstr ""
+
+#: includes/customizer.php:943
+msgid "Chat"
+msgstr ""
+
+#: includes/customizer.php:947
+msgid "Show order selector"
+msgstr ""
+
+#: includes/customizer.php:980
+msgid "Social Networks Code"
+msgstr ""
+
+#: includes/customizer.php:986
+msgid ""
+"Appears in posts headers. Can be used to put AddThis or social networks "
+"buttons (like, follow, share, etc&hellip;)"
+msgstr ""
+
+#: includes/customizer.php:992 includes/customizer.php:1004
+#, php-format
+msgid "Custom %s HTML"
+msgstr ""
+
+#: includes/customizer.php:998 includes/customizer.php:1010
+#, php-format
+msgid ""
+"Useful in case of adding extra 3rd party JS, CSS or HTML tags like analytics "
+"or etc. Insert just before %s tag."
+msgstr ""
+
+#: includes/customizer.php:1020
+msgid "Effects"
+msgstr ""
+
+#: includes/customizer.php:1027
+msgid "Image Lazy Loading"
+msgstr ""
+
+#: includes/customizer.php:1031
+msgid "Smooth Scroll"
+msgstr ""
+
+#: includes/customizer.php:1032
+msgid ""
+"Smooth scroll is nice effect, but may decrease the scrolling performance."
+msgstr ""
+
+#: includes/customizer.php:1038
+msgid "(TODO) Animations"
+msgstr ""
+
+#: includes/customizer.php:1039
+msgid "Enable animation effect for some elements."
+msgstr ""
+
+#: includes/customizer.php:1041 includes/customizer.php:1053
+msgid "Disabled"
+msgstr ""
+
+#: includes/customizer.php:1042
+msgid "Fast"
+msgstr ""
+
+#: includes/customizer.php:1043
+msgid "Normal"
+msgstr ""
+
+#: includes/customizer.php:1044
+msgid "Slow"
+msgstr ""
+
+#: includes/customizer.php:1050
+msgid "(TODO) Shadows"
+msgstr ""
+
+#: includes/customizer.php:1051
+msgid "Enable shadow effect for some elements."
+msgstr ""
+
+#: includes/customizer.php:1054
+msgid "Light"
+msgstr ""
+
+#: includes/customizer.php:1055
+msgid "Big"
+msgstr ""
+
+#: includes/customizer.php:1062
+msgid "SEO"
+msgstr ""
+
+#: includes/customizer.php:1067
+msgid "Enable SEO Helpers"
+msgstr ""
+
+#: includes/customizer.php:1076
+msgid "System Pages"
+msgstr ""
+
+#: includes/customizer.php:1093 includes/customizer.php:1108
+msgid "Simple"
+msgstr ""
+
+#: includes/customizer.php:1094 includes/customizer.php:1109
+msgid "As a regular page"
+msgstr ""
+
+#: includes/customizer.php:1113
+msgid "Content"
+msgstr ""
+
+#: includes/customizer.php:1118 includes/customizer.php:1201
+#: includes/customizer.php:1241 includes/admin.php:322 includes/admin.php:324
+msgid "Widgets Area"
+msgstr ""
+
+#: includes/customizer.php:1124
+msgid "Search"
+msgstr ""
+
+#: includes/customizer.php:1128
+msgid "All"
+msgstr ""
+
+#: includes/customizer.php:1134
+msgid "Force search to find only"
+msgstr ""
+
+#: includes/customizer.php:1144
+msgid "Post Types"
+msgstr ""
+
+#: includes/customizer.php:1185
+msgid "Use Default Views"
+msgstr ""
+
+#: includes/customizer.php:1191
+#, php-format
+msgid "Single %s layout"
+msgstr ""
+
+#: includes/customizer.php:1197 includes/customizer.php:1239
+msgid "Left Thumbnail"
+msgstr ""
+
+#: includes/customizer.php:1198 includes/customizer.php:1240
+msgid "Right Thumbnail"
+msgstr ""
+
+#: includes/customizer.php:1199
+msgid "Contextual Header"
+msgstr ""
+
+#: includes/customizer.php:1200
+msgid "Catalog Item"
+msgstr ""
+
+#: includes/customizer.php:1206
+msgid "Add author's bio at end of content"
+msgstr ""
+
+#: includes/customizer.php:1212
+msgid "Add parent/child navigation"
+msgstr ""
+
+#: includes/customizer.php:1218
+msgid "Add outdated content notification"
+msgstr ""
+
+#: includes/customizer.php:1220
+#, php-format
+msgid ""
+"The notification message could be edited from <a href=\"%s\">the "
+"component</a>."
+msgstr ""
+
+#: includes/customizer.php:1229
+msgid "Archive Layout"
+msgstr ""
+
+#: includes/customizer.php:1235
+msgid "Boxes"
+msgstr ""
+
+#: includes/customizer.php:1236
+msgid "Cover Boxes"
+msgstr ""
+
+#: includes/customizer.php:1237
+msgid "Time-Line"
+msgstr ""
+
+#: includes/customizer.php:1238
+msgid "Poetry"
+msgstr ""
+
+#: includes/customizer.php:1246
+msgid "Display Archive Post Content as"
+msgstr ""
+
+#: includes/customizer.php:1250
+msgid "Excerpt"
+msgstr ""
+
+#: includes/customizer.php:1251
+msgid "Full Text"
+msgstr ""
+
+#: includes/customizer.php:1259
+msgid "Number of words in excerpts"
+msgstr ""
+
+#: includes/customizer.php:1275
+msgid "Per Page"
+msgstr ""
+
+#: includes/admin.php:250
+msgid "Floating"
+msgstr ""
+
+#: includes/admin.php:313 includes/admin.php:315
+msgid "Front Page (with logo)"
+msgstr ""
+
+#: includes/admin.php:317 includes/admin.php:326 includes/admin.php:336
+#: includes/admin.php:345 includes/admin.php:356
+msgid "Tinsta Nav Item"
+msgstr ""
+
+#: includes/admin.php:327
+msgid ""
+"Create <em>sidebar</em> and allow managing widgets as <em>mega-menu</em>."
+msgstr ""
+
+#: includes/admin.php:332 includes/admin.php:334
+msgid "Search Box"
+msgstr ""
+
+#: includes/admin.php:341
+msgid "%avatar% Hey %name%"
+msgstr ""
+
+#: includes/admin.php:343
+msgid "Current User"
+msgstr ""
+
+#: includes/admin.php:347
+msgid "Displayed only on logged users."
+msgstr ""
+
+#: includes/admin.php:358
+msgid "Displayed only on anonymous users."
+msgstr ""
+
+#: includes/admin.php:375
+msgid ""
+"Dynamic content items works if are placed as 1st or 2nd level. When placed "
+"deeper, they are not dislpayed."
+msgstr ""
+
+#: includes/admin.php:420
+msgid "Add to Menu"
 msgstr ""
 
 #: template-parts/theme/header.php:2
@@ -998,106 +1170,6 @@ msgstr ""
 
 #: includes/integrations/woocommerce.php:103
 msgid "Sale!"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:6
-#: includes/integrations/siteorigin-panels.php:8
-#: includes/integrations/siteorigin-panels.php:12
-msgid "Layouts"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:10
-msgid "Site Layouts"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:11
-msgid "Parent layout"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:13
-msgid "View layout"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:14
-msgid "Create layout"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:15
-msgid "Design new layout"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:16
-msgid "Edit layout"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:17
-msgid "Update"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:19
-msgid "No found"
-msgstr ""
-
-#: includes/integrations/siteorigin-panels.php:20
-msgid "Not found in Trash"
-msgstr ""
-
-#: includes/experiments/widget-logic.php:237
-msgid "Logic"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:54
-#: includes/experiments/nav-menu-items.php:210
-#: includes/experiments/nav-menu-items.php:269
-#: includes/experiments/nav-menu-items.php:270
-msgid "Dynamic Content"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:92
-msgid "Login or Register"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:143
-#, php-format
-msgid "Menu \"%s\""
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:144
-#, php-format
-msgid "Appears only in %s as sub-menu"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:169
-#: includes/experiments/nav-menu-items.php:171
-msgid "Front Page (with logo)"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:173
-#: includes/experiments/nav-menu-items.php:182
-#: includes/experiments/nav-menu-items.php:191
-#: includes/experiments/nav-menu-items.php:200
-msgid "Tinsta Nav Item"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:187
-#: includes/experiments/nav-menu-items.php:189
-msgid "Search Box"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:196
-msgid "Hey $name $avatar"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:198
-msgid "Current User"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:250
-msgid "Add to Menu"
-msgstr ""
-
-#: includes/experiments/nav-menu-items.php:256
-msgid "Works only when item is placed as first or second level."
 msgstr ""
 
 #: includes/widgets/breadcrumbs-widget.php:28
@@ -1164,23 +1236,23 @@ msgstr ""
 msgid "User Profile"
 msgstr ""
 
-#: includes/widgets/user-profile-widget.php:28
-msgid "&mdash; Select &mdash;"
-msgstr ""
-
 #: includes/widgets/user-profile-widget.php:29
-msgid "Icon"
-msgstr ""
-
-#: includes/widgets/user-profile-widget.php:30
-msgid "Icon & Name"
-msgstr ""
-
-#: includes/widgets/user-profile-widget.php:31
-msgid "Avatar"
+msgid "Select"
 msgstr ""
 
 #: includes/widgets/user-profile-widget.php:32
+msgid "Icon"
+msgstr ""
+
+#: includes/widgets/user-profile-widget.php:35
+msgid "Icon & Name"
+msgstr ""
+
+#: includes/widgets/user-profile-widget.php:38
+msgid "Avatar"
+msgstr ""
+
+#: includes/widgets/user-profile-widget.php:41
 msgid "Avatar & Name"
 msgstr ""
 

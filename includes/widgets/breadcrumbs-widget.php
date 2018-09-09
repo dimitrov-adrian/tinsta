@@ -5,7 +5,19 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(false, sprintf('(Tinsta) %s', __('Breadcrumbs', 'tinsta')));
+    parent::__construct(
+      false,
+      sprintf('(Tinsta) %s', __('Breadcrumbs', 'tinsta')),
+      [
+        'description' => __('Breadcrumbs widget does not provide per widget configuration but global such. Edit from Appearance -&gt; Customizer -&gt; Components -&gt; Breadcrumbs.', 'tinsta'),
+      ]
+    );
+
+  }
+
+  function form($instance)
+  {
+    echo '<p>' . $this->widget_options['description'] . '</p>';
   }
 
   function widget($args, $instance)

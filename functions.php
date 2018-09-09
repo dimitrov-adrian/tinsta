@@ -28,8 +28,7 @@ if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
 
       if ($tinsta_supports_failcheck['php']) {
         echo '<p>';
-        printf(__('Tinsta theme requires PHP >= 5.4.0, but you have %s. Upgrade it or contact your hosting provider. Otherwise the theme will not work.',
-          'tinsta'), phpversion());
+        printf(__('Tinsta theme requires PHP >= 5.4.0, but you have %s. Upgrade it or contact your hosting provider. Otherwise the theme will not work.', 'tinsta'), phpversion());
         echo '</p>';
       }
       if ($tinsta_supports_failcheck['wp']) {
@@ -41,8 +40,7 @@ if ( count( array_filter( $tinsta_supports_failcheck) ) ) {
       }
       if ($tinsta_supports_failcheck['phar']) {
         echo '<p>';
-        _e('Tinsta theme requires Phar support for PHP, but you don\'t have it enabled. Enable Phar for PHP or contact your hosting provider. Otherwise the theme will not work.',
-          'tinsta');
+        _e('Tinsta theme requires Phar support for PHP, but you don\'t have it enabled. Enable Phar for PHP or contact your hosting provider. Otherwise the theme will not work.', 'tinsta');
         echo '</p>';
       }
 
@@ -82,13 +80,6 @@ if ( ! defined('TINSTA_STYLESHEET_CACHE_DIR') ) {
  */
 if ( ! defined('TINSTA_INTEGRATIONS') ) {
   define('TINSTA_INTEGRATIONS', true);
-}
-
-/**
- * Experimental functions.
- */
-if ( ! defined('TINSTA_EXPERIMENTAL') ) {
-  define('TINSTA_EXPERIMENTAL', false);
 }
 
 /**
@@ -139,11 +130,4 @@ if ( TINSTA_INTEGRATIONS ) {
       include $integration_include;
     }
   }
-}
-
-/**
- * Include experiments.
- */
-if ( TINSTA_EXPERIMENTAL ) {
-  // include __DIR__ . '/includes/experimental/<experimental_theme_ext>.php';
 }

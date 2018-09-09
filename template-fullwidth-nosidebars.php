@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Template Name: Full Screen
+ * Template Name: Full Width, No Sidebars
  *
  * We use template file, just to show the template selector for posts.
  */

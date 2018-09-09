@@ -6,4 +6,8 @@
  * We use template file, just to show the template selector for posts.
  */
 
-require __DIR__ . '/index.php';
+get_header();
+
+the_content();
+
+get_footer();

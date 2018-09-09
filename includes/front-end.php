@@ -44,15 +44,109 @@ add_action('template_redirect', function () {
 });
 
 /**
+ * Parse query hook
+ */
+add_action('parse_query', function ( $query, $error = true ) {
+  if ( get_theme_mod('system_page_search_disable_search') && is_main_query() && is_search() ) {
+    $query->is_search = false;
+    $query->query_vars['s'] = false;
+    $query->query['s'] = false;
+    // to error
+    if ( $error == true ) {
+      $query->is_404 = true;
+    }
+  }
+});
+
+/**
+ * Override post fetching
+ */
+add_action('pre_get_posts', function ($query) {
+
+  if ( is_admin() ) {
+    return;
+  }
+
+  if ( $query->is_main_query() ) {
+
+    if ( is_search() ) {
+      $post_type = get_theme_mod('system_page_search_force_post_type');
+      if ($post_type) {
+        $query->set('post_type', $post_type);
+      }
+    }
+
+    if ( !is_search() ) {
+
+      $post_type = $query->get('post_type');
+      if (!$post_type && is_home()) {
+        $post_type = 'post';
+      }
+      $per_page = get_theme_mod("post_type_{$post_type}_archive_per_page", 0);
+      if ($per_page) {
+        $query->set('posts_per_page', $per_page);
+      }
+
+    }
+
+  }
+
+});
+
+/**
+ * Proccess widget's tinsta related settings
+ */
+add_filter('dynamic_sidebar_params', function ($params) {
+  global $wp_registered_widgets;
+  if (!empty($wp_registered_widgets[$params[0]['widget_id']]['callback'])) {
+    $widget = $wp_registered_widgets[$params[0]['widget_id']]['callback'][0];
+    /*** @var $widget \WP_Widget */
+    $settings = $widget->get_settings();
+    if (isset($settings[$params[1]['number']])) {
+
+      $settings = $settings[$params[1]['number']];
+
+      $style = '';
+
+      if (!empty($settings['tinsta_widget_size'])) {
+        $style .= 'width:' . round($settings['tinsta_widget_size'], 2) . '%;';
+      }
+
+      if (!empty($settings['tinsta_widget_float'])) {
+        $style .= 'float:' . $settings['tinsta_widget_float'];
+      }
+
+      $params[0]['before_widget'] = str_replace('class="', " style=\"{$style}\" class=\"", $params[0]['before_widget']);
+
+      if (!empty($settings['tinsta_boxed']) && $settings['tinsta_boxed'] == 'on') {
+        $params[0]['before_widget'] = str_replace('class="', 'class="wrapper ', $params[0]['before_widget']);
+      }
+
+    }
+  }
+
+  return $params;
+});
+
+/**
+ * Modifies tag cloud widget arguments to display all tags in the same font size
+ * and use list format for better accessibility.
+ */
+add_filter('widget_tag_cloud_args', function ( $args ) {
+  $args['largest']  = 2;
+  $args['smallest'] = 0.5;
+  $args['unit']     = 'rem';
+  return $args;
+});
+
+/**
  * Add extra markup in header.
  */
 add_action('wp_head', function () {
 
-  // @TODO performance improvements.
-
+  $is_public = get_option('blog_public', true);
   $color = esc_attr(get_theme_mod('region_root_color_primary'));
   $sitename = esc_attr(get_bloginfo('sitename'));
-  $sitedescription = esc_attr(substr(get_bloginfo('description'), 0, 160));
 
   echo get_theme_mod('component_header_markup');
 
@@ -69,6 +163,10 @@ add_action('wp_head', function () {
     }
   }
 
+  if ($is_public && tinsta_is_login_page()) {
+    echo '<meta name="robots" content="noindex, nofollow" />';
+  }
+
   echo "<meta name=\"theme-color\" content=\"{$color}\" />";
   echo "<meta name=\"msapplication-TileColor\" content=\"{$color}\" />";
   echo "<meta name=\"apple-mobile-web-app-title\" content=\"{$sitename}\" />";
@@ -78,12 +176,8 @@ add_action('wp_head', function () {
   if (get_theme_mod('component_seo_enable')) {
 
     // Public checkbox in settings.
-    if (get_option('blog_public', true)) {
-      // Skip SEO friendly metas
-      if (tinsta_is_login_page()) {
-        echo '<meta name="robots" content="noindex, nofollow" />';
-      }
-      elseif ( is_tax() || ( is_archive() && ( !empty($_GET['orderby']) || !empty($_GET['order'])) ) ) {
+    if ($is_public) {
+      if ( is_tax() || ( ( !empty($_GET['orderby']) || !empty($_GET['order'])) ) && is_archive() ) {
         wp_no_robots();
       }
     }
@@ -106,24 +200,27 @@ add_action('wp_head', function () {
         $keywords[] = $term->name;
       }
       $description = get_the_excerpt();
+      rewind_posts();
     }
 
-    if (is_archive()) {
+    elseif (is_category()) {
       $description = category_description();
     }
 
     // Always set some description.
-    if (!trim($description)) {
-      $description = $sitedescription;
-    }
-    else {
-      $description = strip_tags($description);
-      $description = substr($description, 0, 160);
-      $description = esc_attr($description);
+    $sitedescription = esc_attr(substr(get_bloginfo('description'), 0, 160));
+    if ($sitedescription) {
+      echo "<meta name=\"subject\" content=\"{$sitedescription}\" />";
     }
 
-    echo "<meta name=\"description\" content=\"{$description}\" />";
-    echo "<meta name=\"subject\" content=\"{$sitedescription}\" />";
+    if (!$description) {
+      $description = $sitedescription;
+    }
+
+    if ($description) {
+      echo "<meta name=\"description\" content=\"{$description}\" />";
+    }
+
     echo "<meta name=\"publisher\" content=\"{$sitename}\" />";
     if ($keywords) {
       printf('<meta name="keywords" content="%s" />', esc_attr(implode(', ', $keywords)));
@@ -138,14 +235,6 @@ add_action('wp_head', function () {
 });
 
 /**
- * Fix shortcodes in feeds
- */
-add_filter('the_content_rss', function ($content = '') {
-  $content = do_shortcode($content);
-  return $content;
-});
-
-/**
  * Add extra markup in footer.
  */
 add_action('wp_footer', function () {
@@ -157,7 +246,7 @@ add_action('wp_footer', function () {
   if ( !is_user_logged_in() && get_theme_mod('component_site_agreement_enable') ) {
     $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
     if (!($privacy_policy_page_id && is_page($privacy_policy_page_id))) {
-      get_template_part('template-parts/components/agreement');
+      locate_template('template-parts/components/agreement.php', true, true);
     }
   }
 
@@ -212,9 +301,6 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('tinsta-google-fonts', '//fonts.googleapis.com/css?family=' . $fonts_google);
   }
 
-  // Disable the ugly WP styles for recent comments widget.
-  add_filter('show_recent_comments_widget_style', '__return_false');
-
   // Enqueue stylesheets.
   $stylesheet = tinsta_get_stylesheet('default');
   wp_enqueue_style('tinsta-stylesheet', $stylesheet, [], $theme_hash);
@@ -260,6 +346,10 @@ add_action('wp_enqueue_scripts', function () {
     }
 
   }
+
+  // Disable the ugly WP styles for recent comments widget.
+  add_filter('show_recent_comments_widget_style', '__return_false');
+  rewind_posts();
 
 });
 
@@ -331,18 +421,13 @@ add_filter('post_class', function ($classes, $class, $post_id) {
 }, 6, 3);
 
 /**
- * Wrap videos in embed HTML in media container to allow better aspect ratio with responsive.
+ * Excerpt rewrite
  */
-add_filter('embed_oembed_html', function ($html, $url, $attr) {
-
-  // Wrap embed videos within a media-container div element.
-  if (preg_match('#(\<video)#i', $html)) {
-    $html = '<div class="media-container">' . $html . '</div>';
-  }
-
-  return $html;
-
-}, 10, 3);
+// @TODO This seems to be implemented out of the box, check to ensure.
+//add_filter('the_excerpt', function ( $excerpt ) {
+//  $excerpt = strip_shortcodes( $excerpt );
+//  return $excerpt;
+//});
 
 /**
  * Alter post contents
@@ -394,9 +479,17 @@ add_filter('the_content', function ($content) {
 }, 100, 2);
 
 /**
+ * Fix shortcodes in feeds
+ */
+add_filter('the_content_rss', function ($content = '') {
+  $content = do_shortcode($content);
+  return $content;
+});
+
+/**
  * Filter the except length to X words.
  */
-add_filter( 'excerpt_length', function ( $length ) {
+add_filter('excerpt_length', function ( $length ) {
 
   $post = get_post();
   $new_length = get_theme_mod("post_type_{$post->post_type}_archive_show_excerpt_words", $length);
@@ -407,6 +500,20 @@ add_filter( 'excerpt_length', function ( $length ) {
 
   return $length;
 });
+
+/**
+ * Wrap videos in embed HTML in media container to allow better aspect ratio with responsive.
+ */
+add_filter('embed_oembed_html', function ($html, $url, $attr) {
+
+  // Wrap embed videos within a media-container div element.
+  if (preg_match('#(\<video)#i', $html)) {
+    $html = '<div class="media-container">' . $html . '</div>';
+  }
+
+  return $html;
+
+}, 10, 3);
 
 /**
  * Alter comment fields:
@@ -459,102 +566,6 @@ add_filter('comment_text', function ($comment_text, $comment, $args) {
 }, 10, 3);
 
 /**
- * Proccess widget's tinsta related settings
- */
-add_filter('dynamic_sidebar_params', function ($params) {
-  global $wp_registered_widgets;
-  if (!empty($wp_registered_widgets[$params[0]['widget_id']]['callback'])) {
-    $widget = $wp_registered_widgets[$params[0]['widget_id']]['callback'][0];
-    /*** @var $widget \WP_Widget */
-    $settings = $widget->get_settings();
-    if (isset($settings[$params[1]['number']])) {
-
-      $settings = $settings[$params[1]['number']];
-
-      $style = '';
-
-      if (!empty($settings['tinsta_widget_size'])) {
-        $style .= 'width:' . round($settings['tinsta_widget_size'], 2) . '%;';
-      }
-
-      if (!empty($settings['tinsta_widget_float'])) {
-        $style .= 'float:' . $settings['tinsta_widget_float'];
-      }
-
-      $params[0]['before_widget'] = str_replace('class="', " style=\"{$style}\" class=\"", $params[0]['before_widget']);
-
-      if (!empty($settings['tinsta_boxed']) && $settings['tinsta_boxed'] == 'on') {
-        $params[0]['before_widget'] = str_replace('class="', 'class="wrapper ', $params[0]['before_widget']);
-      }
-
-    }
-  }
-
-  return $params;
-});
-
-/**
- * Parse query hook
- */
-add_action( 'parse_query', function ( $query, $error = true ) {
-  if ( get_theme_mod('system_page_search_disable_search') && is_main_query() && is_search() ) {
-    $query->is_search = false;
-    $query->query_vars['s'] = false;
-    $query->query['s'] = false;
-    // to error
-    if ( $error == true ) {
-      $query->is_404 = true;
-    }
-  }
-});
-
-/**
- * Override post fetching
- */
-add_action('pre_get_posts', function ($query) {
-
-  if ( is_admin() ) {
-    return;
-  }
-
-  if ( $query->is_main_query() ) {
-
-    if ( is_search() ) {
-      $post_type = get_theme_mod('system_page_search_force_post_type');
-      if ($post_type) {
-        $query->set('post_type', $post_type);
-      }
-    }
-
-    if ( !is_search() ) {
-
-      $post_type = $query->get('post_type');
-      if (!$post_type && is_home()) {
-        $post_type = 'post';
-      }
-      $per_page = get_theme_mod("post_type_{$post_type}_archive_per_page", 0);
-      if ($per_page) {
-        $query->set('posts_per_page', $per_page);
-      }
-
-    }
-
-  }
-
-});
-
-/**
- * Modifies tag cloud widget arguments to display all tags in the same font size
- * and use list format for better accessibility.
- */
-add_filter('widget_tag_cloud_args', function ( $args ) {
-  $args['largest']  = 2;
-  $args['smallest'] = 0.5;
-  $args['unit']     = 'rem';
-  return $args;
-});
-
-/**
  * Add first level menu items, depth-0 class.
  */
 add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
@@ -585,7 +596,7 @@ if ( !is_customize_preview() && !is_admin() ) {
         $to_remove[$item->ID] = $item->ID;
       }
 
-      if ($item->type == 'tinsta-nav-menu-widget-area' && !is_active_sidebar('tinsta-menu-' . $item->post_name)) {
+      if ($item->type == 'tinsta-nav-menu-widget-area' && !is_active_sidebar('tinsta-menu-' . $item->ID)) {
         $to_remove[$item->ID] = $item->ID;
       }
 
@@ -618,10 +629,9 @@ if ( !is_customize_preview() && !is_admin() ) {
  */
 add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $args) {
 
-  static $wp_current_user = null;
-
   if ($item->object === 'tinsta-nav-menu-object') {
 
+    static $wp_current_user = null;
     if ($wp_current_user === null) {
       $wp_current_user = wp_get_current_user();
     }
@@ -657,16 +667,16 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-search-box') {
-      if ($depth < 2) {
+      if ($depth === 0) {
         $item_output = get_search_form(false);
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-widget-area') {
-      $item_output = null;
-      if ($depth < 3) {
-        if (is_customize_preview() || is_active_sidebar('tinsta-menu-' . $item->post_name)) {
+      if ($depth === 0) {
+        $sidebar_id = 'tinsta-menu-' . $item->ID;
+        if (is_customize_preview() || is_active_sidebar($sidebar_id)) {
           ob_start();
-          dynamic_sidebar('tinsta-menu-' . $item->post_name);
+          dynamic_sidebar($sidebar_id);
           $widgets = ob_get_clean();
           if (trim($widgets)) {
             $item_output = '
@@ -684,7 +694,9 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
   }
 
-  $item_output = preg_replace('#\@icon\(([\w\-]+)\)#i', '<i class="la $1"></i>', $item_output);
+  if (strpos($item_output, '@icon(') !== false) {
+    $item_output = preg_replace('#\@icon\(([\w\-]+)\)#i', '<i class="la $1"></i>', $item_output);
+  }
 
   if (!empty($item->description)) {
     $item_output = str_replace('</a>',

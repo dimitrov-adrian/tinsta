@@ -19,9 +19,11 @@ function tinsta_settings_import($file, $tinsta_settings_only = false)
   $imported_settings_count = 0;
   $defaults = tinsta_get_options_defaults();
 
-  require_once ABSPATH . '/wp-admin/includes/file.php';
-  WP_Filesystem();
   global $wp_filesystem;
+  if (!$wp_filesystem) {
+    require_once ABSPATH . '/wp-admin/includes/file.php';
+    WP_Filesystem();
+  }
 
   if ($wp_filesystem->is_readable($file)) {
 
@@ -191,6 +193,10 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
         break;
       }
     }
+  }
+
+  if (!$sidebar) {
+    return;
   }
 
   //  if (!$sidebar) {

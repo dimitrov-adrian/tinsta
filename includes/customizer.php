@@ -9,11 +9,11 @@
 /**
  * Enqueue scripts and styles.
  */
-add_action('wp_enqueue_scripts', function () {
-  if ( is_customize_preview() && !empty($_POST['customized']) ) {
-    wp_localize_script('tinsta', 'tinstaCustomized', json_decode(wp_unslash($_POST['customized']), true));
-  }
-});
+if (!empty($_POST['customized'])) {
+  add_action('wp_enqueue_scripts', function () {
+    wp_localize_script('tinsta', 'tinstaCustomized', json_decode(wp_unslash($_POST['customized']), TRUE));
+  });
+}
 
 /**
  * Add metabox for Tinsta's items in the customizer.
@@ -195,7 +195,7 @@ add_action('customize_register', function ($wp_customize) {
 
   /** @var $wp_customize \WP_Customize_Manager */
 
-  $public_post_types = get_post_types(['public' => true], 'objects');
+  $public_post_types = apply_filters('tinsta_supported_customizer_post_types', get_post_types(['public' => true], 'objects'));
 
   // Remove built-in color customizer.
   $wp_customize->remove_section('colors');
@@ -557,12 +557,12 @@ add_action('customize_register', function ($wp_customize) {
 
   // Region: Primary Menu (Main Menu)
   $wp_customize->add_section('tinsta_region_primary_menu', [
-    'title' => __('Main Menu', 'tinsta'),
+    'title' => __('Primary Site Menu', 'tinsta'),
     'panel' => 'tinsta_regions',
     'description' => '
         <p>
           <a href="javascript:wp.customize.control(\'nav_menu_locations[main]\').focus();">
-            ' . __('Edit primary menu.', 'tinsta') . '
+            ' . __('Edit <strong>Primary Menu</strong>.', 'tinsta') . '
           </a>
         </p>
     ',
@@ -570,13 +570,27 @@ add_action('customize_register', function ($wp_customize) {
       return has_nav_menu('main');
     }
   ]);
+  $wp_customize->add_control('region_primary_menu_sticky', [
+    'type'    => 'checkbox',
+    'label'   => __('Sticky', 'tinsta'),
+    'section' => 'tinsta_region_primary_menu',
+    'active_callback' => function () {
+      $position = get_theme_mod('region_primary_menu_position');
+      return in_array($position, [ 'before-header', 'after-header' ])
+        && !get_theme_mod('region_header_sticky')
+        && $position != 'bottom-float';
+    },
+  ]);
   $wp_customize->add_control('region_primary_menu_position', [
     'label'   => __('Position', 'tinsta'),
     'section' => 'tinsta_region_primary_menu',
     'type'    => 'select',
     'choices' => [
       'before-header' => __('Before Header', 'tinsta'),
-      '' => __('After Header', 'tinsta'),
+      'after-header' => __('After Header', 'tinsta'),
+      'prepend-header' => __('Prepend to Header', 'tinsta'),
+      'append-header' => __('Append to Header', 'tinsta'),
+      'bottom-float' => __('Stuck to Bottom', 'tinsta'),
     ],
     'active_callback' => function () {
       return is_active_sidebar('header');
@@ -1079,6 +1093,9 @@ add_action('customize_register', function ($wp_customize) {
   // System Page: Homepage settings
   $wp_customize->get_section('static_front_page')->panel = 'tinsta_system_pages';
 
+  // Add Widget area to frontpage variations.
+  $wp_customize->get_control('show_on_front')->choices['widgets'] = __('Widgets', 'tinsta');
+
   // System Page: Login and Register
   $wp_customize->add_section('tinsta_system_page_login', [
     'title' => __('Login & Register', 'tinsta'),
@@ -1290,7 +1307,6 @@ add_action('customize_register', function ($wp_customize) {
     }
 
   }
-
 
   // Remove forced mods controls, it is a bit stupid to add and then to remove,
   // but the cases mods are overriden are not supposed to be very often (only on child theme or specific plugin)

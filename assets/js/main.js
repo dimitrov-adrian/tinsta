@@ -270,9 +270,15 @@
     }
 
     var menuItemsSelectors = [
-      //'.site-header-wrapper .menu-item-type-tinsta-nav-menu-widget-area.depth-0 > .sub-menu',
-      '.site-header-wrapper  .menu-item-object-tinsta-nav-menu-object.depth-0 > .sub-menu',
-      '.site-header-wrapper .menu-item-has-children.depth-0 > .sub-menu'
+
+      // All menus in header.
+      '.site-header-wrapper .menu-item-object-tinsta-nav-menu-object.depth-0 > .sub-menu',
+      '.site-header-wrapper .menu-item-has-children.depth-0 > .sub-menu',
+
+      // Primary menu items.
+      '.site-primary-menu .menu-item-object-tinsta-nav-menu-object.depth-0 > .sub-menu',
+      '.site-primary-menu .menu-item-has-children.depth-0 > .sub-menu',
+
     ];
 
     document.querySelectorAll(menuItemsSelectors.join(','))
@@ -289,18 +295,31 @@
           item.parentNode.className += ' is-mega';
         }
 
+        // If widgets area, disable clicking for root item anchor.
+        if (item.parentElement.className.match('menu-item-type-tinsta-nav-menu-widget-area')) {
+          var firstA = item.parentElement.querySelector('a');
+          if (firstA) {
+            firstA.addEventListener( 'click', function (event) {
+              event.preventDefault();
+            });
+          }
+        }
+
         // Consider replacing window.innerWidth with window.outerWidth
         // innerWidth represent current width, and outerWidth represent the whole window
         item.parentElement.addEventListener('mouseenter', function (event) {
           if ( window.innerWidth >= parseInt(tinsta.breakpoints.tablet) ) {
+
             item.style.right = 'auto';
             item.style.left = 'auto';
+
             if (item.offsetWidth + item.offsetLeft > mainWrapper.offsetWidth) {
               item.style.right = 0;
             }
-            if (item.offsetLeft < 10) {
+            if (item.offsetLeft < 20) {
               item.style.left = 0;
             }
+
           }
         });
 
@@ -320,27 +339,6 @@
       });
 
   }());
-
-  /**
-   * Make topline, header sticky.
-   */
-  ( supports_getComputedStyle ) && ( function () {
-    var topline = document.getElementsByClassName('site-topline-wrapper');
-    var header = document.getElementsByClassName('site-header-wrapper');
-    if (topline.length > 0 && header.length > 0) {
-      var setHeaderTop = function () {
-        if (window.getComputedStyle(topline[0]).position === 'sticky' && window.getComputedStyle(header[0]).position === 'sticky') {
-          header[0].style.setProperty('top', topline[0].offsetHeight + 'px');
-        } else {
-          header[0].style.setProperty('top', null);
-        }
-      };
-      window.addEventListener('load', setHeaderTop);
-      window.addEventListener('resize', setHeaderTop);
-      window.addEventListener('orientationchange', setHeaderTop);
-      setHeaderTop();
-    }
-  } () );
 
   /**
    * Search widget forms add focus class when focused element.

@@ -57,7 +57,7 @@
       </div>
     <?php endif ?>
 
-    <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt())): ?>
+    <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt() ) ): ?>
       <div class="entry-summary">
         <p>
           <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">

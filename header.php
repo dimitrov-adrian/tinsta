@@ -7,14 +7,12 @@
   <meta name="MobileOptimized" content="width" />
   <meta name="HandheldFriendly" content="true" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="ResourceLoaderDynamicStyles" content=""/>
-  <?php wp_meta() ?>
   <?php wp_head() ?>
 </head>
 <body <?php body_class() ?>>
 
-<?php
+<a class="skip-link screen-reader-text" href="#main" tabindex="0">
+  <?php _e('Skip to content', 'tinsta') ?>
+</a>
 
-if ( ! ( is_singular() && get_page_template_slug() == 'template-fullscreen.php' ) ) {
-  locate_template('template-parts/theme/header.php', true);
-}
+<?php locate_template('template-parts/global/header.php', true)?>

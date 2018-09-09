@@ -1,7 +1,7 @@
 <?php
 
 add_action('bbp_enqueue_scripts', function() {
-  wp_enqueue_style(tinsta_get_stylesheet('integrations/bbpress'));
+  //wp_enqueue_style(tinsta_get_stylesheet('integrations/bbpress'));
 });
 
 //

@@ -6,15 +6,17 @@
 
 # Tinsta (Tiny Standard)
 
-![](https://raw.githubusercontent.com/dimitrov-adrian/tinsta/master/screenshot.png)
+![](https://raw.githubusercontent.com/dimitrov-adrian/tinsta/master/screenshot.jpg)
 
 Tinsta (as from **Ti**ny **sta**ndard) is free open source WordPress theme, that aims to provide 
 very standard web site layout with a lot of customization options.
+
 
 ##
 ### Requirements
 - PHP 5.4 or later
 - WordPress 4.6 or later
+
 
 ##
 ### Installation
@@ -25,27 +27,25 @@ very standard web site layout with a lot of customization options.
 5. Click on the 'Activate' button to use your new theme right away.
 4. Navigate to Appearance > Customize in your admin panel and customize to taste.
 
+
 ##
 ### wp-config.php constants
 
-##### Setup directory to store cache css files
-`TINSTA_STYLESHEET_CACHE_DIR` constant should be relative to `WP_CONTENT_DIR` and **must** 
-starts with slash.
+##### Directory to store cached css files
+Constant should be relative to `WP_CONTENT_DIR` and **must** starts with slash.  
+Defaults `WP_CONTENT_DIR`/cache/tinsta/css
+
 ```php
 define('TINSTA_STYLESHEET_CACHE_DIR', '/cache/tinsta/css');
 ```
 
-##### Enable/Disable special Tinsta's plugin integrations
-Enabled by default
-```php
-define('TINSTA_INTEGRATIONS', false);
-```
+##### Bundled third-party plugin integrations
+Defaults is enabled
 
-##### Enable/Disable experimentals features
-Disabled by default
 ```php
 define('TINSTA_INTEGRATIONS', true);
 ```
+
 
 ##
 ### TODO
@@ -53,7 +53,7 @@ List by priority
 - [ ] **[WIP]** Improve UI strings
 - [ ] **[WIP]** Gutenberg blocks *(integration)*
 - [ ] **[WIP]** SiteOrigin Panels *(integration)*
-- [ ] WooCommerce *(integration)*
+- [ ] **[WIP]** WooCommerce *(integration)*
 - [ ] Sticky Sidebars
 - [ ] Allow full width layout
 - [ ] bbPress *(integration)*
@@ -62,28 +62,28 @@ List by priority
 - [ ] Share Buttons by AddThis *(integration)*
 - [ ] Documentation
 
-##
-#### FAQ
 
-##### How to update
+##
+### FAQ
+
+#### How to update
 Tinsta theme is not in the [theme directory](https://wordpress.org/themes/),
 so cannot be updated through WordPress built-in store. The only way to get automatic
 updates is via [github-udpater](https://github.com/afragen/github-updater) plugin.
 
 Manual update is always an option. Check **INSTALLATION** for more information.
 
-##### Why no complete customizeable ability like Headway
+#### Why no complete customizeable ability like Headway
 Because the theme's purpose is not to be a complete design builder,
 but to provide a lot of customization options within the theme's scope.
 
-
-#####  Why no layout builder like Site-Origin Panels, Divi, ..etc.
+####  Why no layout builder like Site-Origin Panels, Divi, ..etc.
 There is a lot of plugins that provide such function, and at current
 stage Tinsta theme cannot provide something better than these options.
 Anyway, the theme can integrate with some of these plugins very well,
 so you can pick the plugin you are familiar with it and do the job.
 
-##### Why no per post type or page sidebars (widget areas), how can manage different widgets in same sidebars
+#### Why no per post type or page sidebars (widget areas), how can manage different widgets in same sidebars
 Adding variants to sidebar per post_type or type family will be very limited way
 to managing widgets. Using plugin that provide widget logic is more flexible way
 to do the goal. There is plenty of good solutions for this, so right now there 
@@ -91,6 +91,7 @@ is no reason to reinvent the wheel. Check some of the **Widget Logic** recomment
 and pick by your choice.
 
 
+##
 ### Want to extend. Plugins recommendation list.
 The theme cannot provide a replacement functions for everything in 
 WordPress's plugins garden.
@@ -109,7 +110,7 @@ So here is short list of plugins that can be helpful.
   - [PHP Code Widget](https://wordpress.org/plugins/php-code-widget/)
   - [Recent Posts Widget with thumbnails](https://wordpress.org/plugins/recent-posts-widget-with-thumbnails/)
   - [Simple Social Icons](https://wordpress.org/plugins/simple-social-icons/)
-  
+
 
 ##
 ### Developers
@@ -140,11 +141,13 @@ add_filter('tinsta_get_stylesheet_args', function ($args) {
 });
 ```
 
+
 ##
 ### Debugging
 WordPress constant `SCRIPT_DEBUG` also allow forcing stylesheet regeneration,
 but need to send `no-cache` HTTP header (usually `Shift`+**Refresh** or
 Chrome's **Disable cache** option in dev panel)
+
 
 ##
 ### Contributing
@@ -154,6 +157,7 @@ Chrome's **Disable cache** option in dev panel)
 * Have idea or feedback, feel free to open an issue and share.
 
 * If you want to help with translation, then please wait until first stable release.
+
 
 ## 
 ### License & Terms 
@@ -205,4 +209,3 @@ Source: https://github.com/nbouvrette/remPolyfill
 **Respond.js min/max-width media query polyfill**  
 Licenses: MIT License  
 Source: https://github.com/scottjehl/Respond
-

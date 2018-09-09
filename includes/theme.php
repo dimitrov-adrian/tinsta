@@ -45,6 +45,7 @@ add_action( 'after_setup_theme', function () {
  * Init hook
  */
 add_action('init', function () {
+
   // @TODO performance improvements.
   // Because we need to ensure all used theme mods had default values, and the filters like:
   // "default_option_theme_mods_{$theme_slug}" and "option_theme_mods_{$theme_slug}" doesn't do what expected to do...
@@ -80,6 +81,7 @@ add_action('init', function () {
  */
 add_action('widgets_init', function () {
 
+  // Register sidebars.
   $is_customizer_preview = is_customize_preview();
 
   register_sidebar([
@@ -102,15 +104,17 @@ add_action('widgets_init', function () {
     'after_title' => '</div>',
   ]);
 
-  register_sidebar([
-    'name' => __('Front Page', 'tinsta'),
-    'description' => __('Displayed before main content of home page (front-page).', 'tinsta'),
-    'id' => 'frontpage',
-    'before_widget' => '<div id="%1$s" class="widget %2$s">',
-    'after_widget' => '</div>',
-    'before_title' => '<div class="widgettitle">',
-    'after_title' => '</div>',
-  ]);
+  if (get_option('show_on_front') == 'widgets') {
+    register_sidebar([
+      'name' => __('Front Page', 'tinsta'),
+      'description' => __('Displayed before main content of home page (front-page).', 'tinsta'),
+      'id' => 'frontpage',
+      'before_widget' => '<div id="%1$s" class="widget %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<div class="widgettitle">',
+      'after_title' => '</div>',
+    ]);
+  }
 
   if (get_theme_mod("system_page_404_content") == 'widgets' || $is_customizer_preview) {
     register_sidebar([
@@ -234,7 +238,7 @@ add_action('widgets_init', function () {
     register_sidebar([
       'name' => sprintf(__('Menu "%s"', 'tinsta'), $sidebar->post_title),
       'description' => sprintf(__('Appears under the "%s" menu item as mega menu', 'tinsta'), $sidebar->post_title),
-      'id' => 'tinsta-menu-' . $sidebar->post_name,
+      'id' => 'tinsta-menu-' . $sidebar->ID,
       'before_widget' => '<div id="%1$s" class="widget %2$s">',
       'after_widget' => '</div>',
       'before_title' => '<div class="widgettitle">',
@@ -242,12 +246,7 @@ add_action('widgets_init', function () {
     ]);
   }
 
-});
-
-/**
- * Register widgets
- */
-add_action('widgets_init', function () {
+  // Register theme's widgets.
 
   require __DIR__ . '/widgets/breadcrumbs-widget.php';
   register_widget('Tinsta_BreadCrumbs_Widget');
@@ -269,9 +268,6 @@ add_action('widgets_init', function () {
 
   require __DIR__ . '/widgets/related-posts-widget.php';
   register_widget('Tinsta_RelatedPosts_Widget');
-
-  require __DIR__ . '/widgets/page-content-widget.php';
-  register_widget('Tinsta_PageContent_Widget');
 
 });
 
