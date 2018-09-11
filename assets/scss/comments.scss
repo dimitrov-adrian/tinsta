@@ -54,11 +54,11 @@ $la-is-loaded: true;
       overflow: hidden;
 
       .comment-author-avatar {
-        width: $component_avatar_size + px;
+        width: $options_avatar_size + px;
         @media (min-width: 421px) {
           float: left;
           margin-right: 20px;
-          @if ($component_comments_style == 'chat') {
+          @if ($options_comments_style == 'chat') {
             margin-top: 2.50rem; // the default comment-meta height
           }
         }
@@ -115,10 +115,10 @@ $la-is-loaded: true;
       }
       .comment-content {
         @media (min-width: 421px) {
-          margin-left: $component_avatar_size + 20px;
+          margin-left: $options_avatar_size + 20px;
         }
         margin-top: .8rem;
-        @if ($component_comments_style == 'chat') {
+        @if ($options_comments_style == 'chat') {
           @include roundness();
           background-color: opa(muted($region_main_color_background, $region_root_color_foreground));
           border-top: none;
@@ -131,6 +131,8 @@ $la-is-loaded: true;
       &.bypostauthor .comment-content {
         @include border(muted($region_root_color_primary));
         background-color: opa(muted($region_root_color_primary));
+        padding-left: .6rem;
+        padding-right: .6rem;
       }
 
       &.pingback,
@@ -155,21 +157,21 @@ $la-is-loaded: true;
 
     @media (min-width: 421px) {
       .children {
-        margin-left: $component_avatar_size + 20px;
+        margin-left: $options_avatar_size + 20px;
         @media (max-width: $breakpoint_max_tablet) {
-          margin-left: ( $component_avatar_size - $component_avatar_size_small ) + px;
+          margin-left: ( $options_avatar_size - $options_avatar_size_small ) + px;
         }
         .comment {
           margin-bottom: 1rem;
         }
         .comment-author-avatar {
-          width: $component_avatar_size_small + px;
+          width: $options_avatar_size_small + px;
         }
         .comment-content {
-          margin-left: $component_avatar_size_small + 20px;
+          margin-left: $options_avatar_size_small + 20px;
         }
         .children {
-          margin-left: $component_avatar_size_small + 20px;
+          margin-left: $options_avatar_size_small + 20px;
           @media (max-width: $breakpoint_max_tablet) {
             margin-left: 0;
           }
@@ -178,7 +180,7 @@ $la-is-loaded: true;
     }
 
     @media (min-width: 421px) {
-      @if ($component_comments_style == 'chat') {
+      @if ($options_comments_style == 'chat') {
         .comment:nth-child(even) {
           .comment-author-avatar {
             float: right;
@@ -187,12 +189,12 @@ $la-is-loaded: true;
           }
           .comment-content {
             margin-left: 0;
-            margin-right: $component_avatar_size + 20px;
+            margin-right: $options_avatar_size + 20px;
           }
         }
         .children .comment:nth-child(even) .comment-content {
           margin-left: 0;
-          margin-right: $component_avatar_size_small + 20px;
+          margin-right: $options_avatar_size_small + 20px;
         }
 
       }
@@ -237,9 +239,11 @@ $la-is-loaded: true;
 
     #cancel-comment-reply-link {
       float: right;
+      @extend %small;
       &:before {
         @extend %la;
         content: $la-close;
+        margin: .4rem;
       }
     }
 
@@ -248,7 +252,7 @@ $la-is-loaded: true;
     }
     .comment-form-avatar {
       float: left;
-      width: $component_avatar_size + px;
+      width: $options_avatar_size + px;
       @media (max-width: $breakpoint_max_tablet) {
         width: 64px;
       }
@@ -267,7 +271,7 @@ $la-is-loaded: true;
     }
 
     .comment-form {
-      margin-left: $component_avatar_size + 10px;
+      margin-left: $options_avatar_size + 10px;
       @media (max-width: $breakpoint_max_tablet) {
         margin-left: 74px;
       }
@@ -309,9 +313,9 @@ $la-is-loaded: true;
           display: none;
         }
         textarea {
-          height: $component_avatar_size + px;
+          height: $options_avatar_size + px;
           max-height: unset;
-          min-height: $component_avatar_size + px;
+          min-height: $options_avatar_size + px;
           @media (max-width: $breakpoint_max_tablet) {
             height: 64px;
             min-height: 64px;

@@ -1,16 +1,26 @@
 @import "tinsta/_functions";
 @import "tinsta/_typography";
 
+body {
+  background: $region_root_color_background;
+  color: $region_root_color_foreground;
+}
+
 /**
  * Error page
  */
 .error-content-wrapper {
   box-shadow: 0 12px 28px -8px rgba(0, 0, 0, .2);
   margin: 2em auto;
-  max-width: 800px;
-  min-width: 320px;
+  max-width: $breakpoint_max_tablet;
+  min-width: $breakpoint_min_tablet;
   width: 90%;
   padding: 2rem;
+  .site-info {
+    @extend %base-title;
+    text-align: right;
+  }
+  @include roundness();
 }
 
 .content {

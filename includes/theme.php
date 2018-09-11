@@ -9,7 +9,7 @@
 /**
  * Prepare WordPress for the theme.
  */
-add_action( 'after_setup_theme', function () {
+add_action('after_setup_theme', function () {
 
   // First, need to load language, because some of the default options uses translations.
   load_theme_textdomain('tinsta', get_template_directory() . '/languages');
@@ -52,7 +52,7 @@ add_action('init', function () {
   // Also set forced theme mods from tinsta_force_options filter.
   $theme_defaults = tinsta_get_options_defaults();
   $theme_mods = get_theme_mods();
-  $forced_theme_mods = (array) apply_filters('tinsta_force_options', []);
+  $forced_theme_mods = (array)apply_filters('tinsta_force_options', []);
   foreach ($theme_defaults as $mod_name => $mod_default_value) {
 
     if (isset($forced_theme_mods[$mod_name]) && (!isset($theme_mods[$mod_name]) || $forced_theme_mods[$mod_name] != $theme_mods[$mod_name])) {
@@ -75,9 +75,9 @@ add_action('init', function () {
 
 /**
  * Register widgets and sidebars.
- * 
+ *
  * should be on widgets_init but is_customize_preview() is not available then.
- * 
+ *
  */
 add_action('widgets_init', function () {
 
@@ -137,7 +137,8 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('Before Entries', 'tinsta'),
-    'description' => __('Displayed before entries or single entry, between the sidebars. Scoped in Main Content.', 'tinsta'),
+    'description' => __('Displayed before entries or single entry, between the sidebars. Scoped in Main Content.',
+      'tinsta'),
     'id' => 'before-entries',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -147,7 +148,8 @@ add_action('widgets_init', function () {
 
   register_sidebar([
     'name' => __('After Entries', 'tinsta'),
-    'description' => __('Displayed after entries or single entry, between the sidebars. Scoped in Main Content.', 'tinsta'),
+    'description' => __('Displayed after entries or single entry, between the sidebars. Scoped in Main Content.',
+      'tinsta'),
     'id' => 'after-entries',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
@@ -162,7 +164,8 @@ add_action('widgets_init', function () {
     if (get_theme_mod("post_type_{$post_type->name}_layout_archive") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Archive %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
-        'description' => sprintf(__('Manage %s display, when displaying multiple entries, via Widgets.', 'tinsta'), $post_type->label),
+        'description' => sprintf(__('Manage %s display, when displaying multiple entries, via Widgets.', 'tinsta'),
+          $post_type->label),
         'id' => "post-layout-archive-widget-{$post_type->name}",
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget' => '</div>',
@@ -172,12 +175,13 @@ add_action('widgets_init', function () {
         'after_title' => '</div>',
       ]);
     }
-    
+
     // If twe are on customizer preview, then should register all sidebars, just to register it in customizer.
     if (get_theme_mod("post_type_{$post_type->name}_layout") == 'widgets-area' || $is_customizer_preview) {
       register_sidebar([
         'name' => sprintf(__('Single %s &mdash; Widgets Area Layout', 'tinsta'), $post_type->label),
-        'description' => sprintf(__('Manage %s display, when displaying single entry, via Widgets.', 'tinsta'), $post_type->label),
+        'description' => sprintf(__('Manage %s display, when displaying single entry, via Widgets.', 'tinsta'),
+          $post_type->label),
         'id' => "post-layout-widget-{$post_type->name}",
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget' => '</div>',
@@ -217,7 +221,7 @@ add_action('widgets_init', function () {
       [
         'key' => '_menu_item_type',
         'value' => 'tinsta-nav-menu-widget-area',
-      ]
+      ],
     ],
     'orderby' => 'title',
     'posts_per_page' => -1,
@@ -233,8 +237,6 @@ add_action('widgets_init', function () {
       'after_title' => '</div>',
     ]);
   }
-
-  // _wp_page_template
 
   // Register theme's widgets.
 
@@ -267,7 +269,7 @@ add_action('widgets_init', function () {
  * @TODO may be need to filter those that are not intended to be accessible in SCSS
  * @TODO better sanitization
  */
-add_filter('tinsta_get_stylesheet_args', function ($args = []) {
+add_filter('tinsta_stylesheet_args', function ($args = []) {
 
   $defaults = tinsta_get_options_defaults();
   $theme_mods = array_replace_recursive(get_theme_mods(), $args['variables']);
@@ -279,7 +281,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
       // @TODO better sanitization.
       if (!is_scalar($value)) {
         // Should not have such variables.
-        die('Incorrect type: ' . $name . ' = ' . print_r($value,1));
+        die('Incorrect type: ' . $name . ' = ' . print_r($value, 1));
         continue;
       }
 
@@ -290,9 +292,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
         if (substr($value, 0, 1) != '#' || (strlen($value) != 4 && strlen($value) != 7)) {
           $args['variables'][$name] = $defaults[$name];
         }
-      }
-
-      // Sanitize numbers.
+      } // Sanitize numbers.
       elseif (is_numeric($defaults[$name])) {
         if (!is_numeric($value)) {
           $float_val = sprintf('%.2f', $value);
@@ -304,9 +304,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
           }
         }
 
-      }
-
-      // Do not escape units.
+      } // Do not escape units.
       elseif (preg_match('#^([\d\.])(px|pt|\%|em|rem||vv|vw|vh)$#', trim($value), $matches)) {
 
         // But if we have some like 0em, then convert to 0.
@@ -314,23 +312,17 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
           $args['variables'][$name] = 0;
         }
 
-      }
-
-      // Quote URLs.
+      } // Quote URLs.
       elseif (preg_match('#(http\:|^\/\/|\%)#', $value)) {
         $args['variables'][$name] = "'{$args['variables'][$name]}'";
 
-      }
-
-      elseif (!is_bool($args['variables'][$name]) && !empty($args['variables'][$name])) {
+      } elseif (!is_bool($args['variables'][$name]) && !empty($args['variables'][$name])) {
 
         //$args['variables'][$name] = "'{$args['variables'][$name]}'";
         //$args['variables'][$name] =
         // do nothing generic variables.
 
-      }
-
-      // Convert nulls and empties to null.
+      } // Convert nulls and empties to null.
       elseif (empty($args['variables'][$name])) {
         $args['variables'][$name] = null;
       }
@@ -351,7 +343,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
     if (!empty($args['variables'][$name])) {
 
       // Break if quotes opening quotes doesn't match closing.
-      if (substr_count($args['variables'][$name], '"') %2 || substr_count($args['variables'][$name], '\'') %2) {
+      if (substr_count($args['variables'][$name], '"') % 2 || substr_count($args['variables'][$name], '\'') % 2) {
         $args['variables'][$name] = $defaults[$name];
       }
 
@@ -359,7 +351,7 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
       $args['variables'][$name] = preg_split('#[\t\n\,\;\,]#', $args['variables'][$name]);
       foreach ($args['variables'][$name] as $index => $value) {
         $value = trim($value);
-        if (strpos($value, ' ') !== false && ( $value{0} !== '"' && $value{0} !== '\'') ) {
+        if (strpos($value, ' ') !== false && ($value{0} !== '"' && $value{0} !== '\'')) {
           $value = "'" . addslashes($value) . "'";
         }
         $args['variables'][$name][$index] = $value;
@@ -374,22 +366,3 @@ add_filter('tinsta_get_stylesheet_args', function ($args = []) {
 
   return $args;
 });
-
-
-
-/* EXPERIMENTAL !!! */
-add_action('add_meta_boxes', function () {
-  add_meta_box(
-    'tinsta-page-attributes',
-    __( 'Tinsta', 'tinsta' ),
-    'tinsta_page_attributes_render',
-    'page',
-    'side',
-    'low'
-  );
-});
-
-function tinsta_page_attributes_render( $post )
-{
-  echo '123123123123123';
-}

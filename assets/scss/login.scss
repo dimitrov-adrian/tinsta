@@ -94,7 +94,7 @@ body {
       @include roundness();
       &:focus {
         border-color: $region_root_color_primary;
-        box-shadow: 0 0 0 ($typography_bordering + px) $region_root_color_primary;
+        box-shadow: 0 0 0 ($basics_bordering + px) $region_root_color_primary;
       }
     }
 

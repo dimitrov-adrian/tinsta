@@ -5,19 +5,16 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(
-      false,
-      sprintf('(Tinsta) %s', __('Breadcrumbs', 'tinsta')),
-      [
-        'description' => __('Breadcrumbs widget does not provide per widget configuration but global such. Edit from Appearance -&gt; Customizer -&gt; Components -&gt; Breadcrumbs.', 'tinsta'),
-      ]
-    );
+    parent::__construct(false, sprintf('(Tinsta) %s', __('Breadcrumbs', 'tinsta')), [
+      'description' => __('Breadcrumbs', 'tinsta'),
+    ]);
 
   }
 
   function form($instance)
   {
-    echo '<p>' . $this->widget_options['description'] . '</p>';
+    echo '<p>' . __('Breadcrumbs widget does not provide per widget configuration but global such. Edit from Appearance -&gt; Customizer -&gt; Options -&gt; Breadcrumbs.',
+        'tinsta') . '</p>';
   }
 
   function widget($args, $instance)
@@ -26,14 +23,14 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
     global $wp;
 
     // Do not show breadcrumbs on homepage.
-    if (is_front_page() || empty($wp->query_vars) ) {
+    if (is_front_page() || empty($wp->query_vars)) {
       return;
     }
 
-    $trail              = [];
+    $trail = [];
     $min_trails_to_show = 1;
 
-    if (get_theme_mod('component_breadcrumbs_include_home')) {
+    if (get_theme_mod('options_breadcrumbs_include_home')) {
       $trail[get_home_url()] = get_bloginfo('name');
       $min_trails_to_show++;
     }
@@ -75,7 +72,7 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
       if (is_a($queried_object, 'WP_Taxonomy')) {
         if (1 || strpos(strtolower($queried_object->taxonomy), 'cat')) {
           foreach (get_ancestors($queried_object->term_id, $queried_object->taxonomy, 'taxonomy') as $ancestor) {
-            $category                            = get_category($ancestor);
+            $category = get_category($ancestor);
             $trail[get_category_link($ancestor)] = $category->name;
           }
           $trail[get_term_link($queried_object)] = $queried_object->name;
@@ -84,7 +81,7 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
 
       if (is_singular() && is_post_type_hierarchical(get_post_type())) {
         foreach (array_reverse(get_ancestors(get_the_ID(), get_post_type(), 'post_type')) as $ancestor) {
-          $post                        = get_post($ancestor);
+          $post = get_post($ancestor);
           $trail[get_permalink($post)] = $post->post_title;
         }
       } elseif (is_category() || has_category()) {
@@ -105,29 +102,34 @@ class Tinsta_BreadCrumbs_Widget extends WP_Widget
       }
     }
 
-    $trail = apply_filters('tinsta_breadcrumb_trail', $trail);
+    $trail = (array)apply_filters('tinsta_breadcrumb_trail', $trail);
 
     if ($min_trails_to_show < 2) {
       $min_trails_to_show = 2;
     }
 
-    if (is_singular() && count($trail) < $min_trails_to_show) {
+    if (count($trail) < $min_trails_to_show) {
       return;
     }
 
+    $last = array_pop($trail);
 
     echo $args['before_widget'];
     ?>
     <div class="breadcrumbs">
-      <?php if (get_theme_mod('component_breadcrumbs_title')):?>
-      <span>
-        <?php echo get_theme_mod('component_breadcrumbs_title')?>
-      </span>
-      <?php endif?>
+      <?php if (get_theme_mod('options_breadcrumbs_title')): ?>
+        <span class="label">
+          <?php echo get_theme_mod('options_breadcrumbs_title') ?>
+        </span>
+      <?php endif ?>
       <?php foreach ($trail as $trail_link => $trail_label): ?>
-        <a href="<?php echo $trail_link ?>"
-           class="trail <?php echo end($trail) == $trail_label ? 'active' : '' ?>"><?php echo $trail_label ?></a>
+        <a href="<?php echo $trail_link ?>" class="breadcrumbs-trail">
+          <?php echo $trail_label ?>
+        </a>
       <?php endforeach ?>
+      <span class="breadcrumbs-trail active">
+        <?php echo $last ?>
+      </span>
     </div>
     <?php
     echo $args['after_widget'];

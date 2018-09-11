@@ -29,7 +29,7 @@
 
   </header>
 
-  <?php if (get_the_excerpt() && ! post_password_required()): ?>
+  <?php if (get_the_excerpt() && !post_password_required()): ?>
     <div class="entry-summary">
       <?php the_excerpt() ?>
     </div>

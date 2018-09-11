@@ -2,7 +2,7 @@
 
 /**
  * Template Name: Full Width
- * 
+ *
  * We use template file, just to show the template selector for posts.
  */
 

@@ -7,16 +7,48 @@
 
 
 /**
+ * Clean non Tinsta settings.
+ *
+ * @param bool $dry_run
+ *
+ * @return array
+ */
+function tinsta_settings_clean($dry_run = false)
+{
+
+  $protected = apply_filters('tinsta_settings_clean_protected', [
+    'sidebars_widgets',
+    'custom_logo',
+    'nav_menu_locations',
+    'custom_css_post_id',
+  ]);
+
+  $defaults = tinsta_get_options_defaults();
+  $cleaned_settings = [];
+  foreach (get_theme_mods() as $key => $value) {
+    if (!isset($defaults[$key]) && !in_array($key, $protected)) {
+      if (!$dry_run) {
+        remove_theme_mod($key);
+      }
+      $cleaned_settings[] = $key;
+    }
+  }
+
+  return $cleaned_settings;
+}
+
+/**
  * Import .tinsta settings file (only local files)
  *
  * @param string $file
  * @param bool $tinsta_settings_only
+ * @param bool $dry_run
  *
- * @return int
+ * @return array
  */
-function tinsta_settings_import($file, $tinsta_settings_only = false)
+function tinsta_settings_import($file, $tinsta_settings_only = false, $dry_run = false)
 {
-  $imported_settings_count = 0;
+  $imported_settings = [];
   $defaults = tinsta_get_options_defaults();
 
   global $wp_filesystem;
@@ -25,26 +57,41 @@ function tinsta_settings_import($file, $tinsta_settings_only = false)
     WP_Filesystem();
   }
 
-  if ($wp_filesystem->is_readable($file)) {
+  if ($wp_filesystem->exists($file)) {
 
     $data = $wp_filesystem->get_contents($file);
     $data = @json_decode($data, true);
 
     if (!json_last_error()) {
+
+      // Preprocess import settings.
+      $data = apply_filters('tinsta_settings_import', $data, $tinsta_settings_only);
+
+      if (isset($data['$tinstaVersion'])) {
+        unset($data['$tinstaVersion']);
+      }
+
       foreach ($data as $key => $value) {
+
         // Import ONLY the settings, described in tinsta_get_options_defaults().
-        if ($tinsta_settings_only && !isset($defaults[$key])) {
-          remove_theme_mod($key);
-        }
-        else {
-          set_theme_mod($key, $value);
-          $imported_settings_count++;
+        if (!$tinsta_settings_only || ($tinsta_settings_only && isset($defaults[$key]))) {
+          if (!$dry_run) {
+            set_theme_mod($key, $value);
+          }
+
+          $imported_settings[$key] = $value;
         }
       }
+
+      // Fire action after settings are imported.
+      if (!$dry_run) {
+        do_action('tinsta_after_settings_import', $data, $defaults, $tinsta_settings_only);
+      }
+
     }
   }
 
-  return $imported_settings_count;
+  return $imported_settings;
 }
 
 /**
@@ -60,14 +107,14 @@ function tinsta_settings_import($file, $tinsta_settings_only = false)
 function tinsta_insert_widget_in_sidebar($widget_id, $widget_data, $sidebar)
 {
   // Retrieve sidebars, widgets and their instances
-  $sidebars_widgets = get_option('sidebars_widgets', array());
-  $widget_instances = get_option('widget_' . $widget_id, array());
+  $sidebars_widgets = get_option('sidebars_widgets', []);
+  $widget_instances = get_option('widget_' . $widget_id, []);
   // Retrieve the key of the next widget instance
   $numeric_keys = array_filter(array_keys($widget_instances), 'is_int');
   $next_key = $numeric_keys ? max($numeric_keys) + 1 : 2;
   // Add this widget to the sidebar
   if (!isset($sidebars_widgets[$sidebar])) {
-    $sidebars_widgets[$sidebar] = array();
+    $sidebars_widgets[$sidebar] = [];
   }
   $sidebars_widgets[$sidebar][] = $widget_id . '-' . $next_key;
   // Add the new widget instance
@@ -78,7 +125,8 @@ function tinsta_insert_widget_in_sidebar($widget_id, $widget_data, $sidebar)
 }
 
 /**
- * Add theme exports AJAX endpoint
+ * Adds endpoint for exporting settings.
+ *
  * wp-admin/admin-ajax.php?action=tinsta-export-settings
  */
 add_action('wp_ajax_tinsta-export-settings', function () {
@@ -90,24 +138,23 @@ add_action('wp_ajax_tinsta-export-settings', function () {
 
   $filename = get_bloginfo('name') . '-' . date('YmdHi') . '.tinsta';
 
-  if ( ! headers_sent() ) {
+  if (!headers_sent()) {
     header('Cache-Control: no-cache, must-revalidate', true);
     header('Expires: Sat, 26 Jul 1997 05:00:00 GMT', true);
     header('Content-Type: plain/text; charset=UTF-8', true);
     header('Content-Disposition: attachment; filename="' . addslashes($filename) . '"', true);
   }
 
-  if ( !empty($_GET['tinsta_settings_only']) || !empty($_POST['tinsta_settings_only']) ) {
+  if (!empty($_GET['tinsta_settings_only']) || !empty($_POST['tinsta_settings_only'])) {
     $defaults = tinsta_get_options_defaults();
     $document = array_replace($defaults, array_intersect_key(get_theme_mods(), tinsta_get_options_defaults()));
-  }
-  else {
+  } else {
     $document = array_replace(tinsta_get_options_defaults(), get_theme_mods());
   }
 
   $document['$tinstaVersion'] = wp_get_theme()->Version;
 
-  echo json_encode( $document, JSON_PRETTY_PRINT );
+  echo json_encode($document, JSON_PRETTY_PRINT);
   exit;
 });
 
@@ -176,6 +223,7 @@ add_filter('widget_update_callback', function ($instance, $new_instance, $widget
     'tinsta_widget_size' => '',
     'tinsta_boxed' => '',
   ]);
+
   return $instance;
 }, 10, 4);
 
@@ -221,7 +269,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
              name="<?php echo $object->get_field_name('tinsta_boxed') ?>"
              type="checkbox"
              value="on"
-      <?php checked($instance['tinsta_boxed'], 'on') ?> />
+        <?php checked($instance['tinsta_boxed'], 'on') ?> />
       <label for="<?php echo $object->get_field_id('tinsta_boxed') ?>">
         <?php _e('Boxed', 'tinsta') ?>
       </label>
@@ -241,14 +289,15 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
       <select id="<?php echo $object->get_field_id('tinsta_widget_size') ?>"
               name="<?php echo $object->get_field_name('tinsta_widget_size') ?>"
               style="vertical-align: middle; width: 6em;">
-        <option value=""><?php _e('Auto', 'tinsta')?></option>
-        <?php for ($col_n = 1; $col_n < $cols_num; $col_n++):?>
-          <option value="<?php echo $col_width*$col_n?>" <?php selected($instance['tinsta_widget_size'], $col_width*$col_n)?> >
-            <?php echo $col_n?>
+        <option value=""><?php _e('Auto', 'tinsta') ?></option>
+        <?php for ($col_n = 1; $col_n < $cols_num; $col_n++): ?>
+          <option value="<?php echo $col_width * $col_n ?>" <?php selected($instance['tinsta_widget_size'],
+            $col_width * $col_n) ?> >
+            <?php echo $col_n ?>
           </option>
-        <?php endfor?>
+        <?php endfor ?>
       </select>
-      /<?php echo $cols_num?>
+      /<?php echo $cols_num ?>
     </p>
 
     <p>
@@ -256,16 +305,16 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
         <?php _e('Floating', 'tinsta') ?>
       </label>
       <select name="<?php echo $object->get_field_name('tinsta_widget_float') ?>"
-             id="<?php echo $object->get_field_id('tinsta_widget_float') ?>"
-             style="vertical-align: middle; width: 6em;">
+              id="<?php echo $object->get_field_id('tinsta_widget_float') ?>"
+              style="vertical-align: middle; width: 6em;">
         <option value="">
-          <?php _e('Auto', 'tinsta')?>
+          <?php _e('Auto', 'tinsta') ?>
         </option>
-        <option value="left" <?php selected($instance['tinsta_widget_float'], 'left')?>>
-          <?php _e('Left', 'tinsta')?>
+        <option value="left" <?php selected($instance['tinsta_widget_float'], 'left') ?>>
+          <?php _e('Left', 'tinsta') ?>
         </option>
-        <option value="right" <?php selected($instance['tinsta_widget_float'], 'right')?>>
-          <?php _e('Right', 'tinsta')?>
+        <option value="right" <?php selected($instance['tinsta_widget_float'], 'right') ?>>
+          <?php _e('Right', 'tinsta') ?>
         </option>
       </select>
     </p>
@@ -279,7 +328,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
       <legend>
         <?php _e('Layout', 'tinsta') ?>
       </legend>
-      <?php echo $tinsta_fields?>
+      <?php echo $tinsta_fields ?>
     </fieldset>
     <?php
   }
@@ -295,11 +344,11 @@ add_filter('wp_setup_nav_menu_item', function ($item) {
     $items = tinsta_nav_menu_items();
     if (!empty($items[$item->type])) {
       $item->type_label = $items[$item->type]['type_label'];
-    }
-    else {
+    } else {
       $item->type_label = __('Dynamic Content', 'tinsta');
     }
   }
+
   return $item;
 });
 
@@ -370,7 +419,7 @@ function tinsta_nav_menu_items($idbase = 0)
 /**
  * Add metabox for Tinsta's items in the wp-admin/nav-menus.php
  */
-add_action( 'admin_head-nav-menus.php', function() {
+add_action('admin_head-nav-menus.php', function () {
   add_meta_box('tinsta_nav_menu_items', __('Dynamic Content', 'tinsta'), function () {
     global $nav_menu_selected_id;
     ?>
@@ -378,52 +427,57 @@ add_action( 'admin_head-nav-menus.php', function() {
       <div class="tabs-panel tabs-panel-active">
 
         <p>
-          <?php _e('Dynamic content items works if are placed as 1st or 2nd level. When placed deeper, they are not dislpayed.', 'tinsta')?>
+          <?php _e('Dynamic content items works if are placed as 1st or 2nd level. When placed deeper, they are not dislpayed.',
+            'tinsta') ?>
         </p>
 
-        <ul class="categorychecklist form-no-clear" >
-          <?php $index = 0; foreach (tinsta_nav_menu_items() as $item): $index++; ?>
+        <ul class="categorychecklist form-no-clear">
+          <?php $index = 0;
+          foreach (tinsta_nav_menu_items() as $item): $index++; ?>
             <li>
               <div>
                 <label class="menu-item-title">
                   <input type="checkbox" class="menu-item-checkbox"
-                         name="menu-item[<?php echo esc_attr($index)?>][menu-item-object-id]"
+                         name="menu-item[<?php echo esc_attr($index) ?>][menu-item-object-id]"
                          value="<?php echo esc_attr($index); ?>" />
-                  <?php echo esc_html($item['title'])?>
+                  <?php echo esc_html($item['title']) ?>
                 </label>
-                <?php if (!empty($item['description'])):?>
+                <?php if (!empty($item['description'])): ?>
                   <div class="howto">
-                    <?php echo $item['description']?>
+                    <?php echo $item['description'] ?>
                   </div>
-                <?php endif?>
+                <?php endif ?>
 
-                <input type="hidden" class="menu-item-type" name="menu-item[<?php echo esc_attr($index)?>][menu-item-type]"
-                       value="<?php echo esc_html($item['type'])?>" />
+                <input type="hidden" class="menu-item-type"
+                       name="menu-item[<?php echo esc_attr($index) ?>][menu-item-type]"
+                       value="<?php echo esc_html($item['type']) ?>" />
 
-                <input type="hidden" class="menu-item-object" name="menu-item[<?php echo esc_attr($index)?>][menu-item-object]"
-                       value="<?php echo esc_html($item['object'])?>" />
+                <input type="hidden" class="menu-item-object"
+                       name="menu-item[<?php echo esc_attr($index) ?>][menu-item-object]"
+                       value="<?php echo esc_html($item['object']) ?>" />
 
                 <input type="hidden" class="menu-item-title"
-                       name="menu-item[<?php echo esc_attr($index)?>][menu-item-title]"
-                       value="<?php echo esc_html($item['title'])?>" />
+                       name="menu-item[<?php echo esc_attr($index) ?>][menu-item-title]"
+                       value="<?php echo esc_html($item['title']) ?>" />
 
-                <?php if (!empty($item['url'])):?>
-                  <input type="hidden" class="menu-item-url" name="menu-item[<?php echo esc_attr($index); ?>][menu-item-url]"
+                <?php if (!empty($item['url'])): ?>
+                  <input type="hidden" class="menu-item-url"
+                         name="menu-item[<?php echo esc_attr($index); ?>][menu-item-url]"
                          value="<?php echo esc_url($item['url']); ?>" />
-                <?php endif?>
+                <?php endif ?>
 
                 <input type="hidden" class="menu-item-classes"
-                       name="menu-item[<?php echo esc_attr($index)?>][menu-item-classes]" />
+                       name="menu-item[<?php echo esc_attr($index) ?>][menu-item-classes]" />
               </div>
             </li>
-          <?php endforeach?>
+          <?php endforeach ?>
         </ul>
       </div>
       <p class="button-controls">
       <span class="add-to-menu">
-        <input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id )?>
+        <input type="submit"<?php wp_nav_menu_disabled_check($nav_menu_selected_id) ?>
                class="button-secondary submit-add-to-menu right"
-               value="<?php esc_attr_e( 'Add to Menu', 'tinsta' )?>"
+               value="<?php esc_attr_e('Add to Menu', 'tinsta') ?>"
                name="add-tinsta-menu-item" id="submit-tinsta-menu-items-div" />
         <span class="spinner"></span>
       </span>
@@ -431,4 +485,23 @@ add_action( 'admin_head-nav-menus.php', function() {
     </div>
     <?php
   }, 'nav-menus', 'side', 'low');
+});
+
+/**
+ * Save tinsta's post related to post.
+ */
+add_action('save_post', function ($post_id) {
+
+  // Skip if:
+  if (wp_is_post_revision($post_id) || defined('DOING_AJAX')) {
+    return;
+  }
+
+  if (!empty($_POST['_tinsta_post_append_widgets'])) {
+    update_post_meta($post_id, '_tinsta_post_append_widgets', 'on');
+  } elseif (get_post_meta($post_id, '_tinsta_post_append_widgets',
+      true) && empty($_POST['_tinsta_post_append_widgets'])) {
+    delete_post_meta($post_id, '_tinsta_post_append_widgets');
+  }
+
 });

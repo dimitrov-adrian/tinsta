@@ -207,7 +207,7 @@ body {
     position: sticky;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -1px; // sticky have a problems with some chrome and render 1px above, that's why this.
     z-index: $z-index-modal - 10;
   } @else if $region_primary_menu_sticky and (not $region_header_sticky) {
     position: sticky;
@@ -275,9 +275,9 @@ body {
 
     @if ( $region_primary_menu_position == 'bottom-float' ) {
       .depth-0 > .sub-menu {
-        transform: translateY(-100%);
+        transform: translateY(-100%) !important; // It's important to have this because, if set to other value could break the menu.
         top: 0;
-        box-shadow: 0 -7px 28px -12px rgba(0, 0, 0, .9);
+        box-shadow: 0 -4px 28px -12px rgba(0, 0, 0, .9);
       }
     }
 
@@ -463,9 +463,18 @@ body {
  */
 .site-container-before,
 .site-container-after {
+
+  -js-display: flex;
+  display: flex;
+  flex-flow: row wrap;
+
+  //align-items: center;
+  justify-content: center;
+
   .widget {
     margin: 0 auto;
   }
+
 }
 
 /**

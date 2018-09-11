@@ -2,11 +2,11 @@
 
   <div class="comment-meta">
 
-    <?php if (get_option('show_avatars')):?>
-    <div class="comment-author-avatar">
-      <?php echo get_avatar(get_comment_author_email(), get_theme_mod('component_avatar_size')) ?>
-    </div>
-    <?php endif?>
+    <?php if (get_option('show_avatars')): ?>
+      <div class="comment-author-avatar">
+        <?php echo get_avatar(get_comment_author_email(), get_theme_mod('options_avatar_size')) ?>
+      </div>
+    <?php endif ?>
 
     <div class="comment-author">
       <?php comment_author() ?>
@@ -19,8 +19,8 @@
     </a>
 
     <?php
-      // Always show comment reply link, regardless of the depth.
-      comment_reply_link(['max_depth' => get_option('thread_comments_depth'), 'depth' => 1]);
+    // Always show comment reply link, regardless of the depth.
+    comment_reply_link(['max_depth' => get_option('thread_comments_depth'), 'depth' => 1]);
     ?>
 
     <?php edit_comment_link() ?>

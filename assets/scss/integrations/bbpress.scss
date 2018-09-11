@@ -25,6 +25,10 @@ body.bbpress {
     font-size: inherit;
   }
 
+  #bbpress-forums #bbp-search-form {
+    margin-bottom: .4rem;
+  }
+
   #bbpress-forums ul.bbp-lead-topic,
   #bbpress-forums ul.bbp-topics,
   #bbpress-forums ul.bbp-forums,
@@ -82,7 +86,7 @@ body.bbpress {
   .bbp-topics ul.super-sticky,
   .bbp-topics ul.sticky,
   .bbp-forum-content ul.sticky {
-    background: rgba($region_root_color_primary, .08) !important;
+    background: rgba(muted($region_root_color_primary), .2) !important;
   }
 
   .bbp-template-notice {

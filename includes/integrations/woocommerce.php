@@ -7,12 +7,17 @@ add_filter('tinsta_supported_customizer_post_types', function ($post_types) {
   return $post_types;
 });
 
-add_filter( 'woocommerce_enqueue_styles', function($styles) {
-  //  unset( $enqueue_styles['woocommerce-general'] );	// Remove the gloss
-  //  unset( $enqueue_styles['woocommerce-layout'] );		// Remove the layout
-  //  unset( $enqueue_styles['woocommerce-smallscreen'] );	// Remove the smallscreen optimisation
-//  $styles = [];
-//  $styles[] = tinsta_get_stylesheet('woocommerce');
+add_filter('woocommerce_enqueue_styles', function ($styles) {
+  //  unset( $styles['woocommerce-general'] );	// Remove the gloss
+  //  unset( $styles['woocommerce-layout'] );		// Remove the layout
+  unset( $styles['woocommerce-smallscreen'] );	// Remove the smallscreen optimisation
+  $styles['tinsta-woocommerce'] = [
+    'src' => tinsta_get_stylesheet('integrations/woocommerce'),
+    'deps'    => '',
+    'version' => WC_VERSION,
+    'media'   => 'all',
+    'has_rtl' => true,
+  ];
   return $styles;
 });
 
@@ -21,17 +26,17 @@ remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wra
 remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
 remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
 
-add_theme_support( 'woocommerce', [
-  'thumbnail_image_width' => 250,
-  'single_image_width'    => 350,
-  'product_grid'          => [
-    'default_rows'    => 3,
-    'min_rows'        => 2,
-    'max_rows'        => 8,
-    'default_columns' => 4,
-    'min_columns'     => 2,
-    'max_columns'     => 5,
-  ]
+add_theme_support('woocommerce', [
+//  'thumbnail_image_width' => 250,
+//  'single_image_width' => 350,
+//  'product_grid' => [
+//    'default_rows' => 3,
+//    'min_rows' => 2,
+//    'max_rows' => 8,
+//    'default_columns' => 4,
+//    'min_columns' => 2,
+//    'max_columns' => 5,
+//  ],
 ]);
 
 /**

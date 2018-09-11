@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+// Core stylesheets.
 @import "tinsta/_normalize";
 @import "tinsta/_functions";
 @import "tinsta/_icons";
@@ -11,7 +12,6 @@
 
 // Integrations.
 @import "integrations/gutenberg-blocks.scss";
-//@import "integrations/misc";
-//@import "integrations/siteorigin";
-//@import "integrations/woocommerce";
-//@import "integrations/bbpress";
+@import "integrations/misc";
+@import "integrations/jetpack";
+@import "integrations/siteorigin-panels";

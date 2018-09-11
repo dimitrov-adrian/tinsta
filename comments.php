@@ -4,16 +4,16 @@
 if (
 
   // Not Single page
-  ! is_singular()
+  !is_singular()
 
   // Password is required
   || post_password_required()
 
   // Have no comments and comments are closed
-  || ( ! have_comments() && ! comments_open())
+  || (!have_comments() && !comments_open())
 
   // Post type does not supports comments
-  || ! post_type_supports(get_post_type(), 'comments')
+  || !post_type_supports(get_post_type(), 'comments')
 
   // Post type is attachment
   || get_post_type() == 'attachment'
@@ -22,11 +22,11 @@ if (
   return;
 }
 
-$comments_order = strtoupper(empty($_GET['comments-order']) || ! is_scalar($_GET['comments-order']) ? get_option('comment_order') : $_GET['comments-order']);
+$comments_order = strtoupper(empty($_GET['comments-order']) || !is_scalar($_GET['comments-order']) ? get_option('comment_order') : $_GET['comments-order']);
 
 $classes = ['comments-wrapper'];
 
-if ( ! get_option('show_avatars')) {
+if (!get_option('show_avatars')) {
   $classes[] = 'hide-avatars';
 }
 
@@ -38,15 +38,17 @@ if ( ! get_option('show_avatars')) {
     <?php echo get_comments_number_text() ?>
   </div>
 
-  <?php if ( get_theme_mod('component_comments_order_selector') && have_comments() && get_comments_number() > 1): ?>
+  <?php if (get_theme_mod('options_comments_order_selector') && have_comments() && get_comments_number() > 1): ?>
     <div class="comments-toolbar">
       <label>
         <?php _e('Order: ', 'tinsta') ?>
         <select onchange="window.location.href=this.value+'#comments'">
-          <option value="<?php echo add_query_arg('comments-order', 'ASC') ?>" <?php selected($comments_order, 'ASC') ?>>
+          <option value="<?php echo add_query_arg('comments-order', 'ASC') ?>" <?php selected($comments_order,
+            'ASC') ?>>
             <?php _e('Oldest first', 'tinsta') ?>
           </option>
-          <option value="<?php echo add_query_arg('comments-order', 'DESC') ?>" <?php selected($comments_order, 'DESC') ?>>
+          <option value="<?php echo add_query_arg('comments-order', 'DESC') ?>" <?php selected($comments_order,
+            'DESC') ?>>
             <?php _e('Newest first', 'tinsta') ?>
           </option>
         </select>
@@ -58,10 +60,10 @@ if ( ! get_option('show_avatars')) {
     <?php if (have_comments()): ?>
       <?php wp_list_comments([
         'reverse_top_level' => $comments_order == 'DESC',
-        'reverse_children'  => $comments_order == 'DESC',
-        'component_avatar_size' => get_theme_mod('component_avatar_size'),
-        'short_ping'        => true,
-        'callback'          => 'tinsta_comment_callback',
+        'reverse_children' => $comments_order == 'DESC',
+        'options_avatar_size' => get_theme_mod('options_avatar_size'),
+        'short_ping' => true,
+        'callback' => 'tinsta_comment_callback',
       ]) ?>
     <?php endif ?>
 

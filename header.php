@@ -15,4 +15,4 @@
   <?php _e('Skip to content', 'tinsta') ?>
 </a>
 
-<?php locate_template('template-parts/global/header.php', true)?>
+<?php locate_template('template-parts/global/header.php', true) ?>

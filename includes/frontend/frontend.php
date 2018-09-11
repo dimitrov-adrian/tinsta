@@ -12,7 +12,7 @@
 add_action('template_redirect', function () {
 
   // Handle requests like /?tinsta-resolve-user-avatar=<email|id>[&s=<size>]
-  if ( !empty($_GET['tinsta-resolve-user-avatar']) ) {
+  if (!empty($_GET['tinsta-resolve-user-avatar'])) {
     $avatar_url = get_avatar_url($_GET['tinsta-resolve-user-avatar'], [
       'size' => empty($_GET['s']) || !is_numeric($_GET['s']) ? null : $_GET['s'],
     ]);
@@ -21,7 +21,7 @@ add_action('template_redirect', function () {
   }
 
   // Simple ajax search.
-  if ( isset($_GET['tinsta-ajax-search']) && !get_theme_mod('system_page_search_disable_search') ) {
+  if (isset($_GET['tinsta-ajax-search']) && !get_theme_mod('system_page_search_disable_search')) {
     $args = [
       'posts_per_page' => 10,
     ];
@@ -46,13 +46,13 @@ add_action('template_redirect', function () {
 /**
  * Parse query hook
  */
-add_action('parse_query', function ( $query, $error = true ) {
-  if ( get_theme_mod('system_page_search_disable_search') && is_main_query() && is_search() ) {
+add_action('parse_query', function ($query, $error = true) {
+  if (get_theme_mod('system_page_search_disable_search') && is_main_query() && is_search()) {
     $query->is_search = false;
     $query->query_vars['s'] = false;
     $query->query['s'] = false;
     // to error
-    if ( $error == true ) {
+    if ($error == true) {
       $query->is_404 = true;
     }
   }
@@ -63,20 +63,20 @@ add_action('parse_query', function ( $query, $error = true ) {
  */
 add_action('pre_get_posts', function ($query) {
 
-  if ( is_admin() ) {
+  if (is_admin()) {
     return;
   }
 
-  if ( $query->is_main_query() ) {
+  if ($query->is_main_query()) {
 
-    if ( is_search() ) {
+    if (is_search()) {
       $post_type = get_theme_mod('system_page_search_force_post_type');
       if ($post_type) {
         $query->set('post_type', $post_type);
       }
     }
 
-    if ( !is_search() ) {
+    if (!is_search()) {
 
       $post_type = $query->get('post_type');
       if (!$post_type && is_home()) {
@@ -129,17 +129,6 @@ add_filter('dynamic_sidebar_params', function ($params) {
 });
 
 /**
- * Modifies tag cloud widget arguments to display all tags in the same font size
- * and use list format for better accessibility.
- */
-add_filter('widget_tag_cloud_args', function ( $args ) {
-  $args['largest']  = 2;
-  $args['smallest'] = 0.5;
-  $args['unit']     = 'rem';
-  return $args;
-});
-
-/**
  * Add extra markup in header.
  */
 add_action('wp_head', function () {
@@ -148,14 +137,14 @@ add_action('wp_head', function () {
   $color = esc_attr(get_theme_mod('region_root_color_primary'));
   $sitename = esc_attr(get_bloginfo('sitename'));
 
-  echo get_theme_mod('component_header_markup');
+  echo get_theme_mod('options_header_markup');
 
   if (get_theme_mod('typography_text_enhancements')) {
     echo '<meta name="ResourceLoaderDynamicStyles" content="on" />';
   }
 
   // rel=logo
-  $logo_id = get_theme_mod( 'custom_logo' );
+  $logo_id = get_theme_mod('custom_logo');
   if ($logo_id) {
     $logo_url = wp_get_attachment_image_url($logo_id);
     if ($logo_url) {
@@ -173,11 +162,11 @@ add_action('wp_head', function () {
   echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />";
   echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\" />";
 
-  if (get_theme_mod('component_seo_enable')) {
+  if (get_theme_mod('options_seo_enable')) {
 
     // Public checkbox in settings.
     if ($is_public) {
-      if ( is_tax() || ( ( !empty($_GET['orderby']) || !empty($_GET['order'])) ) && is_archive() ) {
+      if (is_tax() || ((!empty($_GET['orderby']) || !empty($_GET['order']))) && is_archive()) {
         wp_no_robots();
       }
     }
@@ -201,9 +190,7 @@ add_action('wp_head', function () {
       }
       $description = get_the_excerpt();
       rewind_posts();
-    }
-
-    elseif (is_category()) {
+    } elseif (is_category()) {
       $description = category_description();
     }
 
@@ -229,7 +216,7 @@ add_action('wp_head', function () {
 
   }
 
-  if (get_theme_mod('component_effects_lazyload')) {
+  if (get_theme_mod('options_effects_lazyload')) {
     tinsta_lazyload_start_buffer();
   }
 
@@ -241,10 +228,10 @@ add_action('wp_head', function () {
 add_action('wp_footer', function () {
 
   // Output footer markup.
-  echo get_theme_mod('component_footer_markup');
+  echo get_theme_mod('options_footer_markup');
 
   // Add agreement dialog markup.
-  if ( !is_user_logged_in() && get_theme_mod('component_site_agreement_enable') ) {
+  if (!is_user_logged_in() && get_theme_mod('options_site_agreement_enable')) {
     $privacy_policy_page_id = get_option('wp_page_for_privacy_policy');
     if (!($privacy_policy_page_id && is_page($privacy_policy_page_id))) {
       locate_template('template-parts/components/agreement.php', true, true);
@@ -260,7 +247,7 @@ add_action('wp_enqueue_scripts', function () {
 
   $template_directory_uri = get_template_directory_uri();
 
-  $min_suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.' );
+  $min_suffix = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.');
 
   // https://github.com/aFarkas/html5shiv
   wp_enqueue_script('html5shiv', $template_directory_uri . '/assets/js/html5shiv.min.js', [], '3.7.3');
@@ -290,11 +277,11 @@ add_action('wp_enqueue_scripts', function () {
   $fonts_google = [];
 
   if (get_theme_mod('typography_font_google')) {
-    $fonts_google[] = urldecode( trim( get_theme_mod('typography_font_google')));
+    $fonts_google[] = urldecode(trim(get_theme_mod('typography_font_google')));
   }
 
   if (get_theme_mod('typography_font_headings_google')) {
-    $fonts_google[] = urldecode( trim( get_theme_mod('typography_font_headings_google')));
+    $fonts_google[] = urldecode(trim(get_theme_mod('typography_font_headings_google')));
   }
 
   if ($fonts_google) {
@@ -307,13 +294,14 @@ add_action('wp_enqueue_scripts', function () {
   wp_enqueue_style('tinsta-stylesheet', $stylesheet, [], $theme_hash);
 
   // Add nice scroll if when enabled.
-  if (get_theme_mod('component_effects_smooth_scroll')) {
+  if (get_theme_mod('basics_effects_smooth_scroll')) {
     wp_enqueue_script('smoothscroll', $template_directory_uri . '/assets/js/smoothscroll.min.js', [], '1.4.6', true);
   }
 
   // Add nice scroll if when enabled.
-  if (get_theme_mod('component_effects_lazyload')) {
-    wp_enqueue_script('tinsta-lazyload', $template_directory_uri . '/assets/js/lazyload.' . $min_suffix . 'js', [], $theme_hash, true);
+  if (get_theme_mod('options_effects_lazyload')) {
+    wp_enqueue_script('tinsta-lazyload', $template_directory_uri . '/assets/js/lazyload.' . $min_suffix . 'js', [],
+      $theme_hash, true);
   }
 
   // Theme's script.
@@ -322,7 +310,7 @@ add_action('wp_enqueue_scripts', function () {
     'siteUrl' => home_url(),
     'assetsDir' => $template_directory_uri . '/assets/',
     'fullHeight' => get_theme_mod('region_root_height_full'),
-    'scrolltop' => get_theme_mod('component_scrolltop'),
+    'scrolltop' => get_theme_mod('options_scrolltop'),
     'strings' => [
       'close' => __('Close', 'tinsta'),
       'top' => __('Top', 'tinsta'),
@@ -333,7 +321,7 @@ add_action('wp_enqueue_scripts', function () {
     ],
   ]);
 
-    // Comment respond form reply script.
+  // Comment respond form reply script.
   if (is_singular()) {
     $comments_open = comments_open();
 
@@ -362,16 +350,16 @@ add_filter('body_class', function ($classes, $class) {
   static $cached_vars = null;
   if ($cached_vars === null) {
     $cached_vars = [
-      'component_effects_shadows' => get_theme_mod('component_effects_shadows'),
-      'component_effects_animations' => get_theme_mod('component_effects_animations'),
+      'basics_effects_shadows' => get_theme_mod('basics_effects_shadows'),
+      'basics_effects_animations' => get_theme_mod('basics_effects_animations'),
     ];
   }
 
-  if ($cached_vars['component_effects_shadows']) {
+  if ($cached_vars['basics_effects_shadows']) {
     $classes[] = 'effects-shadows';
   }
 
-  if ($cached_vars['component_effects_animations']) {
+  if ($cached_vars['basics_effects_animations']) {
     $classes[] = 'effects-animations';
   }
 
@@ -405,8 +393,7 @@ add_filter('post_class', function ($classes, $class, $post_id) {
       if ($layout) {
         $classes['layout'] = 'layout-' . $layout;
       }
-    }
-    else {
+    } else {
       $layout = get_theme_mod("post_type_{$post->post_type}_layout_archive");
       if ($layout) {
         $classes['layout'] = 'layout-' . $layout;
@@ -443,8 +430,8 @@ add_filter('the_content', function ($content) {
       'is_singular' => is_singular(),
       'is_user_logged_in' => is_user_logged_in(),
       'is_admin_bar_showing' => is_admin_bar_showing(),
-      'component_outdated_post_time' => (int) get_theme_mod('component_outdated_post_time', 0)  * 60 * 60 * 24,
-      'component_outdated_post_message' => get_theme_mod('component_outdated_post_message'),
+      'options_outdated_post_time' => (int)get_theme_mod('options_outdated_post_time', 0) * 60 * 60 * 24,
+      'options_outdated_post_message' => get_theme_mod('options_outdated_post_message'),
     ];
   }
 
@@ -457,9 +444,10 @@ add_filter('the_content', function ($content) {
       $content = ob_get_clean() . $content;
     }
 
-    if ($cached_vars['component_outdated_post_time'] && (int) get_the_time('U') + $cached_vars['component_outdated_post_time'] < time()) {
+    if ($cached_vars['options_outdated_post_time'] && (int)get_the_time('U') + $cached_vars['options_outdated_post_time'] < time()) {
       $content .= '<div class="message warning">';
-      $content .= str_replace('%time%', human_time_diff(get_the_time('U')), $cached_vars['component_outdated_post_message']);
+      $content .= str_replace('%time%', human_time_diff(get_the_time('U')),
+        $cached_vars['options_outdated_post_message']);
       $content .= '</div>';
     }
 
@@ -484,13 +472,14 @@ add_filter('the_content', function ($content) {
  */
 add_filter('the_content_rss', function ($content = '') {
   $content = do_shortcode($content);
+
   return $content;
 });
 
 /**
  * Filter the except length to X words.
  */
-add_filter('excerpt_length', function ( $length ) {
+add_filter('excerpt_length', function ($length) {
 
   $post = get_post();
   $new_length = get_theme_mod("post_type_{$post->post_type}_archive_show_excerpt_words", $length);
@@ -505,7 +494,7 @@ add_filter('excerpt_length', function ( $length ) {
 /**
  * Wrap videos in embed HTML in media container to allow better aspect ratio with responsive.
  */
-add_filter('embed_oembed_html', function ($html, $url, $attr) {
+add_filter('embed_oembed_html', function ($html) {
 
   // Wrap embed videos within a media-container div element.
   if (preg_match('#(\<video)#i', $html)) {
@@ -514,7 +503,20 @@ add_filter('embed_oembed_html', function ($html, $url, $attr) {
 
   return $html;
 
-}, 10, 3);
+});
+
+/**
+ * Safely add oEmbed media to a comment
+ */
+add_filter('get_comment_text', function ( $comment_text ) {
+  global $wp_embed;
+  // Automatic discovery would be a security risk, safety first
+  add_filter( 'embed_oembed_discover', '__return_false', 999 );
+  $comment_text = $wp_embed->autoembed( $comment_text );
+  // ...but don't break your posts if you use it
+  remove_filter( 'embed_oembed_discover', '__return_false', 999 );
+  return $comment_text;
+});
 
 /**
  * Alter comment fields:
@@ -525,7 +527,8 @@ add_filter('comment_form_defaults', function ($defaults) {
 
   // Enable auto-completion for fields
   if (!empty($defaults['fields']['author'])) {
-    $defaults['fields']['author'] = str_replace('<input ', '<input autocomplete="name" ', $defaults['fields']['author']);
+    $defaults['fields']['author'] = str_replace('<input ', '<input autocomplete="name" ',
+      $defaults['fields']['author']);
   }
 
   if (!empty($defaults['fields']['url'])) {
@@ -539,7 +542,7 @@ add_filter('comment_form_defaults', function ($defaults) {
   // Append avatar to comment post form.
   $defaults['title_reply_after'] .= '
     <div class="comment-form-avatar">
-    ' . get_avatar(get_current_user_id(), get_theme_mod('component_avatar_size')) . '
+    ' . get_avatar(get_current_user_id(), get_theme_mod('options_avatar_size')) . '
     </div>';
 
   return $defaults;
@@ -571,6 +574,7 @@ add_filter('comment_text', function ($comment_text, $comment, $args) {
  */
 add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
   $classes[] = 'depth-' . $depth;
+
   return $classes;
 }, 10, 4);
 
@@ -579,7 +583,7 @@ add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
  *
  * Must happen only on front-end
  */
-if ( !is_customize_preview() && !is_admin() ) {
+if (!is_customize_preview() && !is_admin()) {
 
   add_filter('wp_get_nav_menu_items', function ($items) {
 
@@ -644,10 +648,8 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
 
     } elseif ($item->type == 'tinsta-nav-menu-login-register') {
       if (!$wp_current_user->ID) {
-        $item_output = sprintf('<a href="%s">%s</a>',
-          wp_login_url(),
-          ( get_option('users_can_register') ? __('Login & Register', 'tinsta') : __('Login', 'tinsta') )
-        );
+        $item_output = sprintf('<a href="%s">%s</a>', wp_login_url(),
+          (get_option('users_can_register') ? __('Login & Register', 'tinsta') : __('Login', 'tinsta')));
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-current-user') {
@@ -661,10 +663,7 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
           '%name%' => $wp_current_user->display_name,
         ]);
 
-        $item_output = sprintf('<a href="%s">%s</a>',
-          empty($item->url) ? get_edit_profile_url() : $item->url,
-          $title
-        );
+        $item_output = sprintf('<a href="%s">%s</a>', empty($item->url) ? get_edit_profile_url() : $item->url, $title);
       }
 
     } elseif ($item->type == 'tinsta-nav-menu-search-box') {
@@ -700,11 +699,21 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
   }
 
   if (!empty($item->description)) {
-    $item_output = str_replace('</a>',
-      '<span class="description">' . $item->description . '</span></a>',
-      $item_output);
+    $item_output = str_replace('</a>', '<span class="description">' . $item->description . '</span></a>', $item_output);
   }
 
   return $item_output;
 
 }, 10, 4);
+
+/**
+ * Modifies tag cloud widget arguments to display all tags in the same font size
+ * and use list format for better accessibility.
+ */
+add_filter('widget_tag_cloud_args', function ($args) {
+  $args['largest'] = 2;
+  $args['smallest'] = 0.5;
+  $args['unit'] = 'rem';
+
+  return $args;
+});

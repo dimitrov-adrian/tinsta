@@ -48,7 +48,7 @@
 
     </div>
 
-    <?php if (has_excerpt() && ! post_password_required()): ?>
+    <?php if (has_excerpt() && !post_password_required()): ?>
       <div class="entry-summary">
         <?php the_excerpt_embed() ?>
       </div>
@@ -58,8 +58,9 @@
 
   <div class="entry-content">
     <?php
-      the_content(sprintf(__('Continue reading %s', 'tinsta'), '<span class="screen-reader-text">' . get_the_title() . '</span>'));
-      tinsta_pagination('singular');
+    the_content(sprintf(__('Continue reading %s', 'tinsta'),
+      '<span class="screen-reader-text">' . get_the_title() . '</span>'));
+    tinsta_pagination('singular');
     ?>
   </div>
 
@@ -80,7 +81,7 @@
       </div>
     <?php endif ?>
 
-    <?php if ( ! is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav') ):?>
+    <?php if (!is_post_type_hierarchical(get_post_type()) && get_theme_mod('post_type_' . get_post_type() . '_append_post_nav')): ?>
       <?php tinsta_pagination('prevnext') ?>
     <?php endif ?>
 

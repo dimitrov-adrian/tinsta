@@ -8,13 +8,10 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(
-      false,
-      sprintf('(Tinsta) %s', __('Context Header', 'tinsta')),
-      [
-        'description' => __('Context Header Widget is related to object of current page (post, category, tag, ...). Displays big image and some short information.', 'tinsta'),
-      ]
-    );
+    parent::__construct(false, sprintf('(Tinsta) %s', __('Context Header', 'tinsta')), [
+        'description' => __('Context Header Widget is related to object of current page (post, category, tag, ...). Displays big image and some short information.',
+          'tinsta'),
+      ]);
   }
 
   function form($instance)
@@ -27,7 +24,8 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
       <label for="<?php echo $this->get_field_id('title') ?>">
         <?php _e('Title', 'tinsta') ?>
       </label>
-      <input id="<?php echo $this->get_field_id('title') ?>" name="<?php echo $this->get_field_name('title') ?>" type="text"
+      <input id="<?php echo $this->get_field_id('title') ?>" name="<?php echo $this->get_field_name('title') ?>"
+             type="text"
              value="<?php echo esc_attr($instance['title']) ?>" />
     </p>
     <p>
@@ -60,7 +58,7 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
 
   function widget($args, $instance)
   {
-    $title = trim( empty($instance['title']) ? wp_title('', false) : $instance['title'] );
+    $title = trim(empty($instance['title']) ? wp_title('', false) : $instance['title']);
 
     if (!$title) {
       return;
@@ -78,11 +76,12 @@ class Tinsta_ContextHeader_Widget extends WP_Widget
       <?php else: ?>
         <?php echo tinsta_get_category_cover_image() ?>
       <?php endif ?>
-      <?php // tinsta_the_breadcrumbs() ?>
+      <?php // tinsta_the_breadcrumbs()
+      ?>
       <h1 class="title">
         <?php echo $title ?>
       </h1>
-      <?php if ( ! empty($instance['secondary'])): ?>
+      <?php if (!empty($instance['secondary'])): ?>
         <div class="secondary">
           <?php $instance['secondary'] ?>
         </div>

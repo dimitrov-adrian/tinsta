@@ -99,8 +99,10 @@ So here is short list of plugins that can be helpful.
 - Menu Logic:
   - [If Menu](https://wordpress.org/plugins/if-menu/)
 - Widget Logic:
+  - [If Widget](https://wordpress.org/plugins/if-widget/)
   - [Widget Logic](https://bg.wordpress.org/plugins/widget-logic/)
   - [Widget Display Conditions](https://wordpress.org/plugins/widget-display-conditions/)
+  - [Widget Visibility Without Jetpack](https://wordpress.org/plugins/widget-visibility-without-jetpack/)
 - Performance:
   - [Autoptimize](https://bg.wordpress.org/plugins/autoptimize/)
   - [WP Super Cache](https://bg.wordpress.org/plugins/wp-super-cache/)
@@ -119,7 +121,8 @@ So here is short list of plugins that can be helpful.
 ##### Filters
 
 ###### tinsta_force_options
-Force options to given values, also hide customizer controls
+Force options to given values, also hide customizer controls. It is useful when creating child theme and want to force
+some theme settings, and hide the controls.
 
 ```php
 add_filter('tinsta_get_options_defaults', function ($options) {
@@ -129,11 +132,11 @@ add_filter('tinsta_get_options_defaults', function ($options) {
 });
 ```
 
-###### tinsta_get_stylesheet_args
+###### tinsta_stylesheet_args
 Override or add variables exposed to scss scripts.
 
 ```php
-add_filter('tinsta_get_stylesheet_args', function ($args) {
+add_filter('tinsta_stylesheet_args', function ($args) {
   $args['variables']['my-custom-font-size'] = '32px';
 
   return $args;
@@ -157,6 +160,7 @@ Chrome's **Disable cache** option in dev panel)
 
 * If you want to help with translation, then please wait until first stable release.
 
+* **Code changes have to be PSR1/2 compatible, with 2 spaces indention.**
 
 ## 
 ### License & Terms 

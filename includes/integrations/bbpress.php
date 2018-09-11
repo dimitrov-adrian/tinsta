@@ -4,6 +4,7 @@
 if (is_customize_preview()) {
   add_filter('tinsta_supported_customizer_post_types', function ($post_types) {
     unset($post_types['forum'], $post_types['topic'], $post_types['reply']);
+
     return $post_types;
   });
 }
@@ -11,13 +12,11 @@ if (is_customize_preview()) {
 // Admin.
 if (is_admin()) {
 
-}
-
-// Front-End.
+} // Front-End.
 else {
 
   // Override user profile edit url.
-  add_filter('edit_profile_url', function ( $url, $user_id, $scheme ) {
+  add_filter('edit_profile_url', function ($url, $user_id, $scheme) {
     return bbp_get_user_profile_url($user_id);
   }, 10, 3);
 
@@ -36,16 +35,8 @@ else {
 
       // Override template.
       add_filter('template_include', function ($template) {
-        return __DIR__ . '/../../template-content-only.php';
+        return locate_template('template-content-only.php', false);
       });
-
-      //      add_filter('tinsta_render_posts_loop_template', function ($templates) {
-      //        $templates = [
-      //          "template-parts/global/post-content-only-renderer.php",
-      //        ];
-      //
-      //        return $templates;
-      //      });
 
     }
   });

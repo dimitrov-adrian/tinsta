@@ -569,7 +569,7 @@ ul.wp-block-gallery {
 fieldset {
   min-width: 0; // https://thatemil.com/blog/2015/01/03/reset-your-fieldset/
   @include border($region_root_color_foreground);
-  border-width: $typography_bordering + px;
+  border-width: $basics_bordering + px;
   legend {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -664,9 +664,10 @@ input[type="submit"] {
   -moz-appearance: none;
   font-weight: normal;
 
-  @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_primary);
+  @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_primary, $region_root_color_secondary);
+
   &.secondary {
-    @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_secondary);
+    @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_secondary, $region_root_color_primary);
   }
 }
 
@@ -757,7 +758,7 @@ input::-moz-focus-inner {
  */
 .avatar {
   // Could cause background on transparent images.
-  //background-color: mix(colorInvert($region_root_color_foreground, $typography_brightness), $region_root_color_foreground, 100% - $typography_brightness);
+  //background-color: mix(colorInvert($region_root_color_foreground, $basics_brightness), $region_root_color_foreground, 100% - $basics_brightness);
   //background-color: rgba($region_root_color_foreground, $brightness-base / 100);
   @include roundness();
 }

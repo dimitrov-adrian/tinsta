@@ -234,12 +234,12 @@
   (supports_querySelector) && (function () {
     var shouldShowAgreeDialog = !localStorage.getItem('agreeAccepted');
     if (window.hasOwnProperty('tinstaCustomized')) {
-      shouldShowAgreeDialog = ( window.tinstaCustomized.hasOwnProperty('component_site_agreement_enable') && window.tinstaCustomized.component_site_agreement_enable )
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_style')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_text')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_agree_button')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_url')
-        || window.tinstaCustomized.hasOwnProperty('component_site_agreement_cancel_title');
+      shouldShowAgreeDialog = ( window.tinstaCustomized.hasOwnProperty('options_site_agreement_enable') && window.tinstaCustomized.component_site_agreement_enable )
+        || window.tinstaCustomized.hasOwnProperty('options_site_agreement_style')
+        || window.tinstaCustomized.hasOwnProperty('options_site_agreement_text')
+        || window.tinstaCustomized.hasOwnProperty('options_site_agreement_agree_button')
+        || window.tinstaCustomized.hasOwnProperty('options_site_agreement_cancel_url')
+        || window.tinstaCustomized.hasOwnProperty('options_site_agreement_cancel_title');
     }
     if (shouldShowAgreeDialog) {
       var siteAgreementDialog = document.getElementById('site-enter-agreement');

@@ -154,24 +154,25 @@ body.login {
 /**
  * Scroll Top button
  */
-@if $component_scrolltop {
+@if $options_scrolltop {
   .scrolltop-button {
     @include roundness();
     z-index: $z-index-modal - 1;
     display: none;
+    // @TODO animation.
     position: fixed;
-    @if $component_scrolltop == 'bottom-right' {
-      bottom: 1.4rem;
-      right: 2.4rem;
-    } @else if $component_scrolltop == 'bottom-left' {
-      bottom: 1.4rem;
-      left: 2.4rem;
-    } @else if $component_scrolltop == 'top-right' {
-      top: 1.4rem;
-      right: 2.4rem;
-    } @else if $component_scrolltop == 'top-left' {
-      top: 1.4rem;
-      left: 2.4rem;
+    @if $options_scrolltop == 'bottom-right' {
+      bottom: $options_scrolltop_offset_vertical + px;
+      right: $options_scrolltop_offset_horizontal + px;
+    } @else if $options_scrolltop == 'bottom-left' {
+      bottom: $options_scrolltop_offset_vertical + px;
+      left: $options_scrolltop_offset_horizontal + px;
+    } @else if $options_scrolltop == 'top-right' {
+      top: $options_scrolltop_offset_vertical + px;
+      right: $options_scrolltop_offset_horizontal + px;
+    } @else if $options_scrolltop == 'top-left' {
+      top: $options_scrolltop_offset_vertical + px;
+      left: $options_scrolltop_offset_horizontal + px;
     }
     width: 2.4rem;
     height: 2.4rem;
@@ -183,13 +184,13 @@ body.login {
     cursor: pointer;
     &:before {
       @extend %la;
-      content: $la-angle-double-up;
+      content: quote($options_scrolltop_style);
       position: absolute;
       top: 0;
       right: 0;
       width: 100%;
       font-size: 1.6rem;
-      line-height: 1.5rem;
+      line-height: 2.4rem;
       text-align: center;
       text-indent: 0;
     }
@@ -206,7 +207,7 @@ body.login {
   text-align: center;
   margin: 2rem auto;
   max-width: 86%;
-  @if $component_pagination_style == 'bold' {
+  @if $options_pagination_style == 'bold' {
     font-weight: bold;
   }
   a,
@@ -220,7 +221,7 @@ body.login {
 
 .pagination-items {
   display: inline-block;
-  @if $component_pagination_style == 'bordered' {
+  @if $options_pagination_style == 'bordered' {
     @include border($region_root_color_foreground);
     @include roundness();
   }
@@ -232,7 +233,7 @@ body.login {
   position: relative;
   padding: .4rem .8rem;
   text-decoration: none;
-  @if $component_pagination_style == 'bordered' {
+  @if $options_pagination_style == 'bordered' {
     &:not(:last-child) {
       @include border($region_root_color_foreground, '-right');
       margin-left: -2%; // Magic number because the inline-block spacing
@@ -243,9 +244,9 @@ body.login {
   }
   &.current {
     color: $region_root_color_primary;
-    @if $component_pagination_style == 'bold' {
+    @if $options_pagination_style == 'bold' {
       text-decoration: underline;
-    } @else if $component_pagination_style == '' {
+    } @else if $options_pagination_style == '' {
       @include border($region_root_color_foreground);
     } @else {
       font-weight: bold;
@@ -258,15 +259,40 @@ body.login {
   @media (max-width: $breakpoint_max_mobile) {
     border-right: none !important;
   }
-  &.prev:not(:last-child):before {
-    @extend %la;
-    content: $la-angle-left;
-    margin-top: -.24rem; /* Magic number because the LineAwesome font */
-  }
-  &.next:not(:first-child):after {
-    @extend %la;
-    content: $la-angle-right;
-    margin-top: -.24rem; /* Magic number because the LineAwesome font */
+
+  @if $options_pagination_prevnext_style == 'angle' {
+    &.prev:not(:last-child):before {
+      @extend %la;
+      content: $la-angle-left;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
+    &.next:not(:first-child):after {
+      @extend %la;
+      content: $la-angle-right;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
+  } @elseif $options_pagination_prevnext_style == 'arrow' {
+    &.prev:not(:last-child):before {
+      @extend %la;
+      content: $la-arrow-left;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
+    &.next:not(:first-child):after {
+      @extend %la;
+      content: $la-arrow-right;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
+  } @elseif $options_pagination_prevnext_style == 'caret' {
+    &.prev:not(:last-child):before {
+      @extend %la;
+      content: $la-caret-left;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
+    &.next:not(:first-child):after {
+      @extend %la;
+      content: $la-caret-right;
+      margin-top: -.24rem; /* Magic number because the LineAwesome font */
+    }
   }
 }
 
@@ -277,12 +303,12 @@ body.login {
   margin-top: 2rem;
   line-height: 2.4rem;
   color: inherit;
-  .trail {
-    @extend .breadcrumb-trail;
+  .label {
+    display: inline-block;
+    vertical-align: middle;
   }
 }
-
-.breadcrumb-trail {
+.breadcrumbs-trail {
   display: inline-block;
   max-width: 28%;
   overflow: hidden;
@@ -291,21 +317,20 @@ body.login {
   vertical-align: middle; // have strange behavior
   white-space: nowrap;
   color: inherit;
-  &:hover {
-    color: $region_root_color_primary;
-  }
   &:not(:last-child):after {
-    @extend %la;
-    content: $la-angle-right;
+    @if $options_breadcrumbs_separator == '/' {
+      content: '/';
+    } @else {
+      @extend %la;
+      content: quote($options_breadcrumbs_separator);
+    }
     display: inline-block;
-    width: 1rem;
-    margin: 0 .1rem 0 .4rem;
+    margin: 0 .1rem 0 .2rem;
     line-height: 1rem;
+    opacity: .4;
   }
   &:last-child {
-    color: inherit;
     padding-right: 0;
-    pointer-events: none;
   }
 }
 
@@ -507,19 +532,19 @@ body.login {
  * Agreement
  */
 #site-enter-agreement {
-  @if $component_site_agreement_style == 'top' {
+  @if $options_site_agreement_style == 'top' {
     .dialog-inner {
       top: 1rem;
       bottom: unset;
       transform: translate(-50%, 0);
     }
-  } @else if $component_site_agreement_style == 'bottom' {
+  } @else if $options_site_agreement_style == 'bottom' {
     .dialog-inner {
       top: unset;
       bottom: 1rem;
       transform: translate(-50%, 0);
     }
-  } @else if $component_site_agreement_style == 'bottomfull' {
+  } @else if $options_site_agreement_style == 'bottomfull' {
     background: none;
     .dialog-inner {
       @include border($region_root_color_foreground, '-top');
@@ -532,7 +557,7 @@ body.login {
       right: 0;
       transform: unset;
     }
-  } @else if $component_site_agreement_style == 'topfull' {
+  } @else if $options_site_agreement_style == 'topfull' {
     background: none;
     .dialog-inner {
       @include border($region_root_color_foreground, '-bottom');

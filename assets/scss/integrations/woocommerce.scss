@@ -1,5 +1,5 @@
 //@TODO pagination
-
+@import "../tinsta/functions";
 .woocommerce {
 
   /**
@@ -44,23 +44,23 @@
    */
   .woocommerce-message {
     padding: 1rem 3rem;
-    @extend .message;
+    @extend %message;
   }
 
   .woocommerce-error {
     padding: 1rem 3rem;
-    @extend .message;
-    @extend .error;
+    @extend %message;
+    @extend %error;
   }
   .woocommerce-info {
     padding: 1rem 3rem;
-    @extend .message;
-    @extend .info;
+    @extend %message;
+    @extend %info;
   }
 
 
   .woocommerce-MyAccount-navigation > ul {
-    @extend .menu;
+    //@extend .menu;
   }
 
 
@@ -88,7 +88,7 @@
   }
 
   .woocommerce-pagination {
-    @extend .pagination;
+   // @extend .pagination;
   }
 
   nav.woocommerce-pagination ul {
@@ -115,6 +115,7 @@
   .woocommerce-cart #payment,
   .woocommerce-checkout #payment {
     background: transparent;
+
     @include roundness();
   }
 

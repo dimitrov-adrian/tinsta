@@ -87,7 +87,7 @@
   .logo-site-description {
     @extend %small;
     padding: 0 .6rem;
-    opacity: $typography_brightness / 100;
+    opacity: $basics_brightness / 100;
   }
   @media (max-width: $breakpoint_max_tablet) {
     margin: 1rem;

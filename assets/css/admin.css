@@ -1,9 +1,9 @@
 /* Make code editor almost full height for next controls */
-#customize-control-component_site_topline .CodeMirror-wrap,
-#customize-control-component_site_bottomline .CodeMirror-wrap,
-#customize-control-component_social_networks_code .CodeMirror-wrap,
-#customize-control-component_header_markup .CodeMirror-wrap,
-#customize-control-component_footer_markup .CodeMirror-wrap {
+#customize-control-options_site_topline .CodeMirror-wrap,
+#customize-control-options_site_bottomline .CodeMirror-wrap,
+#customize-control-options_header_markup .CodeMirror-wrap,
+#customize-control-options_footer_markup .CodeMirror-wrap,
+#customize-control-options_social_networks_code .CodeMirror-wrap {
   height: calc( 100vh - 260px );
 }
 
@@ -25,7 +25,6 @@
   padding-left: .6em;
   padding-right: .6em;
 }
-
 
 /* Third-Party plugins tweaks */
 input[name="panels_setting[tablet-width]"],

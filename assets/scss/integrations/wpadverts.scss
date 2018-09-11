@@ -1,0 +1,305 @@
+body.tinsta-theme.wp-adverts-enabled {
+
+  div.adverts-flash-error {
+    @extend .message-error;
+    @extend .no-shadow;
+  }
+  div.adverts-flash-info {
+    @extend .message-info;
+    @extend .no-shadow;
+  }
+
+  .adverts-modal {
+    background-color: rgba(0,0,0,.3);
+    .adverts-modal-inner {
+      @extend .box-shadow;
+    }
+  }
+
+  .widget_personal_info .header-classifieds-widget {
+    display: table-cell;
+    vertical-align: middle;
+    background: $color_secondary;
+    color: $color_secondary_foreground;
+    a {
+      color: $color_secondary_foreground;
+      @include fa-icon('bullhorn');
+      margin: 0 1em;
+      text-decoration: none;
+      &:before {
+        vertical-align: middle;
+        width: 32px;
+        height: 32px;
+        font-size: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  .adverts-button,
+  .adverts-upload-actions a.button
+  .adverts-button.adverts-button-icon {
+    border-radius: 0;
+    border: 0 !important;
+    background: $color_primary;
+    color: $color_primary_foreground !important;
+  }
+
+  span.adverts-widget-grid-link {
+    margin-left: .4em;
+  }
+
+  .adverts-single-author-avatar img.avatar {
+    border-radius: 0;
+    border: 0;
+  }
+
+  a.adverts-button:visited,
+  .adverts-upload-actions a.button:visited,
+  a.adverts-button:hover,
+  .adverts-upload-actions a.button:hover {
+    color: $color_primary_foreground !important;
+  }
+
+  .adverts-button-icon {
+    text-align: center;
+    line-height: 24px !important;
+  }
+  .adverts-round-icon {
+    vertical-align: middle;
+  }
+  .adverts-icon-tags:before {
+    @include fa-icon('folder-open');
+    margin: 0;
+  }
+  .adverts-icon-location:before {
+    @include fa-icon('map-marker');
+    margin: 0;
+  }
+
+  .adverts-icon-eye:before {
+    @include fa-icon('eye');
+    margin: 0;
+  }
+  .adverts-icon-pencil:before {
+    @include fa-icon('pencil');
+    margin: 0;
+  }
+  .adverts-icon-trash-1:before {
+    @include fa-icon('trash');
+    margin: 0;
+  }
+
+  .adverts-control-group.adverts-field-header {
+    h3 {
+      border: 0;
+      border-bottom: 1px solid $color_background !important;
+    }
+  }
+
+  .adverts-gallery {
+    > p {
+      padding: .6em 0;
+      overflow: hidden;
+      margin: 0;
+      color: inherit;
+    }
+  }
+
+  .adverts-gallery-uploads .adverts-gallery-upload-item .adverts-gallery-item-featured {
+    background: $color_secondary;
+    color: $color_secondary_foreground;
+  }
+
+
+  .adverts-form {
+
+    .adverts-multiselect-input.adverts-multiselect-open {
+      border-bottom-color: $color_lighter;
+    }
+    .adverts-multiselect-options {
+      border: 2px solid $color_primary !important;
+      border-top: 0 !important;
+      @extend .box-shadow;
+    }
+
+    #adverts_location,
+    #adverts_price {
+      width: 10em;
+    }
+  }
+
+
+
+  .entry-singular.advert {
+    .entry-header {
+      border-bottom: none;
+    }
+    .rslides_container {
+      float: left;
+      width: 40%;
+      clear: none;
+      margin-top: 0;
+    }
+    .adverts-single-box,
+    .adverts-single-grid-details,
+    .adverts-single-actions,
+    .adverts-contact-box {
+      float: right;
+      width: 58%;
+      clear: none;
+    }
+    .adverts-single-actions {
+      margin-top: .6em;
+    }
+
+    .adverts-price-box {
+      background: $color_secondary;
+      color: $color_secondary_foreground;
+    }
+  }
+
+  .advert {
+    .rslides_container {
+      .rslides {
+        height: auto !important;
+        li {
+          height: auto;
+          img {
+            position: static;
+
+          }
+        }
+      }
+    }
+  }
+
+
+  .adverts-options {
+    border: 2px solid $color_primary;
+    background: transparent;
+    padding: 0 !important;
+    margin: .8em;
+
+    .adverts-search {
+      float: left;
+      width: 70%;
+      padding: 0;
+      margin: 0;
+
+      input, select {
+        border: 0 !important;
+      }
+    }
+
+    .adverts-options-left.adverts-js, .adverts-options-right.adverts-js {
+      padding: 0 !important;
+    }
+    .adverts-button-small {
+      height: 32px;
+      background: $color_primary;
+      color: $color_primary_foreground;
+      border: 0;
+      border-radius: 0;
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+    }
+
+  }
+
+  &.tinsta-wpadverts-archive {
+    .entry-singular .entry-header {
+      padding-left: .8em;
+      padding-right: .8em;
+    }
+    .entry-singular .entry-header,
+    .entry-singular .entry-content,
+    .entry-singular .tinsta-wpadverts-archive {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+
+  }
+
+  .adverts-list {
+    overflow: visible;
+
+    list-style: none;
+    display: block;
+    width: 100%;
+    margin: 0 0 -1px 0 !important;
+    padding: 0;
+    @extend .clearfix;
+    border-top: 1px solid $color_neutral_inactive;
+
+    .advert-item {
+      float: left;
+      overflow: hidden;
+      position: relative;
+      width: percentage(100/5)/100;
+      height: 320px;
+      border-top: 0;
+      border-right: 1px solid $color_neutral_inactive;
+      border-bottom: 1px solid $color_neutral_inactive !important;
+      border-left: 0;
+      padding: 1em;
+      list-style: none;
+      margin: 0;
+      box-sizing: border-box;
+      text-align: center;
+
+      //&:last-child,
+      &:nth-child(5n) {
+        border-right-width: 0;
+      }
+
+      &:active,
+      &:focus,
+      &:hover {
+        border-color: $color_primary !important;
+        outline: 3px solid $color_primary;
+        z-index: 100;
+      }
+
+      .advert-post-title {
+        text-align: center;
+      }
+
+      .advert-price {
+        background: $color_secondary;
+        color: $color_secondary_foreground;
+        border-radius: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-width: 0;
+      }
+
+      .advert-date {
+        opacity: .8;
+      }
+    }
+  }
+
+  .adverts-grid .adverts-grid-row {
+    border: 0;
+  }
+  span.advert-link {
+    @extend a;
+  }
+
+}
+
+// Smartphone landscape
+@media only screen and (max-width: 600px) {
+
+  body.tinsta-theme .entry-singular.advert .rslides_container,
+  body.tinsta-theme .entry-singular.advert .adverts-single-box,
+  body.tinsta-theme .entry-singular.advert .adverts-single-grid-details,
+  body.tinsta-theme .entry-singular.advert .adverts-single-actions,
+  body.tinsta-theme .entry-singular.advert .adverts-contact-box {
+    float: none;
+    width: 100%;
+  }
+
+}

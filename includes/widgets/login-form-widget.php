@@ -5,13 +5,9 @@ class Tinsta_LoginForm_Widget extends WP_Widget
 
   function __construct()
   {
-    parent::__construct(
-      false,
-      sprintf('(Tinsta) %s', __('Login Form', 'tinsta')),
-      [
+    parent::__construct(false, sprintf('(Tinsta) %s', __('Login Form', 'tinsta')), [
         'description' => __('Display login form.', 'tinsta'),
-      ]
-    );
+      ]);
   }
 
   function form($instance)
@@ -23,7 +19,8 @@ class Tinsta_LoginForm_Widget extends WP_Widget
       <label for="<?php echo $this->get_field_id('title') ?>">
         <?php _e('Title', 'tinsta') ?>
       </label>
-      <input id="<?php echo $this->get_field_id('title') ?>" name="<?php echo $this->get_field_name('title') ?>" type="text"
+      <input id="<?php echo $this->get_field_id('title') ?>" name="<?php echo $this->get_field_name('title') ?>"
+             type="text"
              value="<?php echo esc_attr($instance['title']) ?>" />
     </p>
     <?php
@@ -47,14 +44,14 @@ class Tinsta_LoginForm_Widget extends WP_Widget
     }
 
     $form_args = [
-      'echo'           => true,
-      'redirect'       => site_url($_SERVER['REQUEST_URI']),
-      'form_id'        => 'loginform',
-      'id_username'    => 'user_login',
-      'id_password'    => 'user_pass',
-      'id_remember'    => 'rememberme',
-      'id_submit'      => 'wp-submit',
-      'remember'       => true,
+      'echo' => true,
+      'redirect' => site_url($_SERVER['REQUEST_URI']),
+      'form_id' => 'loginform',
+      'id_username' => 'user_login',
+      'id_password' => 'user_pass',
+      'id_remember' => 'rememberme',
+      'id_submit' => 'wp-submit',
+      'remember' => true,
       'value_username' => null,
       'value_remember' => false,
     ];

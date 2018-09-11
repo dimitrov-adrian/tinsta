@@ -43,21 +43,21 @@
 
   </header>
 
-  <?php if ( get_theme_mod("post_type_" . get_post_type() . "_archive_show") == 'full' ):?>
-    
+  <?php if (get_theme_mod("post_type_" . get_post_type() . "_archive_show") == 'full'): ?>
+
     <div class="entry-summary">
       <?php the_content() ?>
     </div>
 
-  <?php else:?>
+  <?php else: ?>
 
-    <?php if (get_the_excerpt() && ! post_password_required()): ?>
+    <?php if (get_the_excerpt() && !post_password_required()): ?>
       <div class="entry-summary">
         <?php the_excerpt() ?>
       </div>
     <?php endif ?>
 
-    <?php if ( ! post_password_required() && ( ! get_the_title() || ! get_the_excerpt() ) ): ?>
+    <?php if (!post_password_required() && (!get_the_title() || !get_the_excerpt())): ?>
       <div class="entry-summary">
         <p>
           <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute() ?>">
@@ -67,6 +67,6 @@
       </div>
     <?php endif ?>
 
-  <?php endif?>
+  <?php endif ?>
 
 </article>

@@ -8,13 +8,9 @@ class Tinsta_Logo_Widget extends WP_Widget
 
   public function __construct()
   {
-    parent::__construct(
-      false,
-      sprintf('(Tinsta) %s', __('Logo', 'tinsta')),
-      [
+    parent::__construct(false, sprintf('(Tinsta) %s', __('Logo', 'tinsta')), [
         'description' => __('Display site logo.', 'tinsta'),
-      ]
-    );
+      ]);
   }
 
   function form($instance)
@@ -29,25 +25,29 @@ class Tinsta_Logo_Widget extends WP_Widget
 
     ?>
     <p>
-      <?php _e('The logo can be changed from Apperance -&gt; Customizer', 'tinsta')?>
+      <?php _e('The logo can be changed from Apperance -&gt; Customizer', 'tinsta') ?>
     </p>
+    <?php if (!(get_theme_mod('custom_logo') && get_custom_logo())): ?>
     <p>
       <label for="<?php echo $this->get_field_id('style') ?>">
         <?php _e('Style', 'tinsta') ?>
       </label>
       <select id="<?php echo $this->get_field_id('style') ?>" name="<?php echo $this->get_field_name('style') ?>">
-        <option value=""><?php _e('None', 'tinsta')?></option>
-        <option value="colored" <?php selected('colored', $instance['style'])?>><?php _e('Colored', 'tinsta')?></option>
-        <option value="colored-inverted" <?php selected('colored-inverted', $instance['style'])?>><?php _e('Inverted Color', 'tinsta')?></option>
+        <option value=""><?php _e('None', 'tinsta') ?></option>
+        <option value="colored" <?php selected('colored', $instance['style']) ?>><?php _e('Colored',
+            'tinsta') ?></option>
+        <option value="colored-inverted" <?php selected('colored-inverted',
+          $instance['style']) ?>><?php _e('Inverted Color', 'tinsta') ?></option>
       </select>
     </p>
+  <?php endif ?>
     <p>
       <input type="checkbox"
              id="<?php echo $this->get_field_id('tagline') ?>"
              name="<?php echo $this->get_field_name('tagline') ?>"
              value="on"
-             <?php checked('on', $instance['tagline'])?>
-            />
+        <?php checked('on', $instance['tagline']) ?>
+      />
       <label for="<?php echo $this->get_field_id('tagline') ?>">
         <?php _e('Show Tagline', 'tinsta') ?>
       </label>
@@ -59,16 +59,16 @@ class Tinsta_Logo_Widget extends WP_Widget
       <input type="number"
              id="<?php echo $this->get_field_id('width') ?>"
              name="<?php echo $this->get_field_name('width') ?>"
-             value="<?php esc_html($instance['width'])?>" />
+             value="<?php esc_html($instance['width']) ?>" />
     </p>
     <p>
       <label for="<?php echo $this->get_field_id('height') ?>">
-        <?php _e('Width', 'tinsta') ?>
+        <?php _e('Height', 'tinsta') ?>
       </label>
       <input type="number"
              id="<?php echo $this->get_field_id('height') ?>"
              name="<?php echo $this->get_field_name('height') ?>"
-             value="<?php esc_html($instance['height'])?>" />
+             value="<?php esc_html($instance['height']) ?>" />
     </p>
     <?php
 
@@ -82,7 +82,7 @@ class Tinsta_Logo_Widget extends WP_Widget
       'width' => '',
       'height' => '',
     ]);
-    $class = $instance['style'];
+
     $style = '';
     if ($instance['width'] || $instance['height']) {
       $style = ' style="';
@@ -94,7 +94,10 @@ class Tinsta_Logo_Widget extends WP_Widget
       }
       $style .= '" ';
     }
-    echo str_replace('class="', 'aria-roledescription="logo" ' . $style . ' class="' . $class . ' ', $args['before_widget']);
+
+    echo $args['before_widget'];
+
+    echo '<div aria-roledescription="logo" ' . $style . ' class="' . $instance['style'] . '" />';
 
     if (get_theme_mod('custom_logo') && get_custom_logo()) {
       the_custom_logo();
@@ -107,13 +110,15 @@ class Tinsta_Logo_Widget extends WP_Widget
       <?php
     }
 
-    if ( $instance['tagline'] == 'on' && get_theme_mod('header_textcolor') !== 'blank') {
+    if ($instance['tagline'] == 'on' && get_theme_mod('header_textcolor') !== 'blank') {
       ?>
       <div class="logo-site-description">
         <?php bloginfo('description') ?>
       </div>
       <?php
     }
+
+    echo '</div>';
 
     echo $args['after_widget'];
   }

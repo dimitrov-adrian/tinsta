@@ -2,7 +2,7 @@ $z-index-modal: 99990; // wpadminbar is 99999
 $z-index-normal: 100;
 $z-index-low: 0;
 
-$brightness-base: ( ( 50 *( $typography_brightness / 90) ) + 5 ) / 1.5;
+$brightness-base: ( ( 50 *( $basics_brightness / 90) ) + 5 ) / 1.5;
 
 $breakpoint_min_mobile: $region_root_breakpoint_mobile;
 $breakpoint_max_mobile: ($region_root_breakpoint_mobile - 1px);
@@ -31,7 +31,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 @mixin border($color, $pos: null, $width: null) {
   @if $width == null {
-    $width: $typography_bordering;
+    $width: $basics_bordering;
   }
   border#{$pos}: $width * 1px solid rgba($color, $brightness-base / 100);
 }
@@ -45,20 +45,20 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 }
 
 @mixin shadow() {
-  @if ($component_effects_shadows) {
+  @if ($basics_effects_shadows) {
     box-shadow: 0 0 12px rgba($region_root_color_foreground, .12);
   }
 }
 
 @mixin shadowBottom() {
-  @if ($component_effects_shadows) {
+  @if ($basics_effects_shadows) {
     box-shadow: 0 12px 12px -12px $region_root_color_foreground;
   }
 }
 
 @mixin roundness($pos: '', $coef: 1) {
-  @if $typography_roundness {
-    $val: ( $typography_roundness / ( 50 / $coef ) ) + 'em';
+  @if $basics_roundness {
+    $val: ( $basics_roundness / ( 50 / $coef ) ) + 'em';
     @if $pos == '' {
       border-radius: $val;
     } @else if $pos == 'top' {
@@ -160,16 +160,16 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     input[type="button"],
     input[type="reset"],
     input[type="submit"] {
-      @include button($background, $foreground, $primary_color);
+      @include button($background, $foreground, $primary_color, $secondary_color);
       &.secondary {
-        @include button($background, $foreground, $secondary_color);
+        @include button($background, $foreground, $secondary_color, $primary_color);
       }
     }
   }
 
 }
 
-@mixin button($background, $foreground, $color) {
+@mixin button($background, $foreground, $color, $secondary: $background) {
 
   @if $typography_font_button_text_style {
     @if $typography_font_button_text_style == 'uppercase' {
@@ -179,8 +179,10 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     }
   }
 
+  transition: all 2s ease-in-out;
+
   @if $typography_form_button_style == 'border' {
-    border: ($typography_bordering + px) solid $color;
+    border: ($basics_bordering + px) solid $color;
     background: transparent;
     color: $color;
     &:hover,
@@ -190,12 +192,25 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       color: $background;
     }
   } @else if $typography_form_button_style == 'fill' {
-    border: ($typography_bordering + px) solid $color;
+    border: ($basics_bordering + px) solid $color;
     color: $background;
     background: $color;
     &:hover,
     &:focus {
       background-color: mix($color, $foreground, 80%);
+      border-color: mix($color, $foreground, 80%);
+      color: $background;
+    }
+  } @else if $typography_form_button_style == 'gradient' {
+    //border: ($basics_bordering + px) solid $color;
+    border: none;
+    color: $background;
+    background: $color;
+    background-image: linear-gradient(to bottom right, $color, $secondary);
+    &:hover,
+    &:focus {
+      background-color: mix($color, $foreground, 80%);
+      background-image: linear-gradient(to bottom right, muted($color), $color);
       border-color: mix($color, $foreground, 80%);
       color: $background;
     }
