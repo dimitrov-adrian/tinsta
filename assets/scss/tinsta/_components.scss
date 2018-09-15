@@ -22,8 +22,8 @@ img {
  */
 .error-content-wrapper {
   margin: 2rem auto;
-  max-width: $breakpoint_max_tablet;
-  min-width: $breakpoint_min_tablet;
+  max-width: $breakpoint-min-tablet;
+  min-width: $breakpoint-min-tablet;
   width: 90%;
   padding: 2rem;
   .site-info {
@@ -40,6 +40,10 @@ body.login {
   #login_error {
     @extend .message;
     @extend .error;
+  }
+
+  .message {
+    @extend %info;
   }
 
   //.message.register {
@@ -63,16 +67,16 @@ body.login {
 
 }
 
-/**
- * Horizontal menu
- */
-// @TODO
-
 /*
  * Mobile menu and back button.
  */
 .mobile-back-button {
   @include roundness('bottom');
+  @if $basics_effects_animations {
+    //animation: opacityMoveDown $basics_effects_animations + ms ease-in-out 1;
+    animation: opacity $basics_effects_animations + ms ease-in-out 1;
+    animation-fill-mode: backwards;
+  }
   z-index: $z-index-modal;
   position: fixed;
   top: 0;
@@ -92,6 +96,16 @@ body.login {
     margin-right: .5rem;
     line-height: 3rem;
   }
+  &:after {
+    content: '';
+    position: fixed;
+    top: 3rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba($region_root_color_foreground, .8);
+    animation-fill-mode: backwards;
+  }
 }
 
 .mobile-menu {
@@ -103,15 +117,20 @@ body.login {
   overflow: auto !important;
   width: calc(100% - 4rem) !important;
   max-height: calc(100% - 3rem - 4rem) !important;
-  z-index: $z-index-modal !important;
+  z-index: $z-index-modal+1 !important;
   transform: translate(0, 0) !important;
-  box-shadow: 0 0 0 .6rem $region_root_color_background,
-              0 0 0 $region_root_width+px rgba($region_root_color_foreground, .84) !important;
   background: $region_root_color_background !important;
+  box-shadow: 0 0 0 4px $region_root_color_background;
   white-space: normal;
   padding: 1rem !important;
   margin: 0 !important;
   @include roundness();
+
+  @if $basics_effects_animations {
+    animation: opacityMoveDown $basics_effects_animations + ms ease-in-out 1;
+    animation-fill-mode: backwards;
+  }
+
   &,
   a,
   li > a {
@@ -150,16 +169,37 @@ body.login {
     vertical-align: bottom;
   }
 }
+.menu-item-type-tinsta-nav-menu-search-box {
+  &:active,
+  &:hover {
+    background: transparent !important;
+  }
+  .site-primary-menu & {
+    min-width: 14rem;
+    @media (max-width: $breakpoint-max-tablet) {
+      .search-autocomplete-list {
+        position: fixed !important;
+        z-index: $z-index-modal;
+        left: 2%;
+        right: 2%;
+        left: 3vw;
+        right: 3vw;
+        width: 94vw;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
 
 /**
  * Scroll Top button
  */
 @if $options_scrolltop {
   .scrolltop-button {
-    @include roundness();
+    @include button($region_main_color_background, $region_root_color_foreground, $region_root_color_primary, $region_root_color_secondary);
     z-index: $z-index-modal - 1;
     display: none;
-    // @TODO animation.
     position: fixed;
     @if $options_scrolltop == 'bottom-right' {
       bottom: $options_scrolltop_offset_vertical + px;
@@ -179,9 +219,6 @@ body.login {
     overflow: hidden;
     padding: .4rem;
     text-indent: 100px;
-    background: $region_root_color_primary;
-    color: $region_main_color_background;
-    cursor: pointer;
     &:before {
       @extend %la;
       content: quote($options_scrolltop_style);
@@ -193,6 +230,13 @@ body.login {
       line-height: 2.4rem;
       text-align: center;
       text-indent: 0;
+    }
+    &.show {
+      display: block;
+      @if $basics_effects_animations {
+        animation: opacityMoveDown $basics_effects_animations + ms ease-in-out 1;
+        animation-fill-mode: backwards;
+      }
     }
   }
 }
@@ -256,7 +300,7 @@ body.login {
   &.next {
     text-transform: uppercase;
   }
-  @media (max-width: $breakpoint_max_mobile) {
+  @media (max-width: $breakpoint-max-mobile) {
     border-right: none !important;
   }
 
@@ -307,10 +351,21 @@ body.login {
     display: inline-block;
     vertical-align: middle;
   }
+
+  @media (max-width: $breakpoint-max-mobile) {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
 }
 .breadcrumbs-trail {
   display: inline-block;
-  max-width: 28%;
+
+  @media (min-width: $breakpoint-min-tablet) {
+    max-width: 28%;
+    white-space: nowrap;
+  }
+
   overflow: hidden;
   position: relative;
   text-overflow: ellipsis;
@@ -348,7 +403,14 @@ body.login {
   height: 100%;
   background-color: rgba($region_root_color_foreground, .84);
   z-index: $z-index-modal - 1;
+
+  @if $basics_effects_animations {
+    animation: opacity $basics_effects_animations + ms ease-in-out 1;
+    animation-fill-mode: backwards;
+  }
+
   .dialog-inner {
+
     @include roundness();
     @include shadow();
     position: absolute;
@@ -362,6 +424,7 @@ body.login {
     color: $region_root_color_foreground;
     overflow: auto;
     padding: 1rem;
+
     .content {
       max-height: 340px;
       overflow: auto;
@@ -391,7 +454,7 @@ body.login {
   //margin-top: 2rem;
   //margin-bottom: 2rem;
 
-  @media (min-width: $breakpoint_min_tablet) {
+  @media (min-width: $breakpoint-min-tablet) {
     background-color: $region_root_color_foreground;
     color: $region_main_color_background;
 
@@ -414,7 +477,7 @@ body.login {
     position: relative;
     z-index: 0;
 
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       opacity: .5;
     }
 
@@ -427,7 +490,7 @@ body.login {
     text-shadow: 0 0.1rem 2rem rgba(0, 0, 0, .2);
     top: 10px;
     width: 40%;
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       position: static;
       width: auto;
       margin-left: 10px;
@@ -458,7 +521,7 @@ body.login {
     right: 10px;
     text-shadow: 0 0.1rem 2rem rgba(0, 0, 0, .2);
     top: 10px;
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       padding: .4rem;
       background-color: $region_main_color_background;
     }
@@ -484,14 +547,14 @@ body.login {
     margin: 0 auto;
     z-index: 10;
 
-    @media (min-width: $breakpoint_max_tablet) {
+    @media (min-width: $breakpoint-min-desktop) {
       font-size: 3rem;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       width: 90%;
       font-size: 2.5rem;
       margin-bottom: 1rem;
@@ -532,6 +595,7 @@ body.login {
  * Agreement
  */
 #site-enter-agreement {
+
   @if $options_site_agreement_style == 'top' {
     .dialog-inner {
       top: 1rem;
@@ -572,4 +636,73 @@ body.login {
     }
   }
 
+}
+
+/**
+ * Reading Progress Indicator.
+ */
+@if ($options_reading_progress) {
+  .reading-indicator {
+    @include roundness();
+    @if $basics_effects_animations {
+      animation: opacityMoveDown $basics_effects_animations + ms ease-in-out 1;
+      animation-fill-mode: backwards;
+    }
+    z-index: $z-index-modal;
+    position: fixed;
+    display: none;
+    overflow: hidden;
+    height: 3px;
+
+    @if ($options_reading_progress == 'top') {
+      top: $options_reading_progress_offset_vertical + px;
+      left: $options_reading_progress_offset_horizontal + px;
+      right: $options_reading_progress_offset_horizontal + px;
+    } @else if ($options_reading_progress == 'bottom') {
+      bottom: $options_reading_progress_offset_vertical + px;
+      left: $options_reading_progress_offset_horizontal + px;
+      right: $options_reading_progress_offset_horizontal + px;
+    } @else {
+      @if ($options_reading_progress == 'top-left') {
+        top: $options_reading_progress_offset_vertical + px;
+        left: $options_reading_progress_offset_horizontal + px;
+      }
+      @elseif ($options_reading_progress == 'top-right') {
+        top: $options_reading_progress_offset_vertical + px;
+        right: $options_reading_progress_offset_horizontal + px;
+      }
+      @elseif ($options_reading_progress == 'bottom-left') {
+        bottom: $options_reading_progress_offset_vertical + px;
+        left: $options_reading_progress_offset_horizontal + px;
+      }
+      @elseif ($options_reading_progress == 'bottom-right') {
+        bottom: $options_reading_progress_offset_vertical + px;
+        right: $options_reading_progress_offset_horizontal + px;
+      }
+      @elseif ($options_reading_progress == 'top-center') {
+        margin-left: -4rem;
+        top: $options_reading_progress_offset_vertical + px;
+        left: 50%;
+      }
+      @elseif ($options_reading_progress == 'bottom-center') {
+        margin-left: -4rem;
+        top: $options_reading_progress_offset_vertical + px;
+        left: 50%;
+      }
+      width: 8rem;
+      overflow: hidden;
+      background: muted($region_root_color_foreground, 70%);
+      box-shadow: 0 0 0 10px rgba(muted($region_root_color_foreground), .9);
+      box-sizing: content-box;
+    }
+
+    .progress {
+      display: block;
+      float: left;
+      background: $region_root_color_primary;
+      height: 100%;
+      transition: width 150ms;
+    }
+
+  }
 }

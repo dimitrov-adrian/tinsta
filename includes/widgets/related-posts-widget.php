@@ -1,6 +1,6 @@
 <?php
 
-class Tinsta_RelatedPosts_Widget extends WP_Widget
+class Tinsta_Related_Posts_Widget extends WP_Widget
 {
 
   function __construct()
@@ -36,7 +36,7 @@ class Tinsta_RelatedPosts_Widget extends WP_Widget
 
     if ($related_posts) {
       echo $args['before_widget'];
-      $instance['title'] = apply_filters('widget_title', (empty($instance['title']) ? '' : $instance['title']));
+      $instance['title'] = apply_filters('widget_title', (!empty($instance['title']) ? $instance['title'] : ''));
       if ($instance['title']) {
         echo $args['before_title'] . $instance['title'] . $args['after_title'];
       }

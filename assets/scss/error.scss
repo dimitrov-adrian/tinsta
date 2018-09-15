@@ -6,14 +6,21 @@ body {
   color: $region_root_color_foreground;
 }
 
+input,
+textarea,
+select {
+  background-color: transparent;
+}
+
 /**
  * Error page
  */
 .error-content-wrapper {
+  background-color: $region_main_color_background;
   box-shadow: 0 12px 28px -8px rgba(0, 0, 0, .2);
   margin: 2em auto;
-  max-width: $breakpoint_max_tablet;
-  min-width: $breakpoint_min_tablet;
+  max-width: $breakpoint-min-tablet;
+  min-width: $breakpoint-min-tablet;
   width: 90%;
   padding: 2rem;
   .site-info {
@@ -36,3 +43,4 @@ body {
     float: left;
   }
 }
+

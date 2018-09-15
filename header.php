@@ -3,7 +3,6 @@
 <head>
   <meta charset="<?php bloginfo('charset') ?>" />
   <link rel="profile" href="http://gmpg.org/xfn/11" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
   <meta name="MobileOptimized" content="width" />
   <meta name="HandheldFriendly" content="true" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />

@@ -1,6 +1,6 @@
 <?php
 
-class Tinsta_BreadCrumbs_Widget extends WP_Widget
+class Tinsta_Breadcrumbs_Widget extends WP_Widget
 {
 
   function __construct()

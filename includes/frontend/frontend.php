@@ -10,6 +10,15 @@
  * Some internal calls that are in help of the Tinsta theme.
  */
 add_action('template_redirect', function () {
+  global $wp;
+
+  if ('manifest.json' === $wp->request && get_theme_mod('options_seo_manifest')) {
+    $manifest = tinsta_manifest_json();
+    if ($manifest) {
+      wp_send_json($manifest, 200);
+      exit;
+    }
+  }
 
   // Handle requests like /?tinsta-resolve-user-avatar=<email|id>[&s=<size>]
   if (!empty($_GET['tinsta-resolve-user-avatar'])) {
@@ -109,7 +118,7 @@ add_filter('dynamic_sidebar_params', function ($params) {
       $style = '';
 
       if (!empty($settings['tinsta_widget_size'])) {
-        $style .= 'width:' . round($settings['tinsta_widget_size'], 2) . '%;';
+        $style .= 'vertical-align:top;width:' . round($settings['tinsta_widget_size'], 2) . '%;';
       }
 
       if (!empty($settings['tinsta_widget_float'])) {
@@ -134,8 +143,13 @@ add_filter('dynamic_sidebar_params', function ($params) {
 add_action('wp_head', function () {
 
   $is_public = get_option('blog_public', true);
-  $color = esc_attr(get_theme_mod('region_root_color_primary'));
   $sitename = esc_attr(get_bloginfo('sitename'));
+
+  $user_scalable = get_theme_mod('basics_mobile_user_scale');
+  if (is_numeric($user_scalable)) {
+    $user_scalable = 'yes, maximum-scale=' . $user_scalable;
+  }
+  echo '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=' . $user_scalable . '" />';
 
   echo get_theme_mod('options_header_markup');
 
@@ -156,11 +170,16 @@ add_action('wp_head', function () {
     echo '<meta name="robots" content="noindex, nofollow" />';
   }
 
-  echo "<meta name=\"theme-color\" content=\"{$color}\" />";
-  echo "<meta name=\"msapplication-TileColor\" content=\"{$color}\" />";
-  echo "<meta name=\"apple-mobile-web-app-title\" content=\"{$sitename}\" />";
-  echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />";
-  echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\" />";
+  if (get_theme_mod('options_seo_manifest')) {
+    $color = esc_attr(get_theme_mod('region_root_color_primary'));
+    $header_background_color = esc_attr(strtoupper(get_theme_mod('region_header_color_background')));
+    echo '<link rel="manifest" href="' . home_url('manifest.json') . '" />';
+    echo "<meta name=\"theme-color\" content=\"{$color}\" />";
+    echo "<meta name=\"msapplication-TileColor\" content=\"{$header_background_color}\" />";
+    echo "<meta name=\"apple-mobile-web-app-title\" content=\"{$sitename}\" />";
+    echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\" />";
+    echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"translucent\" />";
+  }
 
   if (get_theme_mod('options_seo_enable')) {
 
@@ -249,6 +268,9 @@ add_action('wp_enqueue_scripts', function () {
 
   $min_suffix = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min.');
 
+  $is_singular = is_singular();
+  $post_type = $is_singular ? get_post_type() : null;
+
   // https://github.com/aFarkas/html5shiv
   wp_enqueue_script('html5shiv', $template_directory_uri . '/assets/js/html5shiv.min.js', [], '3.7.3');
   wp_script_add_data('html5shiv', 'conditional', 'lte IE 8');
@@ -305,8 +327,7 @@ add_action('wp_enqueue_scripts', function () {
   }
 
   // Theme's script.
-  wp_enqueue_script('tinsta', $template_directory_uri . '/assets/js/main.' . $min_suffix . 'js', [], $theme_hash, true);
-  wp_localize_script('tinsta', 'tinsta', [
+  $js_options = [
     'siteUrl' => home_url(),
     'assetsDir' => $template_directory_uri . '/assets/',
     'fullHeight' => get_theme_mod('region_root_height_full'),
@@ -316,13 +337,24 @@ add_action('wp_enqueue_scripts', function () {
       'top' => __('Top', 'tinsta'),
     ],
     'breakpoints' => [
-      'tablet' => get_theme_mod('region_root_breakpoint_tablet'),
-      'mobile' => get_theme_mod('region_root_breakpoint_mobile'),
+      'tablet' => get_theme_mod('basics_breakpoint_tablet'),
+      'mobile' => get_theme_mod('basics_breakpoint_mobile'),
     ],
-  ]);
+    'showReadingIndicator' => 0,
+  ];
+
+  if ($is_singular
+    && get_theme_mod('options_reading_progress')
+    && get_theme_mod("post_type_{$post_type}_reading_progress_indicator")
+  ) {
+    $js_options['showReadingIndicator'] = 1;
+  }
+
+  wp_enqueue_script('tinsta-main', $template_directory_uri . '/assets/js/main.' . $min_suffix . 'js', [], $theme_hash, true);
+  wp_localize_script('tinsta-main', 'tinsta', $js_options);
 
   // Comment respond form reply script.
-  if (is_singular()) {
+  if ($is_singular) {
     $comments_open = comments_open();
 
     if (have_comments() || $comments_open || intval(get_comments_number()) > 0) {
@@ -382,7 +414,7 @@ add_filter('post_class', function ($classes, $class, $post_id) {
 
   $post = get_post($post_id);
 
-  if (get_theme_mod("post_type_{$post->post_type}_use_defaults")) {
+  if (get_theme_mod("post_type_{$post->post_type}_use_theme_styles")) {
     $classes['default'] = 'default';
   }
 
@@ -407,15 +439,6 @@ add_filter('post_class', function ($classes, $class, $post_id) {
   return $classes;
 
 }, 6, 3);
-
-/**
- * Excerpt rewrite
- */
-// @TODO This seems to be implemented out of the box, check to ensure.
-//add_filter('the_excerpt', function ( $excerpt ) {
-//  $excerpt = strip_shortcodes( $excerpt );
-//  return $excerpt;
-//});
 
 /**
  * Alter post contents
@@ -466,15 +489,6 @@ add_filter('the_content', function ($content) {
   return $content;
 
 }, 100, 2);
-
-/**
- * Fix shortcodes in feeds
- */
-add_filter('the_content_rss', function ($content = '') {
-  $content = do_shortcode($content);
-
-  return $content;
-});
 
 /**
  * Filter the except length to X words.
@@ -641,6 +655,7 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
       $wp_current_user = wp_get_current_user();
     }
 
+    $item_output_orig = $item_output;
     $item_output = null;
 
     if ($item->type == 'tinsta-nav-menu-frontpage') {
@@ -690,6 +705,9 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item, $depth, $a
           }
         }
       }
+    } elseif ($item->type == 'tinsta-nav-menu-button-primary' || $item->type == 'tinsta-nav-menu-button-secondary') {
+      $item->description = null;
+      $item_output = $item_output_orig;
     }
 
   }

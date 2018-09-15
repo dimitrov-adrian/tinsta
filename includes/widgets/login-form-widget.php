@@ -1,6 +1,6 @@
 <?php
 
-class Tinsta_LoginForm_Widget extends WP_Widget
+class Tinsta_Login_Form_Widget extends WP_Widget
 {
 
   function __construct()
@@ -30,7 +30,8 @@ class Tinsta_LoginForm_Widget extends WP_Widget
   function widget($args, $instance)
   {
 
-    if (is_user_logged_in()) {
+    // This widget must not be displayed on login page or on logged in users.
+    if (is_user_logged_in() || tinsta_is_login_page()) {
       return;
     }
 
@@ -45,15 +46,11 @@ class Tinsta_LoginForm_Widget extends WP_Widget
 
     $form_args = [
       'echo' => true,
-      'redirect' => site_url($_SERVER['REQUEST_URI']),
-      'form_id' => 'loginform',
-      'id_username' => 'user_login',
-      'id_password' => 'user_pass',
-      'id_remember' => 'rememberme',
-      'id_submit' => 'wp-submit',
-      'remember' => true,
-      'value_username' => null,
-      'value_remember' => false,
+      'form_id' => $this->get_field_id('loginform'),
+      'id_username' => $this->get_field_id('login'),
+      'id_password' => $this->get_field_id('password'),
+      'id_remember' => $this->get_field_id('remember'),
+      'id_submit' => $this->get_field_id('submit'),
     ];
 
     wp_login_form($form_args);

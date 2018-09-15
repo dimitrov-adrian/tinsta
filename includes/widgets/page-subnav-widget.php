@@ -1,6 +1,6 @@
 <?php
 
-class Tinsta_PageSubnav_Widget extends WP_Widget
+class Tinsta_Page_Subnav_Widget extends WP_Widget
 {
 
   function __construct()

@@ -21,11 +21,9 @@
 
 html {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: $region_root_color_secondary;
-
-  -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+  //-webkit-tap-highlight-color: $region_root_color_secondary;
+  //-webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
   -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* prevent tap highlight color / shadow */
 
   // because of rems.
   @if $typography_font_size {
@@ -46,7 +44,7 @@ html {
  */
 body {
 
-  font-size: inherit;;
+  font-size: inherit;
 
   @if $typography_font_line_height {
     line-height: ($typography_font_line_height / 100);
@@ -96,11 +94,9 @@ body {
       -webkit-font-smoothing: subpixel-antialiased;
     }
 
-  } @else {
-    text-rendering: optimizeSpeed;
   }
 
-  @media (max-width: $breakpoint_max_tablet) {
+  @media (max-width: $breakpoint-min-tablet) {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -136,6 +132,15 @@ body {
     z-index: 999999999; /* Above WP toolbar. */
   }
 }
+
+.no-js .hide-if-nojs {
+  display: none;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+}
+
 .skip-link:focus {
   position: fixed;
 }
@@ -186,10 +191,17 @@ img {
   // max-width: 100%;
   // width: auto;
 
+  // Make empty images "grayed".
+  &[src=""] {
+    background-color: mix(colorInvert($region_root_color_foreground, $basics_brightness), $region_root_color_foreground, 100% - $basics_brightness);
+    background-color: rgba($region_root_color_foreground, $brightness-base / 100);
+  }
+
   // With mobiles with such small resolution pixelated images looks better.
   @media (max-width: 420px) {
     image-rendering: pixelated;
   }
+
 }
 
 img,
@@ -209,7 +221,7 @@ a {
 
   &:hover {
     color: $region_root_color_secondary;
-    //text-decoration: underline; // underlined decoration could make troubles with icons
+    //text-decoration: underline;
     abbr {
       border-bottom-width: 0;
     }
@@ -601,7 +613,7 @@ input[type="radio"],
 input[type="checkbox"] {
   @extend %no-select;
   cursor: pointer;
-  vertical-align: middle;
+  //vertical-align: middle;
   padding: 0; /* Addresses excess padding in IE8/9 */
 }
 
@@ -629,6 +641,12 @@ select,
 
   @include border($region_root_color_foreground);
   background-color: $region_main_color_background;
+  @if $basics_effects_animations {
+    transition: border-color $basics_effects_animations + ms ease-in-out,
+                color $basics_effects_animations + ms ease-in-out,
+                background $basics_effects_animations + ms ease-in-out;
+
+  }
   &:focus {
     border-color: $region_root_color_primary;
   }
@@ -725,10 +743,6 @@ input::-moz-focus-inner {
 }
 
 .menu {
-  // .menu-item {
-  //   // Break the submenu widths
-  //   //position: relative;
-  // }
   li {
     &.current_page_item,
     &.current-menu-parent,
@@ -758,13 +772,11 @@ input::-moz-focus-inner {
  */
 .avatar {
   // Could cause background on transparent images.
-  //background-color: mix(colorInvert($region_root_color_foreground, $basics_brightness), $region_root_color_foreground, 100% - $basics_brightness);
-  //background-color: rgba($region_root_color_foreground, $brightness-base / 100);
   @include roundness();
 }
 
 // Tablet screen formatters.
-@media (max-width: $breakpoint_max_tablet) {
+@media (max-width: $breakpoint-min-tablet) {
   .hentry .caption,
   .hentry .alignleft,
   .hentry .alignright,

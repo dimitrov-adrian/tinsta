@@ -19,9 +19,9 @@ if (have_posts() && is_active_sidebar('after-entries') && tinsta_should_show_bef
 
   </div>
 
-  <?php if (is_active_sidebar('after-content')): ?>
-    <div role="banner" class="site-container-after">
-      <?php dynamic_sidebar('after-content') ?>
+  <?php if (is_active_sidebar('after-main')): ?>
+    <div role="banner" class="site-after-main">
+      <?php dynamic_sidebar('after-main') ?>
     </div>
   <?php endif ?>
 

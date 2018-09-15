@@ -9,10 +9,9 @@
 /**
  * Check if Tinsta theme can run on current environment.
  */
-global $wp_version;
 $tinsta_supports_failcheck = [
   'php' => version_compare(phpversion(), '5.4.0', '<'),
-  'wp' => version_compare($wp_version, '4.6.0', '<'),
+  'wp' => version_compare(get_bloginfo('version'), '4.6.0', '<'),
   'phar' => !extension_loaded('phar'),
   // @TODO add check if wp-content is writeable
 ];
@@ -122,7 +121,6 @@ if (is_customize_preview()) {
  */
 if (TINSTA_INTEGRATIONS) {
 
-  $has_layout_plugin = false;
   foreach ((array)get_option('active_plugins', []) as $active_plugin) {
     $plugin_slug = dirname($active_plugin);
     $integration_include = __DIR__ . '/includes/integrations/' . dirname($active_plugin) . '.php';
@@ -131,8 +129,9 @@ if (TINSTA_INTEGRATIONS) {
     }
   }
 
-  if (empty($has_layout_plugin)) {
-    include __DIR__ . '/includes/integrations/-no-layouting-plugin.php';
+  if (!defined('TINSTA_POST_WIDGETS_REPLACE_CONTENT')) {
+    define('TINSTA_POST_WIDGETS_REPLACE_CONTENT', true);
+    require __DIR__ . '/includes/integrations/-no-layouting-plugin.php';
   }
 
 }

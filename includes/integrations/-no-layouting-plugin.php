@@ -5,7 +5,6 @@
  * Simple post "aranging" mechanism, allowing to override the post content with sidebar
  */
 
-
 /**
  * Register the sidebars.
  */
@@ -15,7 +14,7 @@ add_action('widgets_init', function () {
     'post_type' => 'any',
     'meta_query' => [
       [
-        'key' => '_tinsta_post_append_widgets',
+        'key' => '_tinsta_post_widgets_replace_content',
       ],
     ],
     'orderby' => 'title',
@@ -54,7 +53,7 @@ if (is_admin()) {
   function tinsta_page_attributes_render($post)
   {
 
-    $has_tinsta_post_append_widgets = (bool)get_post_meta($post->ID, '_tinsta_post_append_widgets', true);
+    $has_tinsta_post_widgets_replace_content = (bool)get_post_meta($post->ID, '_tinsta_post_widgets_replace_content', true);
 
     ?>
     <p class="help tinsta-notice">
@@ -62,13 +61,13 @@ if (is_admin()) {
     </p>
     <p>
       <label>
-        <input type="checkbox" name="_tinsta_post_append_widgets" value="on"
-          <?php checked(true, $has_tinsta_post_append_widgets) ?>
+        <input type="checkbox" name="_tinsta_post_widgets_replace_content" value="on"
+          <?php checked(true, $has_tinsta_post_widgets_replace_content) ?>
         />
         <?php _e('Create custom widgets region', 'tinsta') ?>
 
         <?php
-        if (!is_customize_preview() && $has_tinsta_post_append_widgets && current_user_can('customize')) {
+        if (!is_customize_preview() && $has_tinsta_post_widgets_replace_content && current_user_can('customize')) {
           $url = add_query_arg([
             'autofocus' => [
               'panel' => 'widgets',
@@ -92,15 +91,15 @@ if (is_admin()) {
   add_action('save_post', function ($post_id) {
 
     // Skip if:
-    if (wp_is_post_revision($post_id) || defined('DOING_AJAX')) {
+    if (defined('DOING_AJAX') || wp_is_post_revision($post_id)) {
       return;
     }
 
-    if (!empty($_POST['_tinsta_post_append_widgets'])) {
-      update_post_meta($post_id, '_tinsta_post_append_widgets', 'on');
-    } elseif (get_post_meta($post_id, '_tinsta_post_append_widgets',
-        true) && empty($_POST['_tinsta_post_append_widgets'])) {
-      delete_post_meta($post_id, '_tinsta_post_append_widgets');
+    if (!empty($_POST['_tinsta_post_widgets_replace_content'])) {
+      update_post_meta($post_id, '_tinsta_post_widgets_replace_content', 'on');
+    } elseif (get_post_meta($post_id, '_tinsta_post_widgets_replace_content',
+        true) && empty($_POST['_tinsta_post_widgets_replace_content'])) {
+      delete_post_meta($post_id, '_tinsta_post_widgets_replace_content');
     }
 
   });
@@ -119,20 +118,24 @@ if (is_admin()) {
       });
 
       // Replace the post content with widget area.
+      // Setting higher weight, to avoid wp content filters like texturize, autop, etc...
       add_filter('the_content', function ($content) {
         global $__tinsta_nolayouting_setup_postdata_is_fresh;
         if ($__tinsta_nolayouting_setup_postdata_is_fresh === true) {
           $__tinsta_nolayouting_setup_postdata_is_fresh = false;
           $post_id = get_the_ID();
-          if (get_post_meta($post_id, '_tinsta_post_append_widgets', true)) {
+          if (get_post_meta($post_id, '_tinsta_post_widgets_replace_content', true)) {
             ob_start();
+            echo '<div class="post-content-is-widgets">';
             dynamic_sidebar('tinsta-post-' . $post_id);
+            echo '</div>';
             $content = ob_get_clean();
           }
         }
 
         return $content;
-      }, 5);
+
+      }, 10000);
 
     }
   });

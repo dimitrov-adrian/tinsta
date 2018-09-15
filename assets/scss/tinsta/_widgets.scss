@@ -13,7 +13,7 @@
     margin: 0;
     padding-bottom: .6rem;
 
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       text-align: center;
       padding: .6rem;
       margin: .6rem 0;
@@ -32,7 +32,7 @@
     }
   }
 
-  @media (max-width: $breakpoint_max_mobile) {
+  @media (max-width: $breakpoint-max-mobile) {
     float: none;
     max-width: none;
     width: auto !important;
@@ -89,7 +89,7 @@
     padding: 0 .6rem;
     opacity: $basics_brightness / 100;
   }
-  @media (max-width: $breakpoint_max_tablet) {
+  @media (max-width: $breakpoint-min-tablet) {
     margin: 1rem;
   }
 }
@@ -100,7 +100,7 @@
 .widget_media_image {
   img {
     display: block;
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       margin-left: auto;
       margin-right: auto;
     }
@@ -223,7 +223,7 @@
 /**
  * Search Widget
  */
-.widget_search {
+.search-form {
   color: inherit;
   .search-submit {
     display: none;
@@ -233,7 +233,6 @@
     margin: 0;
     padding: 0;
     position: relative;
-    transition: all 150ms ease-in-out;
     &:before {
       @extend %la;
       content: $la-search;
@@ -268,11 +267,18 @@
     z-index: $z-index-modal;
     width: 100%;
     min-width: 20rem;
+    max-width: 300px;
     box-shadow: 0px 5px 16px -8px #000;
     background: $region_root_color_background;
     border: 1px solid #ddd;
     overflow: hidden;
-    @media (max-width: $breakpoint_max_tablet) {
+
+    @if $basics_effects_animations {
+      animation: slideDown $basics_effects_animations + ms ease-in-out 1;
+      animation-fill-mode: backwards;
+    }
+
+    @media (max-width: $breakpoint-min-tablet) {
       width: 94vw;
       position: static;
     }

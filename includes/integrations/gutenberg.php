@@ -28,13 +28,13 @@ add_theme_support('editor-color-palette', [
   ],
 
   [
-    'name' => __('Primary Color', 'tinsta'),
+    'name' => sprintf(__('Primary %s', 'tinsta'), __('Color', 'tinsta')),
     'slug' => 'region_root_color_primary',
     'color' => get_theme_mod('region_root_color_primary'),
   ],
 
   [
-    'name' => __('Secondary Color', 'tinsta'),
+    'name' => sprintf(__('Secondary %s', 'tinsta'), __('Color', 'tinsta')),
     'slug' => 'region_root_color_secondary',
     'color' => get_theme_mod('region_root_color_secondary'),
   ],

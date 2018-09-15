@@ -1,3 +1,8 @@
+/* Make details summary with pointer hover effect */
+details summary {
+  cursor: pointer;
+}
+
 /* Make code editor almost full height for next controls */
 #customize-control-options_site_topline .CodeMirror-wrap,
 #customize-control-options_site_bottomline .CodeMirror-wrap,

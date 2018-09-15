@@ -64,8 +64,8 @@ add_action('init', function () {
 
 
     $settings['responsive'] = true;
-    $settings['mobile-width'] = (int)get_theme_mod('region_root_breakpoint_mobile');
-    $settings['tablet-width'] = (int)get_theme_mod('region_root_breakpoint_tablet');
+    $settings['mobile-width'] = (int)get_theme_mod('basics_breakpoint_mobile');
+    $settings['tablet-width'] = (int)get_theme_mod('basics_breakpoint_tablet');
 
     $settings['margin-top'] = (int)get_theme_mod('typography_font_size');
     $settings['margin-sides'] = $settings['margin-top'];

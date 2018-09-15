@@ -4,10 +4,40 @@ $z-index-low: 0;
 
 $brightness-base: ( ( 50 *( $basics_brightness / 90) ) + 5 ) / 1.5;
 
-$breakpoint_min_mobile: $region_root_breakpoint_mobile;
-$breakpoint_max_mobile: ($region_root_breakpoint_mobile - 1px);
-$breakpoint_min_tablet: $region_root_breakpoint_tablet;
-$breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
+$breakpoint-max-mobile: $basics_breakpoint_mobile - 1px;
+$breakpoint-min-tablet: $basics_breakpoint_mobile + 0px;
+$breakpoint-max-tablet: $basics_breakpoint_tablet - 1px;
+$breakpoint-min-desktop: $basics_breakpoint_tablet + 0px;
+
+@if $basics_effects_animations {
+
+  @keyframes slideDown {
+    0%, 100% {
+      transform-origin: top center;
+    }
+    from {
+      opacity: 0;
+      transform: scale(1, 0);
+    }
+  }
+
+  @keyframes opacityMoveDown {
+    0%, 100% {
+      transform-origin: top center;
+    }
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes opacity {
+    from {
+      opacity: 0;
+    }
+  }
+
+}
 
 /**
  * Produce readable inverted color based on color. black -> white, white -> black and etc.
@@ -40,8 +70,8 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
   @return rgba($color, $brightness-base / 1.5 / 100);
 }
 
-@function muted($color) {
-  @return mix($color, colorInvert($color), 50%);
+@function muted($color, $amount: 50%) {
+  @return mix($color, colorInvert($color), $amount);
 }
 
 @mixin shadow() {
@@ -169,7 +199,15 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 }
 
-@mixin button($background, $foreground, $color, $secondary: $background) {
+@mixin button($background, $foreground, $color, $secondary: $background, $style: $typography_form_button_style) {
+
+  @include roundness();
+
+  @if $basics_effects_animations {
+    transition: color $basics_effects_animations + ms ease-in-out,
+                border-color $basics_effects_animations + ms ease-in-out,
+                background $basics_effects_animations + ms ease-in-out;
+  }
 
   @if $typography_font_button_text_style {
     @if $typography_font_button_text_style == 'uppercase' {
@@ -179,9 +217,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     }
   }
 
-  transition: all 2s ease-in-out;
-
-  @if $typography_form_button_style == 'border' {
+  @if $style == 'border' {
     border: ($basics_bordering + px) solid $color;
     background: transparent;
     color: $color;
@@ -191,7 +227,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       border-color: $color;
       color: $background;
     }
-  } @else if $typography_form_button_style == 'fill' {
+  } @else if $style == 'fill' {
     border: ($basics_bordering + px) solid $color;
     color: $background;
     background: $color;
@@ -201,10 +237,10 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       border-color: mix($color, $foreground, 80%);
       color: $background;
     }
-  } @else if $typography_form_button_style == 'gradient' {
-    //border: ($basics_bordering + px) solid $color;
-    border: none;
+  } @else if $style == 'gradient' {
     color: $background;
+    border: $basics_bordering + px solid $color;
+    border-image: linear-gradient(to bottom right, $color, $secondary) 1;
     background: $color;
     background-image: linear-gradient(to bottom right, $color, $secondary);
     &:hover,
@@ -222,16 +258,21 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       text-decoration: underline;
     }
   }
+
+  cursor: pointer;
 }
 
 @mixin horizontalMenu($background: $region_root_color_background, $foreground: $region_root_color_foreground, $style: 'bold') {
   position: relative;
 
-  @media (max-width: $breakpoint_max_tablet) {
+  @media (max-width: $breakpoint-min-tablet) {
+    display: block;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
   }
+
+  align-items: stretch;
 
   .depth-0 {
 
@@ -241,7 +282,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
     > a {
       padding: .6rem 1rem;
-      @media (max-width: $breakpoint_max_tablet) {
+      @media (max-width: $breakpoint-min-tablet) {
         padding: 1rem;
       }
       position: relative;
@@ -252,17 +293,14 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
     > .sub-menu {
       display: none;
       margin: 0;
-
-      //transition: transform 150ms ease-in-out;
-      //transform: scale(1, 0);
-      transform-origin: top center;
     }
 
+    &.current-menu-ancestor,
     &.current-menu-item {
       @if $style == 'border-top' {
-        border-top: 4px solid $region_root_color_background;
+        border-top: .28rem solid $region_primary_menu_color_foreground;
       } @else if $style == 'border-bottom' {
-        border-bottom: 4px solid $region_root_color_background;
+        border-bottom: .28rem solid $region_primary_menu_color_foreground;
       } @else if $style == 'underline' {
         > a {
           text-decoration: underline;
@@ -287,7 +325,7 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
       }
     }
 
-    @media (min-width: $breakpoint_max_tablet) {
+    @media (min-width: $breakpoint-min-desktop) {
 
       // @TODO consider if to show arrows or not.
       //&.menu-item-has-children,
@@ -349,7 +387,12 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
         }
         > .sub-menu {
           display: block;
-          transform: scale(1, 1);
+
+          @if $basics_effects_animations {
+            animation: slideDown $basics_effects_animations + ms ease-in-out 1;
+            animation-fill-mode: backwards;
+          }
+
         }
       }
     }
@@ -371,8 +414,10 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 %wrapper {
   margin-left: auto;
   margin-right: auto;
-  @if $region_root_width {
+  @if $region_root_width and not $region_root_width_full {
     max-width: $region_root_width + px;
+  } @else {
+    max-width: calc( 100% - 2rem );
   }
   min-width: 300px;
   width: 100%;
@@ -400,14 +445,6 @@ $breakpoint_max_tablet: ($region_root_breakpoint_tablet - 1px);
 
 %disabled {
   filter: grayscale(100%);
-}
-
-.no-js .hide-if-nojs {
-  display: none;
-}
-
-.no-scroll {
-  overflow: hidden !important;
 }
 
 %message {

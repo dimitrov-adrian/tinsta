@@ -1,3 +1,20 @@
+@if $basics_effects_animations {
+
+  @keyframes primaryMenuSlideUp {
+    0%, 100% {
+      transform-origin: bottom center;
+    }
+    from {
+      opacity: 0;
+      transform: translateY(-100%) scale(1, 0);
+    }
+    to {
+      transform: translateY(-100%) scale(1);
+    }
+  }
+
+}
+
 /**
  * Thread as region_root
  */
@@ -27,7 +44,8 @@ body {
   @extend %small;
 
   @if $region_topline_sticky {
-    @media (min-width: $breakpoint_min_tablet) {
+    @media (min-width: $breakpoint-min-tablet) {
+      position: -webkit-sticky;
       position: sticky;
       left: 0;
       right: 0;
@@ -79,7 +97,7 @@ body {
     text-align: $region_topline_alignment;
   }
 
-  @media (max-width: $breakpoint_max_tablet) {
+  @media (max-width: $breakpoint-min-tablet) {
     text-align: center;
   }
 
@@ -104,7 +122,8 @@ body {
 
   // Sticky header tweaks.
   @if $region_header_sticky {
-    @media (min-width: $breakpoint_min_tablet) {
+    @media (min-width: $breakpoint-min-tablet) {
+      position: -webkit-sticky;
       position: sticky;
       left: 0;
       right: 0;
@@ -138,9 +157,9 @@ body {
     -js-display: flex;
     display: flex;
     flex-flow: row wrap;
-    @if $region_header_padding {
-      padding-top: $region_header_padding + px;
-      padding-bottom: $region_header_padding + px;
+    @if $region_header_padding_vertical > 0 {
+      padding-top: $region_header_padding_vertical + px;
+      padding-bottom: $region_header_padding_vertical + px;
     }
 
     align-items: center;
@@ -160,10 +179,10 @@ body {
       padding-right: 1rem;
     }
 
-    @media (max-width: $breakpoint_max_mobile) {
+    @media (max-width: $breakpoint-max-mobile) {
       flex-flow: column;
       // Reset user defined (from Customizer) padding from top and bottom.
-      @if $region_header_padding > 0 {
+      @if $region_header_padding_vertical > 0 {
         padding-top: 0;
         padding-bottom: 0;
       }
@@ -189,7 +208,7 @@ body {
 
   .widget {
     margin: 1rem 0;
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       margin: 1rem;
     }
   }
@@ -204,12 +223,14 @@ body {
   @extend %clearfix;
 
   @if ( $region_primary_menu_position == 'bottom-float' ) {
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     right: 0;
     bottom: -1px; // sticky have a problems with some chrome and render 1px above, that's why this.
     z-index: $z-index-modal - 10;
   } @else if $region_primary_menu_sticky and (not $region_header_sticky) {
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     right: 0;
@@ -224,7 +245,7 @@ body {
   }
 
   // All menus in header should be inlined.
-  @media (max-width: $breakpoint_max_tablet) {
+  @media (max-width: $breakpoint-min-tablet) {
     &:before,
     &:after {
       content: '';
@@ -238,14 +259,15 @@ body {
     }
     &:before {
       left: 0;
-      background: linear-gradient(to left, transparent, rgba(0, 0, 0, .25));
+      background: linear-gradient(to left, transparent, rgba(0, 0, 0, .15));
     }
     &:after {
       right: 0;
-      background: linear-gradient(to right, transparent, rgba(0, 0, 0, .25));
+      background: linear-gradient(to right, transparent, rgba(0, 0, 0, .15));
     }
   }
 
+  background-color: muted($region_primary_menu_color_background);
   @include regionColors($region_primary_menu_color_foreground,
     $region_primary_menu_color_background,
     $region_primary_menu_color_background_opacity);
@@ -253,7 +275,7 @@ body {
   @if $region_primary_menu_layout == 'boxed' {
     @extend %wrapper;
   } @else {
-    .menu {
+    .site-primary-menu-inner-wrapper {
       @extend %wrapper;
     }
   }
@@ -267,17 +289,35 @@ body {
   }
 
   .menu {
-    @extend %wrapper;
     @if $region_primary_menu_alignment {
-      text-align: $region_primary_menu_alignment;
+      display: table;
+      table-layout: fixed;
+      @if $region_primary_menu_alignment == 'left' {
+        margin-right: auto;
+      } @else if $region_primary_menu_alignment == 'right' {
+        margin-left: auto;
+      } @else if $region_primary_menu_alignment == 'center' {
+        margin-left: auto;
+        margin-right: auto;
+      } @else  {
+        width: 100%;
+      }
     }
     @include horizontalMenu($region_primary_menu_color_foreground, $region_primary_menu_color_background, $region_primary_menu_highlight_root);
 
     @if ( $region_primary_menu_position == 'bottom-float' ) {
-      .depth-0 > .sub-menu {
-        transform: translateY(-100%) !important; // It's important to have this because, if set to other value could break the menu.
-        top: 0;
-        box-shadow: 0 -4px 28px -12px rgba(0, 0, 0, .9);
+      @media (min-width: $breakpoint-min-desktop) {
+        .depth-0 > .sub-menu {
+          top: 0;
+          box-shadow: 0 -4px 28px -12px rgba(0, 0, 0, .9);
+        }
+        .depth-0:hover > .sub-menu {
+          transform: translateY(-100%) !important; // It's important to have this because, if set to other value could break the menu.
+          @if $basics_effects_animations {
+            animation: primaryMenuSlideUp $basics_effects_animations + ms ease-in-out 1;
+            animation-fill-mode: backwards;
+          }
+        }
       }
     }
 
@@ -319,7 +359,7 @@ body {
     margin-left: auto;
     margin-right: auto;
 
-    @media (min-width: $breakpoint_min_tablet) {
+    @media (min-width: $breakpoint-min-tablet) {
       @if ($region_main_color_background_opacity < 100 or $region_main_color_background != $region_root_color_background) {
         @if not $has_different_primary_sidebar {
           padding-left: 1rem;
@@ -342,7 +382,7 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
 
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       width: 96%;
       margin-left: 2%;
       margin-right: 2%;
@@ -363,7 +403,7 @@ body {
         padding-right: 1rem;
       }
 
-      @media (max-width: $breakpoint_max_tablet) {
+      @media (max-width: $breakpoint-min-tablet) {
         order: 1;
         width: auto !important;
         padding: 0;
@@ -390,15 +430,29 @@ body {
       padding-bottom: 2rem;
       padding-top: 2rem;
 
-      @media (max-width: $breakpoint_max_tablet) {
+      @media (max-width: $breakpoint-min-tablet) {
         margin-top: 1rem;
         margin-bottom: 1rem;
         width: auto !important;
       }
 
       &.sidebar-primary {
+
+        @if $region_sidebar_primary_sticky {
+          @media (min-width: $breakpoint-min-tablet) {
+            position: -webkit-sticky;
+            position: sticky;
+            align-self: flex-start;
+            overflow-y: auto;
+            top: 0;
+            body.admin-bar & {
+              top: 31px;
+            }
+          }
+        }
+
         order: 0;
-        @media (max-width: $breakpoint_max_tablet) {
+        @media (max-width: $breakpoint-min-tablet) {
           order: 2;
         }
 
@@ -414,7 +468,7 @@ body {
           padding-left: 0;
         }
 
-        @media (max-width: $breakpoint_max_tablet) {
+        @media (max-width: $breakpoint-min-tablet) {
           padding: 0;
         }
 
@@ -427,6 +481,20 @@ body {
       }
 
       &.sidebar-secondary {
+
+        @if $region_sidebar_secondary_sticky {
+          @media (min-width: $breakpoint-min-tablet) {
+            position: -webkit-sticky;
+            position: sticky;
+            align-self: flex-start;
+            overflow-y: auto;
+            top: 0;
+            body.admin-bar & {
+              top: 31px;
+            }
+          }
+        }
+
         order: 2;
 
         @if $region_sidebar_secondary_width {
@@ -441,7 +509,7 @@ body {
           padding-right: 0;
         }
 
-        @media (max-width: $breakpoint_max_tablet) {
+        @media (max-width: $breakpoint-min-tablet) {
           padding: 0;
         }
 
@@ -456,25 +524,91 @@ body {
     }
 
   }
+
+  // Link active/hover styling.
+  a {
+    @if $typography_link_style == 'underline' {
+      text-decoration: underline;
+    } @else if $typography_link_style == 'underline-hover' {
+      @if $basics_effects_animations {
+        transition: text-decoration $basics_effects_animations + ms ease-in-out;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    } @else if $typography_link_style == 'background-hover' {
+      @if $basics_effects_animations {
+        transition: color $basics_effects_animations + ms ease-in-out,
+                    background $basics_effects_animations + ms ease-in-out;
+      }
+      &:hover {
+        background: $region_root_color_secondary;
+        color: colorInvert($region_root_color_secondary);
+      }
+    } @else {
+      @if $basics_effects_animations {
+        transition: color $basics_effects_animations + ms ease-in-out;
+      }
+    }
+  }
+
 }
 
 /**
  * Widgets Area - Before container
  */
-.site-container-before,
-.site-container-after {
+.site-before-main,
+.site-after-main {
+
+  @extend %clearfix;
 
   -js-display: flex;
   display: flex;
   flex-flow: row wrap;
 
-  //align-items: center;
   justify-content: center;
+  align-items: center;
 
   .widget {
     margin: 0 auto;
   }
 
+}
+
+.site-before-main {
+  @include regionColors($region_before_main_color_foreground,
+    $region_before_main_color_background,
+    $region_before_main_color_background_opacity,
+    $region_before_main_color_primary,
+    $region_before_main_color_secondary);
+  @include backgroundImage($region_before_main_image,
+    $region_before_main_image_size,
+    $region_before_main_image_attachment_scroll,
+    $region_before_main_image_repeat,
+    $region_before_main_image_position_x,
+    $region_before_main_image_position_y);
+  @if $region_before_main_padding_vertical > 0 {
+    padding-top: $region_before_main_padding_vertical + px;
+    padding-bottom: $region_before_main_padding_vertical + px;
+  }
+}
+
+.site-after-main {
+  @include regionColors($region_after_main_color_foreground,
+    $region_after_main_color_background,
+    $region_after_main_color_background_opacity,
+    $region_after_main_color_primary,
+    $region_after_main_color_secondary);
+  @include backgroundImage($region_after_main_image,
+    $region_after_main_image_size,
+    $region_after_main_image_attachment_scroll,
+    $region_after_main_image_repeat,
+    $region_after_main_image_position_x,
+    $region_after_main_image_position_y);
+  @if $region_after_main_padding_vertical > 0 {
+    padding-top: $region_after_main_padding_vertical + px;
+    padding-bottom: $region_after_main_padding_vertical + px;
+  }
 }
 
 /**
@@ -527,7 +661,7 @@ body {
       background-color: rgba($region_footer_color_foreground, .1);
     }
 
-    @media (max-width: $breakpoint_max_tablet) {
+    @media (max-width: $breakpoint-min-tablet) {
       margin-bottom: 0;
     }
 
@@ -541,7 +675,7 @@ body {
       justify-content: space-between;
     }
 
-    @media (max-width: $breakpoint_max_mobile) {
+    @media (max-width: $breakpoint-max-mobile) {
       flex-flow: column;
       display: block;
       width: 100%;
@@ -571,6 +705,7 @@ body {
   @extend %small;
 
   @if $region_bottomline_sticky {
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     right: 0;
@@ -603,7 +738,7 @@ body {
       text-align: $region_bottomline_alignment;
     }
 
-    @media (max-width: $breakpoint_max_mobile) {
+    @media (max-width: $breakpoint-max-mobile) {
       text-align: center;
     }
 

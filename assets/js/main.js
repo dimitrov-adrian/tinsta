@@ -3,6 +3,36 @@
   var supports_querySelector = typeof(document.querySelector) === 'undefined' ? 0 : 1;
   var supports_getComputedStyle = typeof(window.getComputedStyle) === 'undefined' ? 0 : 1;
 
+
+  (function() {
+
+    if (!tinsta.showReadingIndicator) {
+      return;
+    }
+
+    var ee = document.getElementById('site-entries');
+    var top = ee.offsetTop;
+    var bottom = top + ee.offsetHeight;
+    var readingIndicator = document.createElement('div');
+    readingIndicator.className = 'reading-indicator';
+    readingIndicator.tinstaProgressBar = document.createElement('div');
+    readingIndicator.tinstaProgressBar.className = 'progress';
+    document.body.appendChild(readingIndicator);
+    readingIndicator.appendChild(readingIndicator.tinstaProgressBar);
+    window.addEventListener('scroll', function() {
+      var screenScrolledBottom = window.pageYOffset + window.innerHeight;
+      if (screenScrolledBottom > top && screenScrolledBottom < bottom) {
+        var progress = Math.ceil(( screenScrolledBottom - top ) / ee.offsetHeight * 100);
+        readingIndicator.style.display = 'block';
+        readingIndicator.tinstaProgressBar.className = 'progress';
+        readingIndicator.tinstaProgressBar.style.width = progress + '%';
+      } else {
+        readingIndicator.style.display = 'none';
+      }
+    });
+  }());
+
+
   /**
    * Because CSS.supports() may not be fully supported.
    *
@@ -66,13 +96,15 @@
     var button = document.createElement('div');
     button.innerText = closeText || tinsta.strings.close;
     button.className = 'mobile-back-button';
-    button.addEventListener('mouseup', function () {
+    document.body.appendChild(button);
+    document.body.className += ' no-scroll';
+    var closeCallback = function () {
       button.parentNode.removeChild(button);
       elementRemoveClass(document.body, 'no-scroll');
       callback();
-    });
-    document.body.appendChild(button);
-    document.body.className += ' no-scroll';
+    };
+    button.addEventListener('mouseup', closeCallback);
+    return closeCallback;
   };
 
   /**
@@ -111,21 +143,25 @@
   /**
    * Auto-grow of comments.
    */
-  (function () {
+  document.addEventListener('DOMContentLoaded', function () {
     var commentTextArea = document.getElementById('comment');
-    if (commentTextArea && commentTextArea.tagName === 'TEXTAREA') {
+    if (commentTextArea && commentTextArea.tagName.toUpperCase() === 'TEXTAREA') {
+
       commentTextArea.removeAttribute('rows');
+      commentTextArea.style.overflow = 'hidden';
+
       var recalcTextAreaHeight = function () {
         this.style.minHeight = 'auto';
-        this.style.minHeight = this.scrollHeight + 'px';
+        this.style.minHeight = this.scrollHeight + 2 + 'px';
       };
-      commentTextArea.style.overflow = 'hidden';
-      commentTextArea.addEventListener('change', recalcTextAreaHeight);
-      commentTextArea.addEventListener('keypress', recalcTextAreaHeight);
-      commentTextArea.addEventListener('keydown', recalcTextAreaHeight);
-      commentTextArea.addEventListener('keyup', recalcTextAreaHeight);
+
+      if ('oninput' in window) {
+        commentTextArea.addEventListener('input', recalcTextAreaHeight);
+      } else {
+        commentTextArea.addEventListener('keyup', recalcTextAreaHeight);
+      }
     }
-  }());
+  });
 
   /**
    * Full Height.
@@ -133,12 +169,11 @@
   if (tinsta.fullHeight) {
     (function () {
       var fullHeightRecalc = function () {
-        var height = 0;
         var main = document.getElementsByClassName('site-container-wrapper');
         if (main.length < 1) {
           return;
         }
-        height = window.innerHeight - (document.body.offsetHeight - main[0].offsetHeight);
+        var height = window.innerHeight - (document.body.offsetHeight - main[0].offsetHeight);
         var wpAdminBar = document.getElementById('wpadminbar');
         if (wpAdminBar) {
           height -= wpAdminBar.offsetHeight;
@@ -149,9 +184,9 @@
       };
 
       fullHeightRecalc();
-      window.addEventListener('load', fullHeightRecalc);
       window.addEventListener('resize', fullHeightRecalc);
       window.addEventListener('orientationchange', fullHeightRecalc);
+      document.addEventListener('readystatechange', fullHeightRecalc);
     }());
   }
 
@@ -165,7 +200,7 @@
       button.innerText = tinsta.strings.top;
       button.setAttribute('title', tinsta.strings.top);
       button.addEventListener('mouseup', function () {
-        var scrollStep = -window.scrollY / (250 / 30);
+        var scrollStep = -window.scrollY / 50;
         var scrollInterval = setInterval(function () {
           if (window.scrollY !== 0) {
             window.scrollBy(0, scrollStep);
@@ -173,19 +208,21 @@
           else {
             clearInterval(scrollInterval)
           }
-        }, 30);
+        }, 5);
       });
       var check = function () {
         if (window.pageYOffset > (window.innerHeight / 2)) {
-          button.style.display = 'block';
+          if (!button.className.match('show')) {
+            button.className += ' show';
+          }
         }
         else {
-          button.style.display = 'none';
+          elementRemoveClass(button, 'show');
         }
       };
       document.body.appendChild(button);
       window.addEventListener('scroll', check);
-      setTimeout(check, 100);
+      setTimeout(check, 350);
     }() );
 
   }
@@ -261,6 +298,8 @@
 
   /**
    * Responsive menu.
+   *
+   * @TODO check submenus for active link and mark the root element as active too. That because megamenus.
    */
   (supports_querySelector) && (function () {
 
@@ -409,6 +448,10 @@
           this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 500);
         });
         element.addEventListener('keydown', function (event) {
+          if (event.keyCode === 27) {
+            this.value = '';
+            this.autocompleteListElement.style.display = 'none';
+          }
           var nextItem = null;
           var activeItem = this.autocompleteListElement.querySelector('li.active');
           if (activeItem) {
@@ -444,7 +487,11 @@
           if (this.autocompleteListTimer) {
             clearTimeout(this.autocompleteListTimer)
           }
-          this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 500);
+          if (element.autocompleteListElement.children.length > 0) {
+            this.autocompleteListTimer = setTimeout(doAjaxAutocomplete.bind(element), 500);
+          } else {
+            element.autocompleteListElement.style.display = 'none';
+          }
         });
         element.addEventListener('focus', function () {
           if (element.autocompleteListElement.children.length > 0) {

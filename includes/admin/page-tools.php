@@ -1,3 +1,7 @@
+<?php
+// @TODO move outside the template.
+?>
+
 <div class="wrap">
 
   <h1>
@@ -6,7 +10,6 @@
 
   <?php
 
-  // @TODO move outside the template.
   if (!empty($_POST['tinsta-import'])) {
     if (!empty($_FILES['file']['tmp_name']) && empty($_FILES['file']['error'])) {
       $imported = tinsta_settings_import($_FILES['file']['tmp_name'], false, !empty($_POST['dry-run']));
@@ -23,6 +26,9 @@
                   <?php echo esc_html($key) ?>
                 </th>
                 <td>
+                  &mdash;&gt;
+                </td>
+                <td>
                   <?php echo esc_html($value) ?>
                 </td>
               </tr>
@@ -38,37 +44,43 @@
     }
   }
 
-
   if (!empty($_POST['tinsta-reset'])) {
     $status = [];
-    $defaults = get_theme_mods();
+    $current_mods = get_theme_mods();
     foreach (tinsta_get_options_defaults() as $key => $val) {
-      $status[$key] = [
-        'from' => isset($defaults[$key]) ? $defaults[$key] : '<Empty>',
-        'to' => $val,
-      ];
+      $old_value = isset($current_mods[$key]) ? $current_mods[$key] : '';
+      if ($old_value != $val) {
+        $status[$key] = [
+          'from' => $old_value,
+          'to' => $val,
+        ];
+      }
       set_theme_mod($key, $val);
     }
     ?>
     <div class="updated notice is-dismissible">
-      <p> <?php _e('All theme settings are reset.', 'tinsta') ?></p>
-      <details>
-        <table>
-          <?php foreach ($status as $key => $status_single): ?>
-            <tr>
-              <th class="textleft">
-                <?php echo esc_html($key) ?>
-              </th>
-              <td>
-                <?php echo esc_html($status_single['from']) ?>
-              </td>
-              <td>
-                <?php echo esc_html($status_single['to']) ?>
-              </td>
-            </tr>
-          <?php endforeach ?>
-        </table>
-      </details>
+      <p>
+        <?php _e('All theme settings are reset.', 'tinsta') ?>
+      </p>
+      <?php if ($status): ?>
+        <details>
+          <table>
+            <?php foreach ($status as $key => $status_single): ?>
+              <tr>
+                <th class="textleft">
+                  <?php echo esc_html($key) ?>
+                </th>
+                <td>
+                  <?php echo esc_html($status_single['from']) ?>
+                </td>
+                <td>
+                  <?php echo esc_html($status_single['to']) ?>
+                </td>
+              </tr>
+            <?php endforeach ?>
+          </table>
+        </details>
+      <?php endif ?>
     </div>
     <?php
   }
@@ -95,6 +107,10 @@
 
   if (!empty($_POST['tinsta-invalidate-stylesheets'])) {
     delete_transient('tinsta_theme');
+    tinsta_get_stylesheet('comments');
+    tinsta_get_stylesheet('default');
+    tinsta_get_stylesheet('error');
+    tinsta_get_stylesheet('login');
     ?>
     <div class="updated notice is-dismissible">
       <p> <?php _e('Invalidated', 'tinsta') ?></p>
@@ -122,9 +138,11 @@
                 'tinsta') ?>
             </label>
           </p>
-          <button type="submit" name="action" value="tinsta-export-settings" class="button">
-            <?php _e('Download', 'tinsta') ?>
-          </button>
+          <p>
+            <button type="submit" name="action" value="tinsta-export-settings" class="button">
+              <?php _e('Download', 'tinsta') ?>
+            </button>
+          </p>
         </form>
       </td>
     </tr>
@@ -149,7 +167,7 @@
           <p>
             <label>
               <input type="checkbox" name="dry-run" value="yes" checked="checked" />
-              <?php _e('Dry run','tinsta') ?>
+              <?php _e('Dry run', 'tinsta') ?>
             </label>
           </p>
           <p>

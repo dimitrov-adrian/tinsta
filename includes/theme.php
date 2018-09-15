@@ -14,14 +14,16 @@ add_action('after_setup_theme', function () {
   // First, need to load language, because some of the default options uses translations.
   load_theme_textdomain('tinsta', get_template_directory() . '/languages');
 
+  // Register the primary menu.
   register_nav_menus([
-    'main' => __('Primary Site Menu', 'tinsta'),
+    'main' => sprintf(__('Primary %s', 'tinsta'), __('Site Menu', 'tinsta')),
   ]);
 
   //@TODO check for usages
   //add_image_size('tinsta_cover_small', 320, 200, true);
   //add_image_size('tinsta_cover', 1280, 450, true);
 
+  // Some theme supports flagging.
   add_theme_support('title-tag');
   add_theme_support('automatic-feed-links');
   add_theme_support('post-thumbnails');
@@ -37,6 +39,12 @@ add_action('after_setup_theme', function () {
   // Nulling search forms
   if (get_theme_mod('system_page_search_disable_search')) {
     add_filter('get_search_form', '__return_null');
+  }
+
+  // In 4.9 this is implemented.
+  if (version_compare(get_bloginfo('version'), '4.9.0', '<')) {
+    add_filter('the_content_rss', 'do_shortcode');
+    add_filter('widget_text', 'do_shortcode');
   }
 
 });
@@ -95,9 +103,9 @@ add_action('widgets_init', function () {
   ]);
 
   register_sidebar([
-    'name' => __('Before Main Content', 'tinsta'),
+    'name' => sprintf(__('Before %s', 'tinsta'), __('Main Content', 'tinsta')),
     'description' => __('Full width region between Header and Main Content of the page.', 'tinsta'),
-    'id' => 'before-content',
+    'id' => 'before-main',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
     'before_title' => '<div class="widgettitle">',
@@ -116,7 +124,7 @@ add_action('widgets_init', function () {
   }
 
   register_sidebar([
-    'name' => __('Primary Sidebar', 'tinsta'),
+    'name' => sprintf(__('Primary %s', 'tinsta'), __('Sidebar', 'tinsta')),
     'description' => __('Primary Sidebar, usually displayed left to Main Content.', 'tinsta'),
     'id' => 'primary',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
@@ -126,7 +134,7 @@ add_action('widgets_init', function () {
   ]);
 
   register_sidebar([
-    'name' => __('Secondary Sidebar', 'tinsta'),
+    'name' => sprintf(__('Secondary %s', 'tinsta'), __('Sidebar', 'tinsta')),
     'description' => __('Secondary Sidebar, usually displayed right to Main Content.', 'tinsta'),
     'id' => 'secondary',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
@@ -136,7 +144,7 @@ add_action('widgets_init', function () {
   ]);
 
   register_sidebar([
-    'name' => __('Before Entries', 'tinsta'),
+    'name' => sprintf(__('Before %s', 'tinsta'), __('Entries', 'tinsta')),
     'description' => __('Displayed before entries or single entry, between the sidebars. Scoped in Main Content.',
       'tinsta'),
     'id' => 'before-entries',
@@ -147,7 +155,7 @@ add_action('widgets_init', function () {
   ]);
 
   register_sidebar([
-    'name' => __('After Entries', 'tinsta'),
+    'name' => sprintf(__('After %s', 'tinsta'), __('Entries', 'tinsta')),
     'description' => __('Displayed after entries or single entry, between the sidebars. Scoped in Main Content.',
       'tinsta'),
     'id' => 'after-entries',
@@ -194,9 +202,9 @@ add_action('widgets_init', function () {
   }
 
   register_sidebar([
-    'name' => __('After Main Content', 'tinsta'),
+    'name' => sprintf(__('After %s', 'tinsta'), __('Main Content', 'tinsta')),
     'description' => __('Full width region between Main Content and Footer of the page.', 'tinsta'),
-    'id' => 'after-content',
+    'id' => 'after-main',
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget' => '</div>',
     'before_title' => '<div class="widgettitle">',
@@ -241,25 +249,31 @@ add_action('widgets_init', function () {
   // Register theme's widgets.
 
   require __DIR__ . '/widgets/breadcrumbs-widget.php';
-  register_widget('Tinsta_BreadCrumbs_Widget');
+  register_widget('Tinsta_Breadcrumbs_Widget');
 
   require __DIR__ . '/widgets/context-header-widget.php';
-  register_widget('Tinsta_ContextHeader_Widget');
+  register_widget('Tinsta_Context_Header_Widget');
 
   require __DIR__ . '/widgets/logo-widget.php';
   register_widget('Tinsta_Logo_Widget');
 
   require __DIR__ . '/widgets/login-form-widget.php';
-  register_widget('Tinsta_LoginForm_Widget');
+  register_widget('Tinsta_Login_Form_Widget');
 
   require __DIR__ . '/widgets/page-subnav-widget.php';
-  register_widget('Tinsta_PageSubnav_Widget');
+  register_widget('Tinsta_Page_Subnav_Widget');
 
   require __DIR__ . '/widgets/user-profile-widget.php';
-  register_widget('Tinsta_UserProfile_Widget');
+  register_widget('Tinsta_User_Profile_Widget');
 
   require __DIR__ . '/widgets/related-posts-widget.php';
-  register_widget('Tinsta_RelatedPosts_Widget');
+  register_widget('Tinsta_Related_Posts_Widget');
+
+  require __DIR__ . '/widgets/page-content-widget.php';
+  register_widget('Tinsta_Page_Content_Widget');
+
+  require __DIR__ . '/widgets/post-loop-widget.php';
+  register_widget('Tinsta_Post_Loop_Widget');
 
 });
 
@@ -278,14 +292,12 @@ add_filter('tinsta_stylesheet_args', function ($args = []) {
   foreach ($theme_mods as $name => $value) {
     if (isset($defaults[$name])) {
 
-      // @TODO better sanitization.
-      if (!is_scalar($value)) {
-        // Should not have such variables.
-        die('Incorrect type: ' . $name . ' = ' . print_r($value, 1));
-        continue;
-      }
-
       $args['variables'][$name] = $value;
+
+      // Seems the value is set programatically or with some hack.
+      if (!is_scalar($value)) {
+        $args['variables'][$name] = $defaults[$name];
+      }
 
       // Seems to be color.
       if (substr($defaults[$name], 0, 1) == '#') {
@@ -317,7 +329,6 @@ add_filter('tinsta_stylesheet_args', function ($args = []) {
         $args['variables'][$name] = "'{$args['variables'][$name]}'";
 
       } elseif (!is_bool($args['variables'][$name]) && !empty($args['variables'][$name])) {
-
         //$args['variables'][$name] = "'{$args['variables'][$name]}'";
         //$args['variables'][$name] =
         // do nothing generic variables.

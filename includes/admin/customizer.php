@@ -40,6 +40,34 @@ add_filter('customize_nav_menu_available_items', function ($items = [], $type = 
   return array_merge($items, array_values(tinsta_nav_menu_items()));
 }, 10, 4);
 
+/**
+ * Add helper links
+ *
+ * @param $sidebar
+ * @param $section
+ */
+function tinsta_customizer_add_sidebar_helper_link($sidebar, $section)
+{
+  global $wp_customize;
+
+  $sidebar_section = $wp_customize->get_section('sidebar-widgets-' . $sidebar);
+  if ($section) {
+    $sidebar_section->description .= '
+      <p>
+        <a href="javascript:wp.customize.section(\'' . $section . '\').focus();">
+          ' . __('Edit Region', 'tinsta') . '
+        </a>
+      </p>';
+  }
+
+  $wp_customize->get_section($section)->description .= '
+    <p>
+      <a href="javascript:wp.customize.section(\'sidebar-widgets-' . $sidebar . '\').focus();">
+        ' . __('Edit Widgets', 'tinsta') . '
+      </a>
+    </p>';
+
+}
 
 /**
  * Setup base region setting controls
@@ -97,7 +125,6 @@ function tinsta_customizer_setup_color_controls($wp_customize, $region_slug)
   }
 
 }
-
 
 /**
  * Setup base region setting controls
@@ -207,6 +234,17 @@ add_action('customize_register', function ($wp_customize) {
   // Forced theme options.
   $forced_theme_mods = (array)apply_filters('tinsta_force_options', []);
 
+  $non_vissible_changes = [
+    'options_seo_manifest',
+    'options_seo_enable',
+    'basics_mobile_user_scale',
+    'options_site_agreement_enable',
+    'system_page_404_theming',
+    'system_page_404_content',
+    'system_page_search_force_post_type',
+    'system_page_search_disable_search',
+  ];
+
   // Register all theme mods as settings in customizer.
   foreach (tinsta_get_options_defaults() as $option_name => $value) {
 
@@ -221,7 +259,7 @@ add_action('customize_register', function ($wp_customize) {
     $wp_customize->add_setting($option_name, [
       'type' => 'theme_mod',
       'default' => $value,
-      'transport' => 'refresh',
+      'transport' => in_array($option_name, $non_vissible_changes) ? 'postMessage' : 'refresh',
 
       // Basic sanitization.
       'sanitize_callback' => function ($value) {
@@ -296,11 +334,21 @@ add_action('customize_register', function ($wp_customize) {
     'type' => 'checkbox',
   ]);
   $wp_customize->add_control('typography_text_enhancements', [
-    'label' => __('Improve text readability with CSS tweaks', 'tinsta'),
+    'label' => __('Enhance text rendering', 'tinsta'),
     'section' => 'tinsta_basics_typography',
     'type' => 'checkbox',
   ]);
-
+  $wp_customize->add_control('typography_link_style', [
+    'label' => __('Link Style', 'tinsta'),
+    'section' => 'tinsta_basics_typography',
+    'type' => 'select',
+    'choices' => [
+      '' => __('Plain', 'tinsta'),
+      'underline' => __('Underline', 'tinsta'),
+      'underline-hover' => __('Underline on Hover', 'tinsta'),
+      'background-hover' => __('Background on Hover', 'tinsta'),
+    ],
+  ]);
 
   // Basics: Headings Typography
   $wp_customize->add_section('tinsta_basics_typography_headings', [
@@ -413,7 +461,7 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_control('basics_effects_animations', [
     'section' => 'tinsta_basics_effects',
     'type' => 'select',
-    'label' => __('(Experimental) Animations', 'tinsta'),
+    'label' => __('Animations', 'tinsta'),
     'description' => __('Enable animation effect for some elements.', 'tinsta'),
     'choices' => [
       0 => __('Disabled', 'tinsta'),
@@ -448,11 +496,59 @@ add_action('customize_register', function ($wp_customize) {
     'description' => __('Smooth scroll is nice effect, but may decrease the scrolling performance.', 'tinsta'),
   ]);
 
+  // Basics: Device behavior
+  $wp_customize->add_section('tinsta_basics_device_behavior', [
+    'title' => __('Device Behavior', 'tinsta'),
+    'panel' => 'tinsta_basics',
+    'priority' => 190,
+  ]);
+  $wp_customize->add_control('basics_breakpoint_tablet', [
+    'label' => __('Tablet Breakpoint', 'tinsta') . ' (px)',
+    'description' => __('Upper boundary to switch tablet view.', 'tinsta'),
+    'section' => 'tinsta_basics_device_behavior',
+    'type' => 'select',
+    'choices' => [
+      1100 => 1100,
+      1024 => 1024,
+      960 => 960,
+      920 => 920,
+      800 => 800,
+    ],
+  ]);
+  $wp_customize->add_control('basics_breakpoint_mobile', [
+    'label' => __('Mobile Breakpoint', 'tinsta') . ' (px)',
+    'description' => __('Upper boundary to switch mobile view.', 'tinsta'),
+    'section' => 'tinsta_basics_device_behavior',
+    'type' => 'select',
+    'choices' => [
+      768 => 768,
+      720 => 720,
+      640 => 640,
+      568 => 568,
+      480 => 480,
+    ],
+  ]);
+  $wp_customize->add_control('basics_mobile_user_scale', [
+    'label' => __('Mobile Scaling', 'tinsta'),
+    'description' => __('Allow mobile users to scale screen.', 'tinsta'),
+    'section' => 'tinsta_basics_device_behavior',
+    'type' => 'select',
+    'choices' => [
+      'yes' => __('Allow', 'tinsta'),
+      'no' => __('Disallow', 'tinsta'),
+      '1.2' => sprintf(__('Up to %sx', 'tinsta'), 1.2),
+      '1.5' => sprintf(__('Up to %sx', 'tinsta'), 1.5),
+      '2' => sprintf(__('Up to %sx', 'tinsta'), 2),
+      '2.5' => sprintf(__('Up to %sx', 'tinsta'), 2.5),
+      '3' => sprintf(__('Up to %sx', 'tinsta'), 3),
+    ],
+  ]);
+
   /*
    * Regions:
    */
   $wp_customize->add_panel('tinsta_regions', [
-    'title' => __('Regions Design', 'tinsta'),
+    'title' => __('Regions', 'tinsta'),
     'priority' => 25,
     'description' => __('Regions are main parts of page. They are predefined from the theme, and typically can hold widgets or other content depending grom current page.',
       'tinsta'),
@@ -470,6 +566,11 @@ add_action('customize_register', function ($wp_customize) {
       'tinsta'),
     'section' => 'tinsta_region_root',
   ]);
+  $wp_customize->add_control('region_root_width_full', [
+    'label' => __('Full Width', 'tinsta'),
+    'section' => 'tinsta_region_root',
+    'type' => 'checkbox',
+  ]);
   $wp_customize->add_control('region_root_width', [
     'label' => __('Page Width', 'tinsta') . ' (px)',
     'section' => 'tinsta_region_root',
@@ -480,32 +581,9 @@ add_action('customize_register', function ($wp_customize) {
       'step' => 1,
       'style' => 'width:6em;',
     ],
-  ]);
-  $wp_customize->add_control('region_root_breakpoint_tablet', [
-    'label' => __('Tablet Breakpoint', 'tinsta'),
-    'description' => __('Upper boundary to switch tablet view.', 'tinsta'),
-    'section' => 'tinsta_region_root',
-    'type' => 'select',
-    'choices' => [
-      '1100px' => '1100px',
-      '1024px' => '1024px',
-      '960px' => '960px',
-      '920px' => '920px',
-      '800px' => '800px',
-    ],
-  ]);
-  $wp_customize->add_control('region_root_breakpoint_mobile', [
-    'label' => __('Mobile Breakpoint', 'tinsta'),
-    'description' => __('Upper boundary to switch mobile view.', 'tinsta'),
-    'section' => 'tinsta_region_root',
-    'type' => 'select',
-    'choices' => [
-      '768px' => '768px',
-      '720px' => '720px',
-      '640px' => '640px',
-      '568px' => '568px',
-      '480px' => '480px',
-    ],
+    'active_callback' => function () {
+      return !get_theme_mod('region_root_width_full');
+    },
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'root');
   tinsta_customizer_setup_background_controls($wp_customize, 'root');
@@ -554,6 +632,8 @@ add_action('customize_register', function ($wp_customize) {
       return is_active_sidebar('header');
     },
   ]);
+  tinsta_customizer_add_sidebar_helper_link('header', 'tinsta_region_header');
+
   $wp_customize->add_control('region_header_sticky', [
     'type' => 'checkbox',
     'label' => __('Sticky', 'tinsta'),
@@ -582,7 +662,7 @@ add_action('customize_register', function ($wp_customize) {
       'right' => __('Right', 'tinsta'),
     ],
   ]);
-  $wp_customize->add_control('region_header_padding', [
+  $wp_customize->add_control('region_header_padding_vertical', [
     'label' => __('Vertical Spacing', 'tinsta') . ' (px)',
     'section' => 'tinsta_region_header',
     'type' => 'number',
@@ -611,6 +691,14 @@ add_action('customize_register', function ($wp_customize) {
       return has_nav_menu('main');
     },
   ]);
+  // @TODO this seems not to works, fix it.
+  //  $wp_customize->get_control('menu_locations[main]')->description .= '
+  //    <p>
+  //      <a href="javascript:wp.customize.section(\'tinsta_region_primary_menu\').focus();">
+  //        ' . __('Edit Region', 'tinsta') . '
+  //      </a>
+  //    </p>';
+
   $wp_customize->add_control('region_primary_menu_sticky', [
     'type' => 'checkbox',
     'label' => __('Sticky', 'tinsta'),
@@ -627,8 +715,8 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_region_primary_menu',
     'type' => 'select',
     'choices' => [
-      'before-header' => __('Before Header', 'tinsta'),
-      'after-header' => __('After Header', 'tinsta'),
+      'before-header' => sprintf(__('Before %s', 'tinsta'), __('Header', 'tinsta')),
+      'after-header' => sprintf(__('After %s', 'tinsta'), __('Header', 'tinsta')),
       'prepend-header' => __('Prepend to Header', 'tinsta'),
       'append-header' => __('Append to Header', 'tinsta'),
       'bottom-float' => __('Stuck to Bottom', 'tinsta'),
@@ -675,6 +763,51 @@ add_action('customize_register', function ($wp_customize) {
   ]);
   tinsta_customizer_setup_color_controls($wp_customize, 'primary_menu');
 
+  // Region: Before Main
+  $wp_customize->add_section('tinsta_region_before_main', [
+    'title' => sprintf(__('Before %s', 'tinsta'), __('Main Content', 'tinsta')),
+    'panel' => 'tinsta_regions',
+    'active_callback' => function () {
+      return is_active_sidebar('before-main');
+    },
+  ]);
+  tinsta_customizer_add_sidebar_helper_link('before-main', 'tinsta_region_before_main');
+  $wp_customize->add_control('region_before_main_padding_vertical', [
+    'label' => __('Vertical Spacing', 'tinsta') . ' (px)',
+    'section' => 'tinsta_region_before_main',
+    'type' => 'number',
+    'input_attrs' => [
+      'min' => 0,
+      'max' => 120,
+      'step' => 1,
+      'style' => 'width:6em;',
+    ],
+  ]);
+  tinsta_customizer_setup_color_controls($wp_customize, 'before_main');
+  tinsta_customizer_setup_background_controls($wp_customize, 'before_main');
+
+  // Region: Before Main
+  $wp_customize->add_section('tinsta_region_after_main', [
+    'title' => sprintf(__('After %s', 'tinsta'), __('Main Content', 'tinsta')),
+    'panel' => 'tinsta_regions',
+    'active_callback' => function () {
+      return is_active_sidebar('after-main');
+    },
+  ]);
+  tinsta_customizer_add_sidebar_helper_link('after-main', 'tinsta_region_after_main');
+  $wp_customize->add_control('region_after_main_padding_vertical', [
+    'label' => __('Vertical Spacing', 'tinsta') . ' (px)',
+    'section' => 'tinsta_region_after_main',
+    'type' => 'number',
+    'input_attrs' => [
+      'min' => 0,
+      'max' => 120,
+      'step' => 1,
+      'style' => 'width:6em;',
+    ],
+  ]);
+  tinsta_customizer_setup_color_controls($wp_customize, 'after_main');
+  tinsta_customizer_setup_background_controls($wp_customize, 'after_main');
 
   // Region: Main
   $wp_customize->add_section('tinsta_region_main', [
@@ -713,6 +846,13 @@ add_action('customize_register', function ($wp_customize) {
       return is_active_sidebar('primary');
     },
   ]);
+  tinsta_customizer_add_sidebar_helper_link('primary', 'tinsta_region_sidebar_primary');
+
+  $wp_customize->add_control('region_sidebar_primary_sticky', [
+    'type' => 'checkbox',
+    'label' => __('Sticky', 'tinsta'),
+    'section' => 'tinsta_region_sidebar_primary',
+  ]);
   $wp_customize->add_control('region_sidebar_primary_width', [
     'label' => __('Width', 'tinsta') . ' (px)',
     'section' => 'tinsta_region_sidebar_primary',
@@ -733,6 +873,12 @@ add_action('customize_register', function ($wp_customize) {
     'active_callback' => function () {
       return is_active_sidebar('secondary');
     },
+  ]);
+  tinsta_customizer_add_sidebar_helper_link('secondary', 'tinsta_region_sidebar_secondary');
+  $wp_customize->add_control('region_sidebar_secondary_sticky', [
+    'type' => 'checkbox',
+    'label' => __('Sticky', 'tinsta'),
+    'section' => 'tinsta_region_sidebar_secondary',
   ]);
   $wp_customize->add_control('region_sidebar_secondary_width', [
     'label' => __('Width', 'tinsta') . ' (px)',
@@ -755,6 +901,7 @@ add_action('customize_register', function ($wp_customize) {
       return is_active_sidebar('footer');
     },
   ]);
+  tinsta_customizer_add_sidebar_helper_link('footer', 'tinsta_region_footer');
   $wp_customize->add_control('region_footer_layout', [
     'label' => __('Layout', 'tinsta'),
     'description' => __('Noticeable when used colors', 'tinsta'),
@@ -849,10 +996,10 @@ add_action('customize_register', function ($wp_customize) {
     'type' => 'select',
     'choices' => [
       'center' => __('Center', 'tinsta'),
-      'top' => __('Top, Modal', 'tinsta'),
-      'topfull' => __('Top, Full Width', 'tinsta'),
-      'bottom' => __('Bottom, Modal', 'tinsta'),
-      'bottomfull' => __('Bottom, Full Width', 'tinsta'),
+      'top' => __('Top', 'tinsta') . ', ' . __('Modal', 'tinsta'),
+      'topfull' => __('Top', 'tinsta') . ', ' . __('Full Width', 'tinsta'),
+      'bottom' => __('Bottom', 'tinsta') . ', ' . __('Modal', 'tinsta'),
+      'bottomfull' => __('Bottom', 'tinsta') . ', ' . __('Full Width', 'tinsta'),
     ],
   ]);
   $wp_customize->add_control('options_site_agreement_text', [
@@ -893,9 +1040,9 @@ add_action('customize_register', function ($wp_customize) {
     'label' => __('Separator', 'tinsta'),
     'section' => 'tinsta_options_breadcrumbs',
     'choices' => [
-      '/' => 'Slash',
-      '\\f121' => 'Arrow',
-      '\\f112' => 'Angle',
+      '/' => __('Slash', 'tinsta'),
+      '\\f121' => __('Arrow', 'tinsta'),
+      '\\f112' => __('Angle', 'tinsta'),
     ],
   ]);
 
@@ -932,9 +1079,9 @@ add_action('customize_register', function ($wp_customize) {
     'type' => 'select',
     'choices' => [
       '' => __('Plain', 'tinsta'),
-      'arrow' => 'Arrow',
-      'angle' => 'Angle',
-      'caret' => 'Caret',
+      'arrow' => __('Arrow', 'tinsta'),
+      'angle' => __('Angle', 'tinsta'),
+      'caret' => __('Caret', 'tinsta'),
     ],
   ]);
 
@@ -960,11 +1107,11 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_options_scrolltop',
     'type' => 'select',
     'choices' => [
-      '\\f113' => 'Up',
-      '\\f10f' => 'Double Up',
-      '\\f16c' => 'Caret',
-      '\\f187' => 'Chevron',
-      '\\f122' => 'Arrow',
+      '\\f113' => __('Up', 'tinsta'),
+      '\\f10f' => __('Double Up', 'tinsta'),
+      '\\f16c' => __('Caret', 'tinsta'),
+      '\\f187' => __('Chevron', 'tinsta'),
+      '\\f122' => __('Arrow', 'tinsta'),
     ],
   ]);
   $wp_customize->add_control('options_scrolltop_offset_horizontal', [
@@ -981,6 +1128,51 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_control('options_scrolltop_offset_vertical', [
     'label' => __('Offset', 'tinsta') . ' &mdash; Y (px)',
     'section' => 'tinsta_options_scrolltop',
+    'type' => 'number',
+    'input_attrs' => [
+      'min' => 32,
+      'max' => 500,
+      'step' => 1,
+      'style' => 'width:6em;',
+    ],
+  ]);
+
+  // Options: Reading progress indicator
+  $wp_customize->add_section('tinsta_options_reading_progress', [
+    'title' => __('Reading Progress Indicator', 'tinsta'),
+    'panel' => 'tinsta_options',
+    'description' => __('Define which post types to show the indicator from "Post Types" panel', 'tinsta'),
+  ]);
+  $wp_customize->add_control('options_reading_progress', [
+    'label' => __('Position', 'tinsta'),
+    'section' => 'tinsta_options_reading_progress',
+    'type' => 'select',
+    'choices' => [
+      '' => __('Disable', 'tinsta'),
+      'top' => __('Top', 'tinsta'),
+      'bottom' => __('Bottom', 'tinsta'),
+      'top-right' => sprintf('%s - %s', __('Top', 'tinsta'), __('Right', 'tinsta')),
+      'top-center' => sprintf('%s - %s', __('Top', 'tinsta'), __('Center', 'tinsta')),
+      'top-left' => sprintf('%s - %s', __('Top', 'tinsta'), __('Left', 'tinsta')),
+      'bottom-left' => sprintf('%s - %s', __('Bottom', 'tinsta'), __('Left', 'tinsta')),
+      'bottom-center' => sprintf('%s - %s', __('Bottom', 'tinsta'), __('Center', 'tinsta')),
+      'bottom-right' => sprintf('%s - %s', __('Bottom', 'tinsta'), __('Right', 'tinsta')),
+    ],
+  ]);
+  $wp_customize->add_control('options_reading_progress_offset_horizontal', [
+    'label' => __('Offset', 'tinsta') . ' &mdash; X (px)',
+    'section' => 'tinsta_options_reading_progress',
+    'type' => 'number',
+    'input_attrs' => [
+      'min' => 0,
+      'max' => 500,
+      'step' => 1,
+      'style' => 'width:6em;',
+    ],
+  ]);
+  $wp_customize->add_control('options_reading_progress_offset_vertical', [
+    'label' => __('Offset', 'tinsta') . ' &mdash; Y (px)',
+    'section' => 'tinsta_options_reading_progress',
     'type' => 'number',
     'input_attrs' => [
       'min' => 32,
@@ -1071,7 +1263,14 @@ add_action('customize_register', function ($wp_customize) {
   $wp_customize->add_control('options_seo_enable', [
     'type' => 'checkbox',
     'label' => __('Enable SEO Helpers', 'tinsta'),
+    'description' => __('Add meta data to your pages (like description, publisher, post cover image, etc.', 'tinsta'),
     'section' => 'tinsta_options_seo',
+  ]);
+  $wp_customize->add_control('options_seo_manifest', [
+    'type' => 'checkbox',
+    'label' => 'manifest.json',
+    'section' => 'tinsta_options_seo',
+    'description' => __('Improve mobile users experience, allowing add site as web app to homescreens.', 'tinsta') . '<a rel="noreferrer nofollow" href="https://developers.google.com/web/fundamentals/web-app-manifest/">#manifest.json</a>',
   ]);
 
   // Options: Topline
@@ -1166,7 +1365,7 @@ add_action('customize_register', function ($wp_customize) {
     'type' => 'select',
     'choices' => [
       '' => 'WordPress',
-      'brand' => __('Simple', 'tinsta'),
+      'brand' => __('Plain', 'tinsta'),
       'full' => __('As a regular page', 'tinsta'),
     ],
   ]);
@@ -1181,7 +1380,7 @@ add_action('customize_register', function ($wp_customize) {
     'section' => 'tinsta_system_page_404',
     'type' => 'select',
     'choices' => [
-      '' => __('Simple', 'tinsta'),
+      '' => __('Plain', 'tinsta'),
       'full' => __('As a regular page', 'tinsta'),
     ],
   ]);
@@ -1245,8 +1444,8 @@ add_action('customize_register', function ($wp_customize) {
       $wp_customize->get_setting("post_type_{$post_type->name}")->panel = 'tinsta_page_types';
     }
 
-    $wp_customize->add_control("{$post_type_base_control_id}_use_defaults", [
-      'label' => __('Use Default Views', 'tinsta'),
+    $wp_customize->add_control("{$post_type_base_control_id}_use_theme_styles", [
+      'label' => __('Use theme styles', 'tinsta'),
       'section' => $region_name,
       'type' => 'checkbox',
     ]);
@@ -1264,6 +1463,12 @@ add_action('customize_register', function ($wp_customize) {
         'catalog-item' => __('Catalog Item', 'tinsta'),
         'widgets-area' => __('Widgets Area', 'tinsta'),
       ], $post_type->name),
+    ]);
+
+    $wp_customize->add_control("{$post_type_base_control_id}_reading_progress_indicator", [
+      'label' => __('Reading progress indicator', 'tinsta'),
+      'section' => $region_name,
+      'type' => 'checkbox',
     ]);
 
     $wp_customize->add_control("{$post_type_base_control_id}_append_authors", [
@@ -1300,6 +1505,7 @@ add_action('customize_register', function ($wp_customize) {
           'poetry' => __('Poetry', 'tinsta'),
           'left-thumbnail' => __('Left Thumbnail', 'tinsta'),
           'right-thumbnail' => __('Right Thumbnail', 'tinsta'),
+          'list' => __('List', 'tinsta'),
           'widgets-area' => __('Widgets Area', 'tinsta'),
         ], $post_type->name),
       ]);

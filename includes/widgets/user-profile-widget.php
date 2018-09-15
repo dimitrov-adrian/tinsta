@@ -4,7 +4,7 @@
  * Deprecated
  */
 
-class Tinsta_UserProfile_Widget extends WP_Widget
+class Tinsta_User_Profile_Widget extends WP_Widget
 {
 
   function __construct()

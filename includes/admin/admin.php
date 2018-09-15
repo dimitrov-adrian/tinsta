@@ -125,6 +125,15 @@ function tinsta_insert_widget_in_sidebar($widget_id, $widget_data, $sidebar)
 }
 
 /**
+ * Uninstallation.
+ */
+add_action('switch_theme', function () {
+  delete_transient('tinsta_theme');
+  delete_transient('tinsta_manifest_json');
+  // @TODO remove tinsta specific settings from widget instances.
+});
+
+/**
  * Adds endpoint for exporting settings.
  *
  * wp-admin/admin-ajax.php?action=tinsta-export-settings
@@ -211,7 +220,7 @@ add_action('admin_menu', function () {
     require __DIR__ . '/page-tools.php';
   });
 
-});
+}, 20);
 
 /**
  * Hook to set tinsta related settings per widget.
@@ -262,7 +271,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
 
   ob_start();
 
-  if (in_array($sidebar, ['before-content', 'after-content'])) {
+  if (in_array($sidebar, ['before-main', 'after-main'])) {
     ?>
     <p>
       <input id="<?php echo $object->get_field_id('tinsta_boxed') ?>"
@@ -297,7 +306,7 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
           </option>
         <?php endfor ?>
       </select>
-      /<?php echo $cols_num ?>
+      / <?php echo $cols_num ?>
     </p>
 
     <p>
@@ -324,12 +333,12 @@ add_action('in_widget_form', function ($object, &$return, $instance) {
   $tinsta_fields = ob_get_clean();
   if ($tinsta_fields) {
     ?>
-    <fieldset class="tinsta-widget-fieldset">
-      <legend>
+    <details class="tinsta-widget-fieldset">
+      <summary>
         <?php _e('Layout', 'tinsta') ?>
-      </legend>
+      </summary>
       <?php echo $tinsta_fields ?>
-    </fieldset>
+    </details>
     <?php
   }
 
@@ -413,6 +422,28 @@ function tinsta_nav_menu_items($idbase = 0)
     'description' => __('Displayed only on anonymous users.', 'tinsta'),
   ];
 
+  $items['tinsta-nav-menu-button-primary'] = [
+    'id' => 'tinsta-nav-menu-button-primary-' . $idbase,
+    'title' => sprintf(__('Primary %s', 'tinsta'), __('Button', 'tinsta')),
+    'type' => 'tinsta-nav-menu-button-primary',
+    'type_label' => sprintf(__('Primary %s', 'tinsta'), __('Button', 'tinsta')),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'url' => '',
+    'description' => __('Menu item that look like a button', 'tinsta'),
+  ];
+
+  $items['tinsta-nav-menu-button-secondary'] = [
+    'id' => 'tinsta-nav-menu-button-secondary-' . $idbase,
+    'title' => sprintf(__('Secondary %s', 'tinsta'), __('Button', 'tinsta')),
+    'type' => 'tinsta-nav-menu-button-secondary',
+    'type_label' => sprintf(__('Secondary %s', 'tinsta'), __('Button', 'tinsta')),
+    'object' => 'tinsta-nav-menu-object',
+    'object_label' => __('Tinsta Nav Item', 'tinsta'),
+    'url' => '',
+    'description' => __('Menu item that look like a button', 'tinsta'),
+  ];
+
   return $items;
 }
 
@@ -485,23 +516,4 @@ add_action('admin_head-nav-menus.php', function () {
     </div>
     <?php
   }, 'nav-menus', 'side', 'low');
-});
-
-/**
- * Save tinsta's post related to post.
- */
-add_action('save_post', function ($post_id) {
-
-  // Skip if:
-  if (wp_is_post_revision($post_id) || defined('DOING_AJAX')) {
-    return;
-  }
-
-  if (!empty($_POST['_tinsta_post_append_widgets'])) {
-    update_post_meta($post_id, '_tinsta_post_append_widgets', 'on');
-  } elseif (get_post_meta($post_id, '_tinsta_post_append_widgets',
-      true) && empty($_POST['_tinsta_post_append_widgets'])) {
-    delete_post_meta($post_id, '_tinsta_post_append_widgets');
-  }
-
 });

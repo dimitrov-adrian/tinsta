@@ -158,7 +158,7 @@ $la-is-loaded: true;
     @media (min-width: 421px) {
       .children {
         margin-left: $options_avatar_size + 20px;
-        @media (max-width: $breakpoint_max_tablet) {
+        @media (max-width: $breakpoint-max-mobile) {
           margin-left: ( $options_avatar_size - $options_avatar_size_small ) + px;
         }
         .comment {
@@ -172,7 +172,7 @@ $la-is-loaded: true;
         }
         .children {
           margin-left: $options_avatar_size_small + 20px;
-          @media (max-width: $breakpoint_max_tablet) {
+          @media (max-width: $breakpoint-max-mobile) {
             margin-left: 0;
           }
         }
@@ -253,14 +253,14 @@ $la-is-loaded: true;
     .comment-form-avatar {
       float: left;
       width: $options_avatar_size + px;
-      @media (max-width: $breakpoint_max_tablet) {
+      @media (max-width: $breakpoint-max-mobile) {
         width: 64px;
       }
       img {
         display: block;
         height: auto;
       }
-      @media (max-width: $breakpoint_max_mobile) {
+      @media (max-width: $breakpoint-max-mobile) {
         float: right;
         width: 42px;
         margin-top: -52px;
@@ -272,10 +272,10 @@ $la-is-loaded: true;
 
     .comment-form {
       margin-left: $options_avatar_size + 10px;
-      @media (max-width: $breakpoint_max_tablet) {
+      @media (max-width: $breakpoint-min-tablet) {
         margin-left: 74px;
       }
-      @media (max-width: $breakpoint_max_mobile) {
+      @media (max-width: $breakpoint-max-mobile) {
         margin-left: 0;
         clear: both;
         padding-top: 1rem;
@@ -316,7 +316,7 @@ $la-is-loaded: true;
           height: $options_avatar_size + px;
           max-height: unset;
           min-height: $options_avatar_size + px;
-          @media (max-width: $breakpoint_max_tablet) {
+          @media (max-width: $breakpoint-min-tablet) {
             height: 64px;
             min-height: 64px;
           }

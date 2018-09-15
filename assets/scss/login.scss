@@ -1,21 +1,16 @@
 @import "tinsta/_functions";
 
 body {
-  background: $region_main_color_background;
-  color: $region_root_color_foreground;
-  /* @TODO make interim logins transparent */
-  //&.body.interim-login {
-  //  background: transparent;
-  //}
+  //color: $region_root_color_foreground;
+
   #login {
     padding-top: 4%;
     form {
+      background: $region_main_color_background;
       color: inherit;
-      background: transparent;
-      box-shadow: none;
+      font-weight: inherit;
       border: none;
       padding-bottom: 2rem;
-      margin-top: 0;
       box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.2);
     }
     form label {
@@ -34,13 +29,29 @@ body {
         color: $region_root_color_secondary !important;
       }
     }
+
     #login_error,
     .message {
+      margin: 1rem 0;
+      //background: transparent;
+      //color: inherit;
+      //box-shadow: none;
+    }
+
+    #login_error,
+    .message.error {
+      @extend %error;
+    }
+
+    .message.register {
+      text-align: center;
+      border: none;
       margin: 1rem 0;
       background: transparent;
       color: inherit;
       box-shadow: none;
     }
+
     h1:before {
       height: 160px;
       width: 320px;
@@ -86,12 +97,12 @@ body {
 
     input {
       color: inherit;
-      background: rgba($region_root_color_foreground, .1);
-      border-color: mix($region_main_color_background, $region_root_color_foreground, 110%);
+      background: transparent;
+      @include border($region_root_color_foreground);
+      @include roundness();
+      box-shadow: none;
       padding: .2rem .6rem;
       line-height: 1.2rem;
-      border-width: 0;
-      @include roundness();
       &:focus {
         border-color: $region_root_color_primary;
         box-shadow: 0 0 0 ($basics_bordering + px) $region_root_color_primary;

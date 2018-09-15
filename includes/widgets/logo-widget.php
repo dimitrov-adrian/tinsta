@@ -97,7 +97,7 @@ class Tinsta_Logo_Widget extends WP_Widget
 
     echo $args['before_widget'];
 
-    echo '<div aria-roledescription="logo" ' . $style . ' class="' . $instance['style'] . '" />';
+    echo '<div ' . $style . ' class="' . $instance['style'] . '" />';
 
     if (get_theme_mod('custom_logo') && get_custom_logo()) {
       the_custom_logo();
